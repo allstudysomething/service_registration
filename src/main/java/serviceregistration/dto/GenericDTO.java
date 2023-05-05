@@ -15,4 +15,5 @@ public abstract class GenericDTO {
     private LocalDateTime deletedWhen;
     private String deletedBy;
     private boolean isDeleted;
+
 }

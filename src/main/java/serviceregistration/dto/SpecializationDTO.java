@@ -14,4 +14,5 @@ public class SpecializationDTO extends GenericDTO {
     private Long id;
     private String titleSpecialization;
     private String specializationDescription;
+
 }
