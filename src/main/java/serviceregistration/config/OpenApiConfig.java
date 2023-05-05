@@ -18,9 +18,9 @@ public class OpenApiConfig {
                         .description("Сервис, позволяющий записаться на прием к врачу")
                         .version("0.1")
                         .license(new License().name("Apache 2.0"))
-                        .contact(new Contact().name("Alexey Zotov")
-                                .email("vgy7_z@mail.ru")
-                                .url("https://github.com/zotov88"))
+                        .contact(new Contact().name("Whereismynick")
+                                .email("whereisnotnull@mail.ru")
+                                .url("https://github.com/allstudysomething"))
                 );
     }
 }

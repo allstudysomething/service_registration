@@ -19,11 +19,11 @@ public class ClientMapper
 
     private final RegistrationRepository registrationRepository;
 
-    public ClientMapper(ModelMapper modelMapper,
-                        RegistrationRepository registrationRepository) {
+    public ClientMapper(ModelMapper modelMapper, RegistrationRepository registrationRepository) {
         super(Client.class, ClientDTO.class, modelMapper);
         this.registrationRepository = registrationRepository;
     }
+
 
     @PostConstruct
     @Override

@@ -7,13 +7,15 @@ import serviceregistration.dto.ClientDTO;
 import serviceregistration.model.Client;
 import serviceregistration.service.ClientService;
 
+//@Hidden
 @RestController
 @RequestMapping("/clients")
-@Tag(name = "Клиенты", description = "Контроллер для работы с клиентами поликлиники")
+@Tag(name = "Клиенты TESTED CRUD", description = "Контроллер для работы с клиентами поликлиники")
 public class ClientController
         extends GenericController<Client, ClientDTO> {
 
     public ClientController(ClientService service) {
         super(service);
     }
+
 }

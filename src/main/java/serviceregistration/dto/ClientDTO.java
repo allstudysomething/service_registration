@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import serviceregistration.model.Role;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -27,7 +26,7 @@ public class ClientDTO extends GenericDTO {
     private String phone;
     private String email;
     private String address;
-    private Role role;
+    private RoleDTO role;
     private List<Long> registrationIDs;
 
 }
