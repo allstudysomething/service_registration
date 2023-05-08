@@ -29,23 +29,23 @@ public class DoctorMapper
     @Override
     protected void setupMapper() {
         modelMapper.createTypeMap(Doctor.class, DoctorDTO.class)
-                .addMappings(m -> m.skip(DoctorDTO::setDoctorSlotsId)).setPostConverter(toEntityConverter());
+                .addMappings(m -> m.skip(DoctorDTO::setDoctorSlotsId)).setPostConverter(toDTOConverter());
         modelMapper.createTypeMap(DoctorDTO.class, Doctor.class)
-                .addMappings(m -> m.skip(Doctor::setDoctorSlots)).setPostConverter(toDTOConverter());
+                .addMappings(m -> m.skip(Doctor::setDoctorSlots)).setPostConverter(toEntityConverter());
     }
 
     @Override
-    protected void mapSpecificFields(DoctorDTO src, Doctor dst) {
-        if (!Objects.isNull(src.getDoctorSlotsId())) {
-            dst.setDoctorSlots(doctorSlotRepository.findAllById(src.getDoctorSlotsId()));
+    protected void mapSpecificFields(DoctorDTO source, Doctor destination) {
+        if (!Objects.isNull(source.getDoctorSlotsId())) {
+            destination.setDoctorSlots(doctorSlotRepository.findAllById(source.getDoctorSlotsId()));
         } else {
-            dst.setDoctorSlots(Collections.emptyList());
+            destination.setDoctorSlots(Collections.emptyList());
         }
     }
 
     @Override
-    protected void mapSpecificFields(Doctor src, DoctorDTO dst) {
-        dst.setDoctorSlotsId(getIds(src));
+    protected void mapSpecificFields(Doctor source, DoctorDTO destination) {
+        destination.setDoctorSlotsId(getIds(source));
     }
 
     @Override

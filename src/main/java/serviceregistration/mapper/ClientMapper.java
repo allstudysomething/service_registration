@@ -24,28 +24,27 @@ public class ClientMapper
         this.registrationRepository = registrationRepository;
     }
 
-
     @PostConstruct
     @Override
     protected void setupMapper() {
         modelMapper.createTypeMap(Client.class, ClientDTO.class)
-                .addMappings(m -> m.skip(ClientDTO::setRegistrationIDs)).setPostConverter(toEntityConverter());
+                .addMappings(m -> m.skip(ClientDTO::setRegistrationIDs)).setPostConverter(toDTOConverter());
         modelMapper.createTypeMap(ClientDTO.class, Client.class)
-                .addMappings(m -> m.skip(Client::setRegistrations)).setPostConverter(toDTOConverter());
+                .addMappings(m -> m.skip(Client::setRegistrations)).setPostConverter(toEntityConverter());
     }
 
     @Override
-    protected void mapSpecificFields(ClientDTO src, Client dst) {
-        if (!Objects.isNull(src.getRegistrationIDs())) {
-            dst.setRegistrations(registrationRepository.findAllById(src.getRegistrationIDs()));
+    protected void mapSpecificFields(ClientDTO source, Client destination) {
+        if (!Objects.isNull(source.getRegistrationIDs())) {
+            destination.setRegistrations(registrationRepository.findAllById(source.getRegistrationIDs()));
         } else {
-            dst.setRegistrations(Collections.emptyList());
+            destination.setRegistrations(Collections.emptyList());
         }
     }
 
     @Override
-    protected void mapSpecificFields(Client src, ClientDTO dst) {
-        dst.setRegistrationIDs(getIds(src));
+    protected void mapSpecificFields(Client source, ClientDTO destination) {
+        destination.setRegistrationIDs(getIds(source));
     }
 
     @Override
@@ -54,6 +53,7 @@ public class ClientMapper
             return Collections.emptyList();
         } else {
             List<Long> list = new ArrayList<>();
+//            entity.getRegistrations().stream().map(GenericModel::getId).collect(Collectors.toList());
             for (Registration registration : entity.getRegistrations()) {
                 list.add(registration.getId());
             }

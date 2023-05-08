@@ -1,5 +1,6 @@
 package serviceregistration.controller;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
@@ -9,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import serviceregistration.model.Role;
 import serviceregistration.repository.RoleRepository;
 
-//@Hidden
+@Hidden
 @RestController
 @RequestMapping("/roles")
 @Tag(name = "Roles ( EXPERIMENTAL ) TESTED", description = "*** EXPERIMENTAL *** Контроллер for work with Roles")

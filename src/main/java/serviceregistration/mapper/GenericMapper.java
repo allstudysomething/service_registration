@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 import serviceregistration.dto.GenericDTO;
 import serviceregistration.model.GenericModel;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -19,9 +18,9 @@ public abstract class GenericMapper<E extends GenericModel, D extends GenericDTO
     private final Class<D> dtoClass;
     protected final ModelMapper modelMapper;
 
-    public GenericMapper(Class<E> entityClass,
-                         Class<D> dtoClass,
-                         ModelMapper modelMapper) {
+    protected GenericMapper(Class<E> entityClass,
+                            Class<D> dtoClass,
+                            ModelMapper modelMapper) {
         this.entityClass = entityClass;
         this.dtoClass = dtoClass;
         this.modelMapper = modelMapper;
@@ -29,56 +28,56 @@ public abstract class GenericMapper<E extends GenericModel, D extends GenericDTO
 
     @Override
     public E toEntity(D dto) {
-        return Objects.isNull(dto) ? null : modelMapper.map(dto, entityClass);
+        return Objects.isNull(dto)
+                ? null
+                : modelMapper.map(dto, entityClass);
     }
 
     @Override
     public D toDTO(E entity) {
-        return Objects.isNull(entity) ? null : modelMapper.map(entity, dtoClass);
+        return Objects.isNull(entity)
+                ? null
+                : modelMapper.map(entity, dtoClass);
     }
 
     @Override
     public List<E> toEntities(List<D> dtos) {
-        List<E> list = new ArrayList<>();
-        for (D dto : dtos) {
-            list.add(toEntity(dto));
-        }
-        return list;
+        return dtos.stream().map(this::toEntity).toList();
     }
 
     @Override
     public List<D> toDTOs(List<E> entities) {
-        List<D> list = new ArrayList<>();
-        for (E entity : entities) {
-            list.add(toDTO(entity));
-        }
-        return list;
+        return entities.stream().map(this::toDTO).toList();
     }
 
-    protected Converter<E, D> toEntityConverter() {
-        return c -> {
-            E src = c.getSource();
-            D dst = c.getDestination();
-            mapSpecificFields(src, dst);
-            return c.getDestination();
+    protected Converter<D, E> toEntityConverter() {
+        return context -> {
+            D source = context.getSource();
+            E destination = context.getDestination();
+            mapSpecificFields(source, destination);
+            return context.getDestination();
         };
     }
 
-    protected Converter<D, E> toDTOConverter() {
-        return c -> {
-            D src = c.getSource();
-            E dst = c.getDestination();
-            mapSpecificFields(src, dst);
-            return c.getDestination();
+    protected Converter<E, D> toDTOConverter() {
+        return context -> {
+            E source = context.getSource();
+            D destination = context.getDestination();
+            mapSpecificFields(source, destination);
+            return context.getDestination();
         };
     }
 
-    protected abstract void mapSpecificFields(E src, D dst);
+    protected abstract void mapSpecificFields(D source, E destination);
 
-    protected abstract void mapSpecificFields(D src, E dst);
+    protected abstract void mapSpecificFields(E source, D destination);
 
+    /**
+     * Настройка маппера (что делать и что вызывать в случае несовпадения типов данных сорса/дестинейшена)
+     */
     @PostConstruct
     protected abstract void setupMapper();
 
     protected abstract List<Long> getIds(E entity);
+
 }

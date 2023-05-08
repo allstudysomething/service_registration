@@ -12,7 +12,7 @@ import lombok.ToString;
 public class SpecializationDTO extends GenericDTO {
 
     private Long id;
-    private String titleSpecialization;
-    private String specializationDescription;
+    private String specialization;
+    private String description;
 
 }

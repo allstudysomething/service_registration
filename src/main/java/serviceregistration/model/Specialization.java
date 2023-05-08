@@ -20,9 +20,9 @@ public class Specialization {
     private Long id;
 
     @Column(name = "title", nullable = false)
-    private String titleSpecialization;
+    private String specialization;
 
     @Column(name = "description")
-    private String specializationDescription;
+    private String description;
 
 }

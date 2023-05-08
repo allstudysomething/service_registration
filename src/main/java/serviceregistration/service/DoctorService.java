@@ -20,7 +20,7 @@ public class DoctorService
     @Override
     public DoctorDTO create(DoctorDTO newObj) {
         RoleDTO roleDTO = new RoleDTO();
-        roleDTO.setId(1L);
+        roleDTO.setId(3L);
         SpecializationDTO specializationDTO = new SpecializationDTO();
         specializationDTO.setId(1L);
         newObj.setRole(roleDTO);

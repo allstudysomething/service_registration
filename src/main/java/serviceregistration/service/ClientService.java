@@ -16,7 +16,7 @@ public class ClientService extends GenericService<Client, ClientDTO> {
     @Override
     public ClientDTO create(ClientDTO newObj) {
         RoleDTO roleDTO = new RoleDTO();
-        roleDTO.setId(2L);
+        roleDTO.setId(1L);
         newObj.setRole(roleDTO);
         return mapper.toDTO(repository.save(mapper.toEntity(newObj)));
     }
