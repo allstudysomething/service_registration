@@ -11,7 +11,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @ToString
-public class DoctorSlotDTO {
+public class DoctorSlotDTO extends GenericDTO {
 
     private Long doctorId;
     private Long slotId;

@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/registrations")
-@Tag(name = "TESTED CRUD Зарегистрированные записи",
+@Tag(name = "Зарегистрированные записи TESTED CRUD",
         description = "Контроллер для работы со всеми когда-либо зарегистрированными записями к врачам")
 public class RegistrationController
         extends GenericController<Registration, RegistrationDTO> {
