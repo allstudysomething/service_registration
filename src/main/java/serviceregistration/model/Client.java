@@ -44,7 +44,8 @@ public class Client extends GenericModel {
     private String midName;
 
     @Column(name = "gender", nullable = false)
-    private String gender;
+    @Enumerated
+    private Gender gender;
 
     @Column(name = "age", nullable = false)
     private Integer age;

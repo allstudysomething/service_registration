@@ -27,6 +27,52 @@
         <div class="mt-3 row g-2">
             <div class="col-md">
                 <div class="form-floating">
+                    <input name="lastName" type="text" class="form-control" id="lastName" placeholder="Введите фамилию" required>
+                    <label for="lastName">Фамилия</label>
+                    <div class="invalid-feedback">Обязательное поле для заполнения</div>
+                </div>
+            </div>
+            <div class="col-md">
+                <div class="form-floating">
+                    <input name="firstName" type="text" class="form-control" id="firstName" placeholder="Введите имя" required>
+                    <label for="firstName">Имя</label>
+                    <div class="invalid-feedback">Обязательное поле для заполнения</div>
+                </div>
+            </div>
+            <div class="col-md">
+                <div class="form-floating">
+                    <input name="middleName" type="text" class="form-control" id="middleName" placeholder="Введите отчество">
+                    <label for="middleName">Отчество</label>
+                </div>
+            </div>
+        </div>
+        <div class="mt-3 row g-2">
+            <div class="col-md">
+                <div class="form-floating">
+                    <input name="phone" type="text" class="form-control" id="phone" placeholder="Введите телефон">
+                    <label for="phone">Телефон</label>
+                    <div class="invalid-feedback">Обязательное поле для заполнения</div>
+                </div>
+            </div>
+            <div class="col-md">
+<!--                <label for="gender" class="form-label">Пол</label>-->
+                <select class="form-select" name="gender" id="gender" required>
+                    <option selected value="default">Выберете пол из списка</option>
+                    <option th:each="gender : ${T(serviceregistration.model.Gender).values()}"
+                            th:value="${gender}" th:text="${gender.getGenderTextDisplay()}"  ></option>
+                </select>
+            </div>
+            <div class="col-md">
+                <div class="form-floating">
+                    <input name="birthDate" type="date" class="form-control" id="birthDate" placeholder="Введите дату рождения" required>
+                    <label for="birthDate">Дата рождения</label>
+                    <div class="invalid-feedback">Обязательное поле для заполнения</div>
+                </div>
+            </div>
+        </div>
+        <div class="mt-3 row g-2">
+            <div class="col-md">
+                <div class="form-floating">
                     <input name="login" type="text" class="form-control" id="login" placeholder="Введите логин" required>
                     <label for="login">Логин</label>
                     <div class="invalid-feedback">Обязательное поле для заполнения</div>
@@ -42,26 +88,11 @@
                     <div class="invalid-feedback">Обязательное поле для заполнения</div>
                 </div>
             </div>
-        </div>
-        <div class="mt-3 row g-2">
             <div class="col-md">
                 <div class="form-floating">
-                    <input name="firstName" type="text" class="form-control" id="firstName" placeholder="Введите имя" required>
-                    <label for="firstName">Имя</label>
+                    <input name="policy" type="text" class="form-control" id="policy" placeholder="Введите номер полиса" required>
+                    <label for="policy">Полис</label>
                     <div class="invalid-feedback">Обязательное поле для заполнения</div>
-                </div>
-            </div>
-            <div class="col-md">
-                <div class="form-floating">
-                    <input name="lastName" type="text" class="form-control" id="lastName" placeholder="Введите фамилию" required>
-                    <label for="lastName">Фамилия</label>
-                    <div class="invalid-feedback">Обязательное поле для заполнения</div>
-                </div>
-            </div>
-            <div class="col-md">
-                <div class="form-floating">
-                    <input name="middleName" type="text" class="form-control" id="middleName" placeholder="Введите отчество">
-                    <label for="middleName">Отчество</label>
                 </div>
             </div>
         </div>
@@ -76,22 +107,6 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md">
-                <div class="form-floating">
-                    <input name="phone" type="text" class="form-control" id="phone" placeholder="Введите телефон">
-                    <label for="phone">Телефон</label>
-                    <div class="invalid-feedback">Обязательное поле для заполнения</div>
-                </div>
-            </div>
-            <div class="col-md">
-                <div class="form-floating">
-                    <input name="birthDate" type="date" class="form-control" id="birthDate" placeholder="Введите дату рождения" required>
-                    <label for="birthDate">Дата рождения</label>
-                    <div class="invalid-feedback">Обязательное поле для заполнения</div>
-                </div>
-            </div>
-        </div>
-        <div class="mt-3 row g-2">
             <div class="col-md">
                 <div class="form-floating">
                     <textarea name="address" type="text" class="form-control" id="address" placeholder="Адрес"></textarea>
