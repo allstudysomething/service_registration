@@ -7,6 +7,8 @@ import serviceregistration.mapper.DoctorMapper;
 import serviceregistration.model.Doctor;
 import serviceregistration.repository.DoctorRepository;
 
+import java.time.LocalDateTime;
+
 @Service
 public class DoctorService extends GenericService<Doctor, DoctorDTO> {
 
@@ -16,12 +18,10 @@ public class DoctorService extends GenericService<Doctor, DoctorDTO> {
     }
 
     public DoctorDTO create(DoctorDTO newObj) {
+        newObj.setCreatedWhen(LocalDateTime.now());
         RoleDTO roleDTO = new RoleDTO();
         roleDTO.setId(2L);
-//        SpecializationDTO specializationDTO = new SpecializationDTO();
-//        specializationDTO.setId(1L);
         newObj.setRole(roleDTO);
-//        newObj.setSpecialization(specializationDTO);
         return mapper.toDTO(repository.save(mapper.toEntity(newObj)));
     }
 }

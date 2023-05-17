@@ -55,7 +55,7 @@ values (nextval('clients_seq'), now(), null, null, null, null,
         'Изм проспект', 19, now(), 'vs1d2@sf.ru', 'Иван', 'm', 'Иванов', 'login2', 'Владимирович', 'pass', '89131103765', 16345, 1);
 
 insert into doctors_slots
-select nextval('doctor_slot_seq'), null, now(), null, null, null, false,cabinets.id, days.id, doctors.id, slots.id
+select nextval('doctor_slot_seq'), null, now(), null, null, null, false, cabinets.id, days.id, doctors.id, slots.id
 from days
     cross join slots
     cross join doctors
