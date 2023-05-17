@@ -25,4 +25,5 @@ public class RegistrationMVCController {
         model.addAttribute("registrations", registrations);
         return "registrations/listAll";
     }
+
 }

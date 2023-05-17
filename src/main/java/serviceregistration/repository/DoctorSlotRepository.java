@@ -2,6 +2,9 @@ package serviceregistration.repository;
 
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import serviceregistration.model.Cabinet;
+import serviceregistration.model.Day;
+import serviceregistration.model.Doctor;
 import serviceregistration.model.DoctorSlot;
 
 public interface DoctorSlotRepository
@@ -23,4 +26,6 @@ public interface DoctorSlotRepository
                         and
                         cabinets.id = :cabinetId""")
     void addSchedule(Long doctorId, Long dayId, Long cabinetId);
+
+    DoctorSlot findFirstByCabinetAndDay(Cabinet cabinet, Day day);
 }
