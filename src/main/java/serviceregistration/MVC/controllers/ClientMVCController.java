@@ -1,5 +1,7 @@
 package serviceregistration.MVC.controllers;
 
+import lombok.extern.slf4j.Slf4j;
+import nonapi.io.github.classgraph.json.JSONUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -10,10 +12,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import serviceregistration.dto.ClientDTO;
 import serviceregistration.service.ClientService;
 
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import static serviceregistration.constants.UserRolesConstants.ADMIN;
 
+@Slf4j
 @Controller
 @RequestMapping("/clients")
 public class ClientMVCController {
@@ -40,6 +46,15 @@ public class ClientMVCController {
             bindingResult.rejectValue("email", "error.email", "Такой e-mail уже существует");
             return "registration";
         }
+        if (clientService.getClientByPhone(clientDTO.getPhone()) != null) {
+            bindingResult.rejectValue("phone", "error.phone", "Такой telephone уже существует");
+            return "registration";
+        }
+        if (clientService.getClientByPolicy(clientDTO.getPolicy()) != null) {
+            bindingResult.rejectValue("policy", "error.policy", "Такой polis уже существует");
+            return "registration";
+        }
+
         clientService.create(clientDTO);
         return "redirect:login";
     }
@@ -50,7 +65,6 @@ public class ClientMVCController {
         model.addAttribute("clients", clients);
         return "clients/list";
     }
-
 
 
 }

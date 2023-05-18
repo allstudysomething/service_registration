@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 import serviceregistration.model.Gender;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -17,13 +18,13 @@ public class ClientDTO extends GenericDTO {
 
     private String login;
     private String password;
-    private Integer policy;
+    private String policy;
     private String firstName;
     private String lastName;
     private String midName;
     private Gender gender;
     private Integer age;
-    private LocalDateTime birthDate;
+    private LocalDate birthDate;
     private String phone;
     private String email;
     private String address;

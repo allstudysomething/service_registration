@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -32,7 +33,7 @@ public class Client extends GenericModel {
     private String password;
 
     @Column(name = "policy", nullable = false)
-    private Integer policy;
+    private String policy;
 
     @Column(name = "first_name", nullable = false)
     private String firstName;
@@ -51,7 +52,7 @@ public class Client extends GenericModel {
     private Integer age;
 
     @Column(name = "birth_date", nullable = false)
-    private LocalDateTime birthDate;
+    private LocalDate birthDate;
 
     @Column(name = "phone", nullable = false)
     private String phone;

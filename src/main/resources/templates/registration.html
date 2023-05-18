@@ -41,8 +41,8 @@
             </div>
             <div class="col-md">
                 <div class="form-floating">
-                    <input name="middleName" type="text" class="form-control" id="middleName" placeholder="Введите отчество">
-                    <label for="middleName">Отчество</label>
+                    <input name="midName" type="text" class="form-control" id="midName" placeholder="Введите отчество">
+                    <label for="midName">Отчество</label>
                 </div>
             </div>
         </div>
@@ -52,6 +52,9 @@
                     <input name="phone" type="text" class="form-control" id="phone" placeholder="Введите телефон">
                     <label for="phone">Телефон</label>
                     <div class="invalid-feedback">Обязательное поле для заполнения</div>
+                    <div class="alert alert-danger" th:if="${#fields.hasErrors('phone')}">
+                        <p th:errors="*{phone}"></p>
+                    </div>
                 </div>
             </div>
             <div class="col-md">
@@ -93,6 +96,9 @@
                     <input name="policy" type="text" class="form-control" id="policy" placeholder="Введите номер полиса" required>
                     <label for="policy">Полис</label>
                     <div class="invalid-feedback">Обязательное поле для заполнения</div>
+                    <div class="alert alert-danger" th:if="${#fields.hasErrors('policy')}">
+                        <p th:errors="*{policy}"></p>
+                    </div>
                 </div>
             </div>
         </div>
