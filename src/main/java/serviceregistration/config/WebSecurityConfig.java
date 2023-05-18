@@ -34,7 +34,8 @@ public class WebSecurityConfig {
                                                               "/css/**",
                                                               "/",
                                                               "/swagger-ui/**",
-                                                              "/v3/api-docs/**");
+                                                              "/v3/api-docs/**",
+            "/registrations/addRegistration");
     
     private final List<String> DOCTORSLOTS_WHITE_LIST = List.of("/doctorslots",
                                                                 "/doctors");
