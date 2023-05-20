@@ -28,7 +28,11 @@ public interface DoctorSlotRepository
                         cabinets.id = :cabinetId""")
     void addSchedule(Long doctorId, Long dayId, Long cabinetId);
 
-    DoctorSlot findFirstByCabinetAndDay(Cabinet cabinet, Day day);
+    void deleteAllByDoctorIdAndDayId(Long doctorId, Long dayId);
+
+    DoctorSlot findFirstByCabinetIdAndDayId(Long cabinetId, Long dayId);
+
+    DoctorSlot findFirstByDoctorIdAndDayId(Long doctorId, Long dayId);
 
 //    List<DoctorSlot> findByDoctorAndDayBetween(Day currentDay, Day plus30day);
     @Query(nativeQuery = true, value = """

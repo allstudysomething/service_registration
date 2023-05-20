@@ -27,6 +27,10 @@ public class DoctorService extends GenericService<Doctor, DoctorDTO> {
         return mapper.toDTO(repository.save(mapper.toEntity(newObj)));
     }
 
+    public DoctorDTO getDoctorByLogin(String login) {
+        return mapper.toDTO(((DoctorRepository)repository).findDoctorByLogin(login));
+    }
+
     public List<DoctorDTO> findAllDoctorsBySpecialization(Specialization specialization){
         return mapper.toDTOs(((DoctorRepository)repository).findAllBySpecialization(specialization));
     }

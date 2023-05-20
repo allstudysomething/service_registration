@@ -29,12 +29,20 @@ public class DoctorSlotService extends GenericService<DoctorSlot, DoctorSlotDTO>
         this.doctorService = doctorService;
     }
 
-    public void getSchedule(Long doctorId, Long dayId, Long cabinetId) {
+    public void addSchedule(Long doctorId, Long dayId, Long cabinetId) {
          doctorSlotRepository.addSchedule(doctorId, dayId, cabinetId);
     }
 
-    public DoctorSlotDTO findDoctorSlotByCabinetAndDay(Cabinet cabinet, Day day) {
-        return mapper.toDTO(doctorSlotRepository.findFirstByCabinetAndDay(cabinet, day));
+    public void deleteSchedule(final Long doctorId, final Long dayId) {
+        doctorSlotRepository.deleteAllByDoctorIdAndDayId(doctorId, dayId);
+    }
+
+    public DoctorSlotDTO getDoctorSlotByCabinetAndDay(final Long cabinetId, final Long dayId) {
+        return mapper.toDTO(doctorSlotRepository.findFirstByCabinetIdAndDayId(cabinetId, dayId));
+    }
+
+    public DoctorSlotDTO getDoctorSlotByDoctorAndDay(final Long doctorId, final Long dayId) {
+        return mapper.toDTO(doctorSlotRepository.findFirstByDoctorIdAndDayId(doctorId, dayId));
     }
 
     // Потом заменить LocalDate date на LocalDate.Now()

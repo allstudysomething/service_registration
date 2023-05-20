@@ -13,11 +13,9 @@ import serviceregistration.dto.DoctorSlotDTO;
 import serviceregistration.model.Cabinet;
 import serviceregistration.model.Day;
 import serviceregistration.model.Slot;
-import serviceregistration.repository.DoctorSlotRepository;
 import serviceregistration.service.*;
 
 import java.util.List;
-import java.util.Objects;
 
 @Slf4j
 @Controller
@@ -62,25 +60,59 @@ public class DoctorSlotMVCController {
         model.addAttribute("scheduleForm", new DoctorSlotDTO());
         return "doctorslots/addSchedule";
     }
-
     @PostMapping("/addSchedule")
     public String addSchedule(@ModelAttribute("scheduleForm") DoctorSlotDTO doctorSlotDTO,
-                              BindingResult bindingResult) {
-        if(!Objects.isNull(doctorSlotService.findDoctorSlotByCabinetAndDay(doctorSlotDTO.getCabinet(),
-                doctorSlotDTO.getDay()))) {
-            bindingResult.rejectValue("cabinet", "error.cabinet", "This Record of Day" +
-                    " and Cabinet are in use");
-            System.out.println("******** zapis suschestvuet *******");
-//            return "doctorslots/addSchedule";
-        } else {
-            System.out.println("********** NOT PRESENT RECORD ***********");
-//            return "doctorslots/addSchedule";
+                              BindingResult bindingResult,
+                              Model model) {
+        addSchedule(model);
+        if (doctorSlotService.getDoctorSlotByDoctorAndDay(doctorSlotDTO.getDoctor().getId(), doctorSlotDTO.getDay().getId()) != null) {
+            bindingResult.rejectValue("day", "error.day", "Врач уже работает " + doctorSlotDTO.getDay().getDay());
+            return "doctorslots/addSchedule";
         }
-
-        doctorSlotService.getSchedule(doctorSlotDTO.getDoctor().getId(),
+        if (doctorSlotService.getDoctorSlotByCabinetAndDay(doctorSlotDTO.getCabinet().getId(), doctorSlotDTO.getDay().getId()) != null) {
+            bindingResult.rejectValue("cabinet", "error.cabinet", "В этот день кабинет занят");
+            return "doctorslots/addSchedule";
+        }
+        doctorSlotService.addSchedule(doctorSlotDTO.getDoctor().getId(),
                 doctorSlotDTO.getDay().getId(),
                 doctorSlotDTO.getCabinet().getId());
         return "redirect:/doctorslots";
     }
+
+    @GetMapping("/deleteSchedule")
+    public String deleteSchedule(Model model) {
+        List<DoctorDTO> doctors = doctorService.listAll();
+        List<Day> days = dayService.listAll();
+        model.addAttribute("doctors", doctors);
+        model.addAttribute("days", days);
+        return "doctorslots/deleteSchedule";
+    }
+
+    @PostMapping("/deleteSchedule")
+    public String deleteSchedule(@ModelAttribute("scheduleForm") DoctorSlotDTO doctorSlotDTO) {
+        doctorSlotService.deleteSchedule(doctorSlotDTO.getDoctor().getId(), doctorSlotDTO.getDay().getId());
+        return "redirect:/doctorslots";
+    }
+
+
+//    @PostMapping("/addSchedule")
+//    public String addSchedule(@ModelAttribute("scheduleForm") DoctorSlotDTO doctorSlotDTO,
+//                              BindingResult bindingResult) {
+//        if(!Objects.isNull(doctorSlotService.findDoctorSlotByCabinetAndDay(doctorSlotDTO.getCabinet(),
+//                doctorSlotDTO.getDay()))) {
+//            bindingResult.rejectValue("cabinet", "error.cabinet", "This Record of Day" +
+//                    " and Cabinet are in use");
+//            System.out.println("******** zapis suschestvuet *******");
+////            return "doctorslots/addSchedule";
+//        } else {
+//            System.out.println("********** NOT PRESENT RECORD ***********");
+////            return "doctorslots/addSchedule";
+//        }
+//
+//        doctorSlotService.getSchedule(doctorSlotDTO.getDoctor().getId(),
+//                doctorSlotDTO.getDay().getId(),
+//                doctorSlotDTO.getCabinet().getId());
+//        return "redirect:/doctorslots";
+//    }
 
 }
