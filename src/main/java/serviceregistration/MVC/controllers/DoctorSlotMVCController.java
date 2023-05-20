@@ -77,9 +77,9 @@ public class DoctorSlotMVCController {
 //            return "doctorslots/addSchedule";
         }
 
-//        doctorSlotService.getSchedule(doctorSlotDTO.getDoctor().getId(),
-//                doctorSlotDTO.getDay().getId(),
-//                doctorSlotDTO.getCabinet().getId());
+        doctorSlotService.getSchedule(doctorSlotDTO.getDoctor().getId(),
+                doctorSlotDTO.getDay().getId(),
+                doctorSlotDTO.getCabinet().getId());
         return "redirect:/doctorslots";
     }
 

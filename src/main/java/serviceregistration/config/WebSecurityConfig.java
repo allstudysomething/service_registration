@@ -35,8 +35,9 @@ public class WebSecurityConfig {
                                                               "/",
                                                               "/swagger-ui/**",
                                                               "/v3/api-docs/**",
+//            "/registrations/addRegistration",
             "/registrations/addRegistration");
-    
+
     private final List<String> DOCTORSLOTS_WHITE_LIST = List.of("/doctorslots",
                                                                 "/doctors");
     private final List<String> DOCTORSLOTS_PERMISSION_LIST = List.of("/doctorslots/addSchedule"
@@ -74,8 +75,9 @@ public class WebSecurityConfig {
                                            .requestMatchers(RESOURCES_WHITE_LIST.toArray(String[]::new)).permitAll()
                                            .requestMatchers(DOCTORSLOTS_WHITE_LIST.toArray(String[]::new)).permitAll()
                                            .requestMatchers(CLIENTS_WHITE_LIST.toArray(String[]::new)).permitAll()
-                                           .requestMatchers(DOCTORSLOTS_PERMISSION_LIST.toArray(String[]::new)).hasAnyRole(ADMIN, DOCTOR)
-                                           .anyRequest().authenticated()
+//                                           .requestMatchers(DOCTORSLOTS_PERMISSION_LIST.toArray(String[]::new)).hasAnyRole(ADMIN, DOCTOR)
+//                                           .anyRequest().authenticated()
+                                           .anyRequest().permitAll()
                                     )
               //Настройка для входа в систему
               .formLogin((form) -> form
