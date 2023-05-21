@@ -34,7 +34,7 @@ public class WebSecurityConfig {
                                                               "/",
                                                               "/swagger-ui/**",
                                                               "/v3/api-docs/**");
-//            "/registrations/addRegistration",
+//            "/registrations/simppple");
 //            "/registrations/addRegistration");
 
     private final List<String> DOCTORS_WHITE_LIST = List.of

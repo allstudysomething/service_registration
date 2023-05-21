@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import serviceregistration.dto.DoctorDTO;
 import serviceregistration.dto.DoctorSlotDTO;
 import serviceregistration.dto.RegistrationDTO;
@@ -17,6 +18,7 @@ import serviceregistration.service.SpecializationService;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @Slf4j
@@ -79,6 +81,7 @@ public class RegistrationMVCController {
     @PostMapping("/addRegistrationSecond")
     public String chooseDoctorWork(@RequestParam("doctorDTO") Long doctorDTOId
             , Model model
+            , RedirectAttributes redirectAttributes
 //            , BindingResult bindingResult
     ) {
 //        log.info("in addRegistrationTwo");
@@ -87,8 +90,11 @@ public class RegistrationMVCController {
                 localDateCurrent, plusDateCurrent);
         dayList.forEach(s -> System.out.println(s.getDay()));
 
+        model.addAttribute("doctorDTOForm", new DoctorDTO());
+        model.addAttribute("doctorWorkDates", dayList);
         return "registrations/chooseDateOfDoctorWork";
     }
+
 
     @GetMapping("/listAll")
     public String listAll(Model model) {
