@@ -5,7 +5,6 @@ import org.springframework.transaction.annotation.Transactional;
 import serviceregistration.dto.DoctorDTO;
 import serviceregistration.dto.DoctorSlotDTO;
 import serviceregistration.mapper.GenericMapper;
-import serviceregistration.model.Cabinet;
 import serviceregistration.model.Day;
 import serviceregistration.model.DoctorSlot;
 import serviceregistration.repository.DoctorSlotRepository;
@@ -19,14 +18,15 @@ import java.util.List;
 public class DoctorSlotService extends GenericService<DoctorSlot, DoctorSlotDTO> {
 
     private final DoctorService doctorService;
-
     private final DoctorSlotRepository doctorSlotRepository;
+    private final DayService dayService;
 
     public DoctorSlotService(DoctorSlotRepository doctorSlotRepository,
-                             GenericMapper<DoctorSlot, DoctorSlotDTO> mapper, DoctorService doctorService) {
+                             GenericMapper<DoctorSlot, DoctorSlotDTO> mapper, DoctorService doctorService, DayService dayService) {
         super(doctorSlotRepository, mapper);
         this.doctorSlotRepository = doctorSlotRepository;
         this.doctorService = doctorService;
+        this.dayService = dayService;
     }
 
     public void addSchedule(Long doctorId, Long dayId, Long cabinetId) {
@@ -54,6 +54,20 @@ public class DoctorSlotService extends GenericService<DoctorSlot, DoctorSlotDTO>
         doctorDTOIds.stream().forEach(s -> doctorDTOS.add(doctorService.getOne(s)));
 //        doctorDTOS.stream().forEach(s -> doctorService.getOne(s))
         return doctorDTOS;
+    }
+
+    public List<Day> findDaysByDoctorDTOIdAndNotRegisteredAndDateBetween(Long doctorDTOId,
+            LocalDate currenTDate, LocalDate futureDate){
+        List<Long> dayIds = doctorSlotRepository.findDaysIdByDoctorDTOIdAndNotRegisteredAndDateBetween(doctorDTOId,
+                currenTDate, futureDate);
+//        System.out.println("in doctorslotservice");
+//        dayIds.forEach(System.out::println);
+        List<Day> dayList = new ArrayList<>();
+        dayIds.forEach(s -> dayList.add(dayService.getDayById(s)));
+//        dayIds.stream().forEach(s -> dayList.add(dayService.getDayById(s)));
+//        System.out.println("out doctorslotservice");
+
+        return  dayList;
     }
 
 

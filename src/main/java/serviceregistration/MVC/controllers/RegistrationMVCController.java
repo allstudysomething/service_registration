@@ -3,13 +3,12 @@ package serviceregistration.MVC.controllers;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 import serviceregistration.dto.DoctorDTO;
 import serviceregistration.dto.DoctorSlotDTO;
 import serviceregistration.dto.RegistrationDTO;
+import serviceregistration.model.Day;
 import serviceregistration.model.Specialization;
 import serviceregistration.service.DoctorService;
 import serviceregistration.service.DoctorSlotService;
@@ -24,6 +23,9 @@ import java.util.Objects;
 @Controller
 @RequestMapping("/registrations")
 public class RegistrationMVCController {
+
+    private static LocalDate localDateCurrent;
+    private static LocalDate plusDateCurrent;
 
     private final RegistrationService registrationService;
     private final SpecializationService specializationService;
@@ -46,37 +48,44 @@ public class RegistrationMVCController {
     }
 
     @PostMapping("/addRegistration")
-    public String chooseDoctor(@ModelAttribute("specializationsForm") Object object
-                                , Specialization specialization
-                                , Model model
+    public String chooseSpecialization(@ModelAttribute("specialization") Specialization specialization
+            , Model model
 //            , BindingResult bindingResult
     ) {
+//        System.out.println(specialization.getId() + " " + specialization.getTitleSpecialization());
+//        System.out.println("******************");
+
         if(!Objects.isNull(specialization.getTitleSpecialization()) && !Objects.isNull(specialization.getSpecializationDescription())) {
             List<DoctorDTO> doctorDTOList = doctorService.findAllDoctorsBySpecialization(specialization);
-    //        doctorDTOList.forEach(System.out::println);
+            doctorDTOList.forEach(System.out::println);
 
-            LocalDate localDateCurrent = LocalDate.of(2023, 6, 1);
+            // ONLY FOR CURRENT EXAMPLE (plus 100 days)
+            localDateCurrent = LocalDate.of(2023, 6, 1);
+            plusDateCurrent = localDateCurrent.plusDays(100);
             List<DoctorDTO> doctorDTOS = doctorSlotService.findDoctorDTOBySpecializationIdAndDayBetween(specialization.getId(),
-                    localDateCurrent, localDateCurrent.plusDays(10));
+                    localDateCurrent, plusDateCurrent);
 
 //            doctorDTOS.forEach(System.out::println);
-
             model.addAttribute("doctorDTOList", doctorDTOS);
             model.addAttribute("doctorDTOForm", new DoctorDTO());
             return "registrations/chooseDoctor";
         }
 
-        return "redirect:/registrations/addRegistration";
+        chooseSpecialization(model);
+//        return "redirect:registrations/addRegistration";
+        return "registrations/chooseSpecialization";
     }
 
-    @PostMapping("/addRegistrationTwo")
-    public String chooseDoctorWork(@ModelAttribute("doctorDTOForm") Object object
-//    public String chooseDoctorWork(@ModelAttribute("doctorDTOForm") DoctorDTO doctorDTO
-            , DoctorDTO doctorDTO
+    @PostMapping("/addRegistrationSecond")
+    public String chooseDoctorWork(@RequestParam("doctorDTO") Long doctorDTOId
+            , Model model
 //            , BindingResult bindingResult
     ) {
-        log.info("in addRegistrationTwo");
-        System.out.println(doctorDTO);
+//        log.info("in addRegistrationTwo");
+        System.out.println(doctorDTOId);
+        List<Day> dayList = doctorSlotService.findDaysByDoctorDTOIdAndNotRegisteredAndDateBetween(doctorDTOId,
+                localDateCurrent, plusDateCurrent);
+        dayList.forEach(s -> System.out.println(s.getDay()));
 
         return "registrations/chooseDateOfDoctorWork";
     }

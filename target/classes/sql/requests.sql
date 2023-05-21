@@ -73,7 +73,7 @@ values
 
 insert into doctors
 values (nextval('doctors_seq'), null, now(), null, null, false, 'Петр', 'Иванов', 'PeIvLogin', 'Иванович', 'p', 2, 1),
-       (nextval('doctors_seq'), null, now(), null, null, false, 'Семен', 'Семенов', 'SeSeLohin', 'Иванович', 'p', 2, 2),
+       (nextval('doctors_seq'), null, now(), null, null, false, 'Семен', 'Семенов', 'SeSeLogin', 'Иванович', 'p', 2, 2),
        (nextval('doctors_seq'), null, now(), null, null, false, 'Иван', 'Петров', 'IvPeLogin', 'Иванович', 'p', 2, 1);
 
 -- insert into clients

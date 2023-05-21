@@ -7,7 +7,7 @@ import serviceregistration.repository.DayRepository;
 import java.util.List;
 
 @Service
-public class DayService {
+public class DayService{
 
     private final DayRepository dayRepository;
 
@@ -18,4 +18,9 @@ public class DayService {
     public List<Day> listAll() {
         return dayRepository.findAll();
     }
+
+    public Day getDayById(Long Id){
+        return dayRepository.getDayById(Id);
+    }
+
 }
