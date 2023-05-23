@@ -1,13 +1,11 @@
 package serviceregistration.service;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import serviceregistration.dto.ClientDTO;
-import serviceregistration.dto.DoctorSlotDTO;
 import serviceregistration.dto.RoleDTO;
 import serviceregistration.mapper.ClientMapper;
-import serviceregistration.model.Cabinet;
 import serviceregistration.model.Client;
-import serviceregistration.model.Day;
 import serviceregistration.repository.ClientRepository;
 
 import java.time.LocalDate;
@@ -16,9 +14,14 @@ import java.time.Period;
 @Service
 public class ClientService extends GenericService<Client, ClientDTO> {
 
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final UserService userService;
+
     public ClientService(ClientRepository repository,
-                         ClientMapper mapper) {
+                         ClientMapper mapper, BCryptPasswordEncoder bCryptPasswordEncoder, UserService userService) {
         super(repository, mapper);
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.userService = userService;
     }
     public ClientDTO getClientByLogin(String login) {
         return mapper.toDTO(((ClientRepository) repository).findClientByLogin(login));
@@ -42,7 +45,14 @@ public class ClientService extends GenericService<Client, ClientDTO> {
         RoleDTO roleDTO = new RoleDTO();
         roleDTO.setId(1L);
         newObj.setRole(roleDTO);
+        newObj.setPassword(bCryptPasswordEncoder.encode(newObj.getPassword()));
+        userService.createUser(newObj.getLogin(), newObj.getRole().getId());
         return mapper.toDTO(repository.save(mapper.toEntity(newObj)));
+    }
+
+    public void delete(final Long id) {
+        userService.deleteByLogin(getOne(id).getLogin());
+        repository.deleteById(id);
     }
 
 }

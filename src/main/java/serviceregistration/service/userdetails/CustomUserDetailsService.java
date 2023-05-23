@@ -43,6 +43,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         }
         else {
             Client client = clientRepository.findClientByLogin(username);
+            System.out.println(client.getLogin() + " ***** " + client.getEmail());
             List<GrantedAuthority> authorities = new ArrayList<>();
             //ROLE_CLIENT, ROLE_DOCTOR
             authorities.add(new SimpleGrantedAuthority(client.getRole().getId() == 1L ? "ROLE_" + UserRolesConstants.CLIENT :

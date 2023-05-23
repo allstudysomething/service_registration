@@ -34,8 +34,6 @@ public class WebSecurityConfig {
                                                               "/",
                                                               "/swagger-ui/**",
                                                               "/v3/api-docs/**");
-//            "/registrations/simppple");
-//            "/registrations/addRegistration");
 
     private final List<String> DOCTORS_WHITE_LIST = List.of
             (
@@ -73,14 +71,6 @@ public class WebSecurityConfig {
                     "/clients/list"
             );
 
-
-//    private final List<String> DOCTORSLOTS_WHITE_LIST = List.of("/doctorslots",
-//                                                                "/doctors");
-
-//    private final List<String> DOCTORSLOTS_PERMISSION_LIST = List.of("/doctorslots/addSchedule"
-////            , "/doctorslots/update"
-////            , "/doctorslots/delete"
-//                                                                );
     private final List<String> REGISTRATIONS_PERMISSION_LIST_FOR_CLIENT = List.of
             (
                     "/registrations",
@@ -92,25 +82,24 @@ public class WebSecurityConfig {
                     "registrations/listAll"
             );
 
-
     public WebSecurityConfig(BCryptPasswordEncoder bCryptPasswordEncoder
                         ,CustomUserDetailsService customUserDetailsService) {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.customUserDetailsService = customUserDetailsService;
     }
     
-    //TODO: про файрволл https://docs.spring.io/spring-security/reference/servlet/exploits/firewall.html
-    @Bean
-    public HttpFirewall httpFirewall() {
-        StrictHttpFirewall firewall = new StrictHttpFirewall();
-        firewall.setAllowedHttpMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
-        firewall.setAllowBackSlash(true);
-        firewall.setAllowUrlEncodedPercent(true);
-        firewall.setAllowUrlEncodedSlash(true);
-        firewall.setAllowSemicolon(true)
-        ;
-        return firewall;
-    }
+//    //TODO: про файрволл https://docs.spring.io/spring-security/reference/servlet/exploits/firewall.html
+//    @Bean
+//    public HttpFirewall httpFirewall() {
+//        StrictHttpFirewall firewall = new StrictHttpFirewall();
+//        firewall.setAllowedHttpMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+//        firewall.setAllowBackSlash(true);
+//        firewall.setAllowUrlEncodedPercent(true);
+//        firewall.setAllowUrlEncodedSlash(true);
+//        firewall.setAllowSemicolon(true)
+//        ;
+//        return firewall;
+//    }
     
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {

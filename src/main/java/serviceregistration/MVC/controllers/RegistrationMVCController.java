@@ -41,6 +41,11 @@ public class RegistrationMVCController {
         this.doctorService = doctorService;
     }
 
+    @GetMapping("")
+    public String faceWindow() {
+        return "registrations/faceWindowClientRegistrations";
+    }
+
     @GetMapping("/addRegistration")
     public String chooseSpecialization(Model model) {
         List<Specialization> specializations = specializationService.listAll();
@@ -97,9 +102,9 @@ public class RegistrationMVCController {
 
 
     @GetMapping("/listAll")
-    public String listAll(Model model) {
-        List<RegistrationDTO> registrations = registrationService.listAll();
-        model.addAttribute("registrations", registrations);
+    public String listAllRegs(Model model) {
+//        List<RegistrationDTO> registrations = registrationService.listAll();
+//        model.addAttribute("registrations", registrations);
         return "registrations/listAll";
     }
 

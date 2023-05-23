@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import serviceregistration.dto.ClientDTO;
 import serviceregistration.service.ClientService;
+import serviceregistration.service.UserService;
 
 import java.util.List;
 
@@ -21,9 +22,11 @@ import static serviceregistration.constants.UserRolesConstants.ADMIN;
 public class ClientMVCController {
 
     private final ClientService clientService;
+    private final UserService userService;
 
-    public ClientMVCController(ClientService clientService) {
+    public ClientMVCController(ClientService clientService, UserService userService) {
         this.clientService = clientService;
+        this.userService = userService;
     }
 
     @GetMapping("/registration")
@@ -33,24 +36,19 @@ public class ClientMVCController {
     }
 
     @PostMapping("/registration")
-    public String registration(@ModelAttribute("clientForm") ClientDTO clientDTO, BindingResult bindingResult) {
-        if (clientDTO.getLogin().equalsIgnoreCase(ADMIN) || clientService.getClientByLogin(clientDTO.getLogin()) != null) {
-            bindingResult.rejectValue("login", "error.login", "Такой логин уже существует");
+    public String registration(@ModelAttribute("clientForm") ClientDTO clientDTO,
+                               BindingResult bindingResult) {
+        String login = clientDTO.getLogin().toLowerCase();
+        clientDTO.setLogin(login);
+        if (login.equalsIgnoreCase(ADMIN) ||
+                (userService.findUserByLogin(login) != null && userService.findUserByLogin(login).getLogin().equals(login))) {
+            bindingResult.rejectValue("login", "login.error", "Этот логин уже существует");
             return "registration";
         }
         if (clientService.getClientByEmail(clientDTO.getEmail()) != null) {
-            bindingResult.rejectValue("email", "error.email", "Такой e-mail уже существует");
+            bindingResult.rejectValue("email", "email.error", "Этот email уже существует");
             return "registration";
         }
-        if (clientService.getClientByPhone(clientDTO.getPhone()) != null) {
-            bindingResult.rejectValue("phone", "error.phone", "Такой telephone уже существует");
-            return "registration";
-        }
-        if (clientService.getClientByPolicy(clientDTO.getPolicy()) != null) {
-            bindingResult.rejectValue("policy", "error.policy", "Такой polis уже существует");
-            return "registration";
-        }
-
         clientService.create(clientDTO);
         return "redirect:login";
     }
@@ -64,3 +62,28 @@ public class ClientMVCController {
 
 
 }
+
+//    @PostMapping("/registration")
+//    public String registration(@ModelAttribute("clientForm") ClientDTO clientDTO, BindingResult bindingResult) {
+//        String login = clientDTO.getLogin().toLowerCase();
+//        clientDTO.setLogin(login);
+//        if (clientDTO.getLogin().equalsIgnoreCase(ADMIN) || clientService.getClientByLogin(clientDTO.getLogin()) != null) {
+//            bindingResult.rejectValue("login", "error.login", "Такой логин уже существует");
+//            return "registration";
+//        }
+//        if (clientService.getClientByEmail(clientDTO.getEmail()) != null) {
+//            bindingResult.rejectValue("email", "error.email", "Такой e-mail уже существует");
+//            return "registration";
+//        }
+//        if (clientService.getClientByPhone(clientDTO.getPhone()) != null) {
+//            bindingResult.rejectValue("phone", "error.phone", "Такой telephone уже существует");
+//            return "registration";
+//        }
+//        if (clientService.getClientByPolicy(clientDTO.getPolicy()) != null) {
+//            bindingResult.rejectValue("policy", "error.policy", "Такой polis уже существует");
+//            return "registration";
+//        }
+//
+//        clientService.create(clientDTO);
+//        return "redirect:login";
+//    }
