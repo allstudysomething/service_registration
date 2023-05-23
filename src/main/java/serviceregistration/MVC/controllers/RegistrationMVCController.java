@@ -3,28 +3,28 @@ package serviceregistration.MVC.controllers;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import serviceregistration.dto.DoctorDTO;
-import serviceregistration.dto.DoctorSlotDTO;
 import serviceregistration.dto.RegistrationDTO;
 import serviceregistration.model.Day;
+import serviceregistration.model.Slot;
 import serviceregistration.model.Specialization;
-import serviceregistration.service.DoctorService;
-import serviceregistration.service.DoctorSlotService;
-import serviceregistration.service.RegistrationService;
-import serviceregistration.service.SpecializationService;
+import serviceregistration.service.*;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
+
 
 @Slf4j
 @Controller
 @RequestMapping("/registrations")
 public class RegistrationMVCController {
+
+    private static Specialization specializationForFuture;
+    private static Long doctorDTOIdForFuture;
+    private static Long dayIdForFuture;
 
     private static LocalDate localDateCurrent;
     private static LocalDate plusDateCurrent;
@@ -33,12 +33,14 @@ public class RegistrationMVCController {
     private final SpecializationService specializationService;
     private final DoctorSlotService doctorSlotService;
     private final DoctorService doctorService;
+    private SlotService slotService;
 
-    public RegistrationMVCController(RegistrationService registrationService, SpecializationService specializationService, DoctorSlotService doctorSlotService, DoctorService doctorService) {
+    public RegistrationMVCController(RegistrationService registrationService, SpecializationService specializationService, DoctorSlotService doctorSlotService, DoctorService doctorService, SlotService slotService) {
         this.registrationService = registrationService;
         this.specializationService = specializationService;
         this.doctorSlotService = doctorSlotService;
         this.doctorService = doctorService;
+        this.slotService = slotService;
     }
 
     @GetMapping("")
@@ -63,6 +65,10 @@ public class RegistrationMVCController {
 //        System.out.println("******************");
 
         if(!Objects.isNull(specialization.getTitleSpecialization()) && !Objects.isNull(specialization.getSpecializationDescription())) {
+
+            // static specialization appropriation
+            specializationForFuture = specialization;
+
             List<DoctorDTO> doctorDTOList = doctorService.findAllDoctorsBySpecialization(specialization);
             doctorDTOList.forEach(System.out::println);
 
@@ -84,13 +90,17 @@ public class RegistrationMVCController {
     }
 
     @PostMapping("/addRegistrationSecond")
-    public String chooseDoctorWork(@RequestParam("doctorDTO") Long doctorDTOId
+    public String chooseDoctorWorkDay(@RequestParam("doctorDTO") Long doctorDTOId
             , Model model
             , RedirectAttributes redirectAttributes
 //            , BindingResult bindingResult
     ) {
 //        log.info("in addRegistrationTwo");
         System.out.println(doctorDTOId);
+
+        // static doctorDTOId appropriation
+        doctorDTOIdForFuture = doctorDTOId;
+
         List<Day> dayList = doctorSlotService.findDaysByDoctorDTOIdAndNotRegisteredAndDateBetween(doctorDTOId,
                 localDateCurrent, plusDateCurrent);
         dayList.forEach(s -> System.out.println(s.getDay()));
@@ -100,12 +110,38 @@ public class RegistrationMVCController {
         return "registrations/chooseDateOfDoctorWork";
     }
 
+    @PostMapping("/addRegistrationThree")
+    public String reserveDoctorSlotByClient(@RequestParam("day") Long dayId,
+                                            Model model) {
+        System.out.println("in addRegistrationThree");
+        System.out.println(dayId);
+
+        // static dayId appropriation
+        dayIdForFuture = dayId;
+
+//        CustomUserDetails customUserDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//        Long userId = Long.valueOf(customUserDetails.getUserId());
+//        System.out.println("userId :" + userId);
+
+        List<Slot> freeTimeSlots = slotService.getFreeSlotsByDoctorDTOIdAndDayId(doctorDTOIdForFuture, dayIdForFuture);
+//        freeTimeSlots.forEach(s -> System.out.println(s.getTimeSlot()));
+        model.addAttribute("freeTimeSlots", freeTimeSlots);
+        return "registrations/chooseTimeOfDayRegistration";
+
+    }
 
     @GetMapping("/listAll")
-    public String listAllRegs(Model model) {
+    public String listAll(Model model) {
+        List<RegistrationDTO> registrations = registrationService.listAll();
+        model.addAttribute("registrations", registrations);
+        return "registrations/listAll";
+    }
+
+    @GetMapping("/myList")
+    public String myList(Model model) {
 //        List<RegistrationDTO> registrations = registrationService.listAll();
 //        model.addAttribute("registrations", registrations);
-        return "registrations/listAll";
+        return "registrations/myList";
     }
 
 }

@@ -70,5 +70,9 @@ public class DoctorSlotService extends GenericService<DoctorSlot, DoctorSlotDTO>
         return  dayList;
     }
 
+//    public DoctorSlotDTO update(DoctorSlotDTO doctorSlotDTO) {
+//
+//    }
+
 
 }

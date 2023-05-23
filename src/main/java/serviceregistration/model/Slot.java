@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.sql.Time;
+import java.time.LocalTime;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -24,7 +24,7 @@ public class Slot {
     private Long id;
 
     @Column(name = "time_slot", nullable = false)
-    private Time timeSlot;
+    private LocalTime timeSlot;
 
     @OneToMany(mappedBy = "slot")
     private List<DoctorSlot> doctorSlots;
