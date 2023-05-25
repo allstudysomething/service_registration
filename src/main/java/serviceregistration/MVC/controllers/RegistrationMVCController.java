@@ -174,6 +174,19 @@ public class RegistrationMVCController {
         return "registrations/myList";
     }
 
+    @RequestMapping(value = "/deleteRecord/{id}")
+    public String deleteRecordById(@PathVariable(value = "id") Long registrationId) {
+//        System.out.println(registrationId);
+        Long doctorSlotId = registrationService.getOne(registrationId).getDoctorSlot().getId();
+//        System.out.println(doctorSlotId);
+        DoctorSlotDTO updatedDoctorSlot = doctorSlotService.getOne(doctorSlotId);
+        updatedDoctorSlot.setIsRegistered(false);
+        doctorSlotService.update(updatedDoctorSlot);
+        registrationService.delete(registrationId);
+
+        return "redirect:/registrations/myRegistrations";
+    }
+
 }
 
 
