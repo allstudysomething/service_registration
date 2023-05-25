@@ -88,18 +88,18 @@ public class WebSecurityConfig {
         this.customUserDetailsService = customUserDetailsService;
     }
     
-//    //TODO: про файрволл https://docs.spring.io/spring-security/reference/servlet/exploits/firewall.html
-//    @Bean
-//    public HttpFirewall httpFirewall() {
-//        StrictHttpFirewall firewall = new StrictHttpFirewall();
-//        firewall.setAllowedHttpMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
-//        firewall.setAllowBackSlash(true);
-//        firewall.setAllowUrlEncodedPercent(true);
-//        firewall.setAllowUrlEncodedSlash(true);
-//        firewall.setAllowSemicolon(true)
-//        ;
-//        return firewall;
-//    }
+    //TODO: про файрволл https://docs.spring.io/spring-security/reference/servlet/exploits/firewall.html
+    @Bean
+    public HttpFirewall httpFirewall() {
+        StrictHttpFirewall firewall = new StrictHttpFirewall();
+        firewall.setAllowedHttpMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+        firewall.setAllowBackSlash(true);
+        firewall.setAllowUrlEncodedPercent(true);
+        firewall.setAllowUrlEncodedSlash(true);
+        firewall.setAllowSemicolon(true)
+        ;
+        return firewall;
+    }
     
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {

@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import serviceregistration.model.Slot;
 import serviceregistration.repository.SlotRepository;
 
+import java.sql.SQLOutput;
 import java.sql.Time;
 import java.util.List;
 
@@ -20,10 +21,10 @@ public class SlotService {
         return slotRepository.findAll();
     }
 
-
     public List<Slot> getFreeSlotsByDoctorDTOIdAndDayId(Long doctorDTOIdForFuture, Long dayIdForFuture) {
         List<Long> slotIDs = slotRepository.findFreeSlotsByDoctorDTOIdAndDayId(doctorDTOIdForFuture, dayIdForFuture);
-        List<Slot> slotList = slotRepository.findAllById(slotIDs);
-        return slotList;
+//        System.out.println(" *** print slotIDs ***");
+//        slotIDs.forEach(s -> System.out.println(s.intValue()));
+        return slotRepository.findAllById(slotIDs);
     }
 }

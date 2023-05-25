@@ -41,7 +41,8 @@
             <select class="form-select" name="day" id="day" required>
 <!--                <option selected value="default">Выберете врача из списка</option>-->
                 <option th:each="day : ${doctorWorkDates}"
-                        th:value="${day.getId()}" th:text="${day.getDay()}"  ></option>
+                        th:value="${day.getId()}" th:text="${#temporals.format(day.getDay(), 'dd-MM-yyyy')}" ></option>
+<!--                        th:value="${day.getId()}" th:text="${day.getDay()}"  ></option>-->
             </select>
 
             <div class="invalid-feedback">Обязательное поле для заполнения</div>

@@ -9,5 +9,6 @@ public interface ClientRepository
     Client findClientByEmail(String email);
     Client findClientByPhone(String phone);
     Client findClientByPolicy(String policy);
+    Client findClientById(Long id);
 
 }

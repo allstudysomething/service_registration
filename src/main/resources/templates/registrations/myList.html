@@ -1,54 +1,63 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-    My Registrations
-</body>
-</html>
-
-
 <!--<!DOCTYPE html>-->
-<!--<html lang="en"-->
-<!--      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"-->
-<!--      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"-->
-<!--      layout:decorate="~{layout}">-->
+<!--<html lang="en">-->
 <!--<head>-->
 <!--    <meta charset="UTF-8">-->
-<!--    <title>Записи</title>-->
+<!--    <title>Title</title>-->
 <!--</head>-->
 <!--<body>-->
-<!--<div layout:fragment="content">-->
-<!--    <h1>Архив записей клиентов</h1>-->
-<!--    <div class="row">-->
-<!--        <div class="col">-->
-<!--        </div>-->
-<!--        <table class="table table-hover">-->
-<!--            <thead>-->
-<!--            <tr>-->
-<!--                <th scope="col">ФИО клиента</th>-->
-<!--                <th scope="col">ФИО врача</th>-->
-<!--                <th scope="col">Время записи</th>-->
-<!--                <th scope="col">Кабинет</th>-->
-<!--                <th scope="col">Статус</th>-->
-<!--            </tr>-->
-<!--            </thead>-->
-<!--            <tbody>-->
-<!--            <tr th:each="r : ${registrations}">-->
-<!--                <td th:text="${r.getClient().getLastName() + ' ' + r.getClient().getFirstName() + ' ' + r.getClient().getMidName()}"></td>-->
-<!--                <td th:text="${r.getDoctorSlot().getDoctor().getLastName() + ' ' +-->
-<!--                               r.getDoctorSlot().getDoctor().getFirstName() + ' ' +-->
-<!--                               r.getDoctorSlot().getDoctor().getMidName()}"></td>-->
-<!--                <td th:text="${r.getDoctorSlot().getDay().getDay() + ' ' + r.getDoctorSlot().getSlot().getTimeSlot()}"></td>-->
-<!--                <td th:text="${r.getDoctorSlot().getCabinet().getCabinetNumber()}"></td>-->
-<!--                <td th:classappend="${r.getIsActive() == false} ? 'not-active-reg' : 'active-reg'"-->
-<!--                    th:text="${r.getIsActive()} == false ? 'Не активна' : 'Активна'"></td>-->
-<!--            </tr>-->
-<!--            </tbody>-->
-<!--        </table>-->
-<!--    </div>-->
-<!--</div>-->
+<!--    My Registrations-->
 <!--</body>-->
 <!--</html>-->
+
+
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Мои Записи</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <h1>Мои текущие записи</h1>
+    <div class="row">
+        <div class="col">
+        </div>
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th scope="col">Дата создания</th>
+<!--                <th scope="col">Статус</th>-->
+                <th scope="col">Дата и время записи</th>
+                <th scope="col">Кабинет</th>
+                <th scope="col">Статус</th>
+                <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="registration : ${currentRegistrations}">
+                <td th:text="${registration.getCreatedWhen().getYear() + '-' + registration.getCreatedWhen().getMonthValue() +
+                    '-' + registration.getCreatedWhen().getDayOfMonth()}"></td>
+<!--                <td th:text="${registration.isActive.booleanValue()}"></td>-->
+                <td th:text="${registration.getDoctorSlot().getDay().getDay() + ' ' + registration.getDoctorSlot().getSlot().getTimeSlot()}"></td>
+                <td th:text="${registration.getDoctorSlot().getCabinet().getCabinetNumber()}"></td>
+                <td th:classappend="${registration.getIsActive() == false} ? 'not-active-reg' : 'active-reg'"
+                    th:text="${registration.getIsActive()} == false ? 'Не активна' : 'Активна'"></td>
+                <td>
+                    <div sec:authorize="isAuthenticated() && (hasRole('ADMIN') || hasRole('CLIENT'))">
+                        <!--                    <a class="btn btn-sm btn-outline-success" th:href="'/regbooks/update/' + ${book.id}">Обновить</a>-->
+                        <a class="btn btn-sm btn-outline-danger" th:href="'/books/delete/' + ${registration.getId()}">Удалить</a>
+                    </div>
+<!--                    <a th:if="${book.getAmount() > 0}" sec:authorize="!hasRole('ADMIN')" class="btn btn-sm btn-outline-success"-->
+<!--                       th:href="'/rent/book/' + ${book.id}">Арендовать книгу</a>-->
+                </td>
+            </tr>
+
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

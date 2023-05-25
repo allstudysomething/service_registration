@@ -48,10 +48,10 @@ public class DoctorSlotService extends GenericService<DoctorSlot, DoctorSlotDTO>
     // Потом заменить LocalDate date на LocalDate.Now()
     public List<DoctorDTO> findDoctorDTOBySpecializationIdAndDayBetween(Long specializationId, LocalDate currenTDate
             , LocalDate futureDate) {
-        List<Long> doctorDTOIds = doctorSlotRepository.findDoctorIDsBySpecializationAndDayBetween(specializationId,
+        List<Long> doctorIds = doctorSlotRepository.findDoctorIDsBySpecializationAndDayBetween(specializationId,
                 currenTDate, futureDate);
         List<DoctorDTO> doctorDTOS = new ArrayList<>();
-        doctorDTOIds.stream().forEach(s -> doctorDTOS.add(doctorService.getOne(s)));
+        doctorIds.forEach(s -> doctorDTOS.add(doctorService.getOne(s)));
 //        doctorDTOS.stream().forEach(s -> doctorService.getOne(s))
         return doctorDTOS;
     }
@@ -70,9 +70,11 @@ public class DoctorSlotService extends GenericService<DoctorSlot, DoctorSlotDTO>
         return  dayList;
     }
 
-//    public DoctorSlotDTO update(DoctorSlotDTO doctorSlotDTO) {
-//
-//    }
-
+    public Long getDoctorSlotByDoctorAndDayAndSlot(Long doctorDTOIdForFuture, Long dayIdForFuture, Long slotIdForFuture) {
+        return doctorSlotRepository.findByDoctorIdAndDayIdAndSlotId(doctorDTOIdForFuture, dayIdForFuture, slotIdForFuture);
+//        System.out.println(doctorSlot.getDoctor() + " : " + doctorSlot.getCabinet() + " " + doctorSlot.getSlot());
+//        System.out.println(doctorSlotId);
+//        return getOne(doctorSlotId);
+    }
 
 }

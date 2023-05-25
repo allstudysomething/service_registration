@@ -27,7 +27,7 @@
 <!--    }-->
 <!--</style>-->
 <main class="content-wrapper">
-    <div th:replace="~{header :: header}"></div>
+    <div th:replace="~{fragments/header :: header}"></div>
     <div class="container">
         <div layout:fragment="content">
             <h1>Статический контент будет здесь отображен</h1>
@@ -35,4 +35,5 @@
     </div>
 </main>
 </body>
+<footer th:insert="~{fragments/footer :: footer}" class="footer"></footer>
 </html>

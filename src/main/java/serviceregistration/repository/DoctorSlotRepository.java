@@ -34,7 +34,6 @@ public interface DoctorSlotRepository
 
     DoctorSlot findFirstByDoctorIdAndDayId(Long doctorId, Long dayId);
 
-//    List<DoctorSlot> findByDoctorAndDayBetween(Day currentDay, Day plus30day);
     @Query(nativeQuery = true, value = """
         SELECT DISTINCT doctor_id FROM doctors_slots JOIN doctors d on doctors_slots.doctor_id = d.id
                  JOIN specializations s on d.specialization_id = s.id
@@ -51,5 +50,12 @@ public interface DoctorSlotRepository
               AND is_registered = 'false'
               AND d2.day BETWEEN :currentDay AND :plusDays """)
     List<Long> findDaysIdByDoctorDTOIdAndNotRegisteredAndDateBetween(Long doctorDTOId, LocalDate currentDay, LocalDate plusDays);
+
+    @Query(nativeQuery = true, value = """
+        select doctors_slots.id from doctors_slots 
+        where doctor_id = :doctorDTOId
+            and day_id = :dayId
+            and slot_id = :slotId """)
+    Long findByDoctorIdAndDayIdAndSlotId(Long doctorDTOId, Long dayId, Long slotId);
 
 }
