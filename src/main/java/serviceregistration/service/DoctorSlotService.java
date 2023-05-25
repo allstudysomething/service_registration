@@ -1,9 +1,13 @@
 package serviceregistration.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import serviceregistration.dto.DoctorDTO;
 import serviceregistration.dto.DoctorSlotDTO;
+import serviceregistration.mapper.DoctorSlotMapper;
 import serviceregistration.mapper.GenericMapper;
 import serviceregistration.model.Day;
 import serviceregistration.model.DoctorSlot;
@@ -20,13 +24,15 @@ public class DoctorSlotService extends GenericService<DoctorSlot, DoctorSlotDTO>
     private final DoctorService doctorService;
     private final DoctorSlotRepository doctorSlotRepository;
     private final DayService dayService;
+    private final DoctorSlotMapper doctorSlotMapper;
 
     public DoctorSlotService(DoctorSlotRepository doctorSlotRepository,
-                             GenericMapper<DoctorSlot, DoctorSlotDTO> mapper, DoctorService doctorService, DayService dayService) {
+                             GenericMapper<DoctorSlot, DoctorSlotDTO> mapper, DoctorService doctorService, DayService dayService, DoctorSlotMapper doctorSlotMapper) {
         super(doctorSlotRepository, mapper);
         this.doctorSlotRepository = doctorSlotRepository;
         this.doctorService = doctorService;
         this.dayService = dayService;
+        this.doctorSlotMapper = doctorSlotMapper;
     }
 
     public void addSchedule(Long doctorId, Long dayId, Long cabinetId) {
@@ -76,5 +82,17 @@ public class DoctorSlotService extends GenericService<DoctorSlot, DoctorSlotDTO>
 //        System.out.println(doctorSlotId);
 //        return getOne(doctorSlotId);
     }
+
+    public Page<DoctorSlotDTO> listAllPaging(Pageable pageable) {
+        Page<DoctorSlot> doctorSlotPage = doctorSlotRepository.findAll(pageable);
+        List<DoctorSlotDTO> result = doctorSlotMapper.toDTOs(doctorSlotPage.getContent());
+        return new PageImpl<>(result, pageable, doctorSlotPage.getTotalElements());
+    }
+
+//    public Page<DoctorSlotDTO> getAllDoctorSlot(Pageable pageable) {
+//        Page<DoctorSlot> doctorSlotsPaginated = doctorSlotRepository.findAllNotLessThanToday(pageable);
+//        List<DoctorSlotDTO> result = mapper.toDTOs(doctorSlotsPaginated.getContent());
+//        return new PageImpl<>(result, pageable, doctorSlotsPaginated.getTotalElements());
+//    }
 
 }

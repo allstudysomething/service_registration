@@ -1,5 +1,7 @@
 package serviceregistration.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import serviceregistration.dto.DoctorDTO;
@@ -57,5 +59,25 @@ public interface DoctorSlotRepository
             and day_id = :dayId
             and slot_id = :slotId """)
     Long findByDoctorIdAndDayIdAndSlotId(Long doctorDTOId, Long dayId, Long slotId);
+
+//    @Query(nativeQuery = true,
+//            value = """
+//                    select ds.*
+//                    from doctors_slots ds
+//                        join days d on ds.day_id = d.id
+//                    where day >= TIMESTAMP 'today'
+//                    order by day_id
+//                    """)
+//    Page<DoctorSlot> findAllNotLessThanToday(Pageable pageable);
+
+//    @Query(nativeQuery = true,
+//            value = """
+//                    select dc.id as DoctorId, d.id as DayId
+//                    from doctors_slots ds
+//                        join days d on ds.day_id = d.id
+//                        join doctors dc on ds.doctor_id = dc.id
+//                    where day > TIMESTAMP 'today' and ds.is_registered = false
+//                    group by dc.id, d.id""")
+//    List<DoctorDay> groupByDoctorSlot();
 
 }
