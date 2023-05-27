@@ -27,10 +27,10 @@
                         <a class="nav-link active" aria-current="page" href="/registrations/addRegistration">Записаться</a>
                     </li>
                     <li sec:authorize="isAuthenticated() && hasRole('CLIENT')" class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/registrations/myRegistrations">Мои записи</a>
+                        <a class="nav-link active" aria-current="page" href="/registrations/myRegistrations">Мои текущие записи</a>
 
                     <li sec:authorize="isAuthenticated() && hasRole('CLIENT')" class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/registrations/myRegistrations">Мои записи</a>
+                        <a class="nav-link active" aria-current="page" href="/registrations/myRegistrationsAllTime">Мои записи (Все время)</a>
                     </li>
 
                     <li sec:authorize="isAuthenticated() && hasRole('ADMIN')" class="nav-item">

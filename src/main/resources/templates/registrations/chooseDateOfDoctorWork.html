@@ -35,7 +35,7 @@
     <!--        action="/registration" - url на который будут отправлены данные-->
     <!--        object="userForm" - имя объекта в котором будут хранится данные (нужно чтобы потом в контроллере их распарсить)-->
     <h3 class="mt-3 mb-3">Выберите свободную дату записи</h3>
-    <form method="POST" class="needs-validation" novalidate style="max-width: 50vw" th:action="@{/registrations/addRegistrationThree}" th:object="${doctorDTOForm}">
+    <form method="POST" class="needs-validation" novalidate style="max-width: 50vw" th:action="@{/registrations/addRegistrationThird}" th:object="${doctorDTOForm}">
         <div class="mt-3 row g-2">
             <label for="day" class="form-label"></label>
             <select class="form-select" name="day" id="day" required>

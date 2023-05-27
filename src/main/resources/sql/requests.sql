@@ -101,6 +101,32 @@ where
     and
     cabinets.id = 1;
 
+insert into doctors_slots
+values (nextval('doctor_slot_seq'), null, now(), null, null, null, false, 1, 15, 1, 1),
+       (nextval('doctor_slot_seq'), null, now(), null, null, null, false, 1, 15, 1, 2),
+       (nextval('doctor_slot_seq'), null, now(), null, null, null, false, 1, 15, 1, 3),
+       (nextval('doctor_slot_seq'), null, now(), null, null, null, false, 1, 15, 1, 4),
+       (nextval('doctor_slot_seq'), null, now(), null, null, null, false, 1, 20, 1, 1),
+       (nextval('doctor_slot_seq'), null, now(), null, null, null, false, 1, 20, 1, 2),
+       (nextval('doctor_slot_seq'), null, now(), null, null, null, false, 1, 20, 1, 3),
+       (nextval('doctor_slot_seq'), null, now(), null, null, null, false, 1, 20, 1, 4),
+       (nextval('doctor_slot_seq'), null, now(), null, null, null, false, 1, 25, 1, 1),
+       (nextval('doctor_slot_seq'), null, now(), null, null, null, false, 1, 25, 1, 2),
+       (nextval('doctor_slot_seq'), null, now(), null, null, null, false, 1, 25, 1, 3),
+       (nextval('doctor_slot_seq'), null, now(), null, null, null, false, 1, 25, 1, 4),
+       (nextval('doctor_slot_seq'), null, now(), null, null, null, false, 1, 16, 2, 1),
+       (nextval('doctor_slot_seq'), null, now(), null, null, null, false, 1, 16, 2, 2),
+       (nextval('doctor_slot_seq'), null, now(), null, null, null, false, 1, 16, 2, 3),
+       (nextval('doctor_slot_seq'), null, now(), null, null, null, false, 1, 16, 2, 4),
+       (nextval('doctor_slot_seq'), null, now(), null, null, null, false, 1, 21, 2, 1),
+       (nextval('doctor_slot_seq'), null, now(), null, null, null, false, 1, 21, 2, 2),
+       (nextval('doctor_slot_seq'), null, now(), null, null, null, false, 1, 21, 2, 3),
+       (nextval('doctor_slot_seq'), null, now(), null, null, null, false, 1, 21, 2, 4),
+       (nextval('doctor_slot_seq'), null, now(), null, null, null, false, 1, 26, 2, 1),
+       (nextval('doctor_slot_seq'), null, now(), null, null, null, false, 1, 26, 2, 2),
+       (nextval('doctor_slot_seq'), null, now(), null, null, null, false, 1, 26, 2, 3),
+       (nextval('doctor_slot_seq'), null, now(), null, null, null, false, 1, 26, 2, 4);
+
 insert into registrations
 values (nextval('registrations_seq'), null, now(), null, null, false, null, false, 1, 2, 1),
        (nextval('registrations_seq'), null, now(), null, null, false, null, false, 1, 2, 3),

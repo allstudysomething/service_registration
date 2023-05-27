@@ -88,11 +88,30 @@ public class RegistrationService extends GenericService<Registration, Registrati
         return registrationList;
     }
 
-    public Page<RegistrationDTO> listAllCurrentPaged(Pageable pageable) {
+    public Page<RegistrationDTO> listAllCurrentPagedNotSorted(Pageable pageable) {
+//        Client currentClient = clientRepository.findClientById(getCurrentUserId());
+//        Page<Registration> registrationPageSorted = registrationRepository.findAllByClient(currentClient, pageable);
+        Page<Registration> registrationPageSorted = registrationRepository.findAll(pageable);
+//        Page<Registration> registrationPageSorted = registrationRepository.findAllAndOrderByIsActiveBefore(true, pageable);
+        List<RegistrationDTO> result = mapper.toDTOs(registrationPageSorted.getContent());
+        result.forEach(s -> System.out.println(s.getIsActive()));
+        return new PageImpl<>(result, pageable, registrationPageSorted.getTotalElements());
+    }
+
+    public Page<RegistrationDTO> listAllCurrentPagedByClient(Pageable pageable) {
         Client currentClient = clientRepository.findClientById(getCurrentUserId());
         Page<Registration> registrationPage = registrationRepository.findAllByClientAndIsActive(currentClient,
                 true, pageable);
         List<RegistrationDTO> result = mapper.toDTOs(registrationPage.getContent());
         return new PageImpl<>(result, pageable, registrationPage.getTotalElements());
     }
+
+    public Page<RegistrationDTO> listAllPagedByClient(Pageable pageable) {
+        Client currentClient = clientRepository.findClientById(getCurrentUserId());
+        Page<Registration> registrationPage = registrationRepository.findAllByClient(currentClient,
+                pageable);
+        List<RegistrationDTO> result = mapper.toDTOs(registrationPage.getContent());
+        return new PageImpl<>(result, pageable, registrationPage.getTotalElements());
+    }
+
 }

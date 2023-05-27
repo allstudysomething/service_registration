@@ -1,0 +1,88 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>Title</title>-->
+<!--</head>-->
+<!--<body>-->
+<!--    My Registrations-->
+<!--</body>-->
+<!--</html>-->
+
+
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Мои Записи</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <h1>Мои текущие записи</h1>
+        <div class="row">
+            <div class="col">
+            </div>
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th scope="col">Дата создания</th>
+    <!--                <th scope="col">Статус</th>-->
+                    <th scope="col">Дата и время записи</th>
+                    <th scope="col">Кабинет</th>
+                    <th scope="col">Статус</th>
+                    <th scope="col"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="registration : ${registrationsPagingAll}">
+                    <td th:text="${#temporals.format(registration.getCreatedWhen(), 'dd-MM-yyyy')}"></td>
+<!--                    <td th:text="${registration.getCreatedWhen().getYear() + '-' + registration.getCreatedWhen().getMonthValue() +-->
+<!--                        '-' + registration.getCreatedWhen().getDayOfMonth()}"></td>-->
+    <!--                <td th:text="${registration.isActive.booleanValue()}"></td>-->
+                    <td th:text="${registration.getDoctorSlot().getDay().getDay() + ' ' + registration.getDoctorSlot().getSlot().getTimeSlot()}"></td>
+                    <td th:text="${registration.getDoctorSlot().getCabinet().getCabinetNumber()}"></td>
+                    <td th:classappend="${registration.getIsActive() == false} ? 'not-active-reg' : 'active-reg'"
+                        th:text="${registration.getIsActive()} == false ? 'Не активна' : 'Активна'"></td>
+                    <td>
+                        <div sec:authorize="isAuthenticated() && (hasRole('ADMIN') || hasRole('CLIENT'))">
+                            <!--                    <a class="btn btn-sm btn-outline-success" th:href="'/regbooks/update/' + ${book.id}">Обновить</a>-->
+                            <a class="btn btn-sm btn-outline-danger" th:href="'/registrations/deleteRecord/' + ${registration.getId()}">Удалить</a>
+                        </div>
+    <!--                    <a th:if="${book.getAmount() > 0}" sec:authorize="!hasRole('ADMIN')" class="btn btn-sm btn-outline-success"-->
+    <!--                       th:href="'/rent/book/' + ${book.id}">Арендовать книгу</a>-->
+                    </td>
+                </tr>
+
+                </tbody>
+            </table>
+        </div>
+        <nav aria-label="Pagination" th:if="${registrationsPagingAll.totalPages gt 0}">
+            <ul class="pagination justify-content-center font-weight-bold">
+                <li class="page-item" th:classappend="${registrationsPagingAll.number eq 0} ? 'disabled'">
+                    <a class="page-link"
+                       th:href="@{/registrations/myRegistrationsAllTime?page={id}(id=${registrationsPagingAll.number lt 2 ? 1 : registrationsPagingAll.number})}"
+                       aria-label="Previous" title="Previous Page" data-toggle="tooltip">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li class="page-item"
+                    th:each="i : ${#numbers.sequence(1, registrationsPagingAll.totalPages, 1)}"
+                    th:classappend="${i eq registrationsPagingAll.number + 1} ? 'active'">
+                    <a class="page-link" th:href="@{/registrations/myRegistrationsAllTime?page={id}(id=${i})}" th:text="${i}"
+                       th:title="${'Page '+ i}" data-toggle="tooltip"></a>
+                </li>
+                <li class="page-item" th:classappend="${registrationsPagingAll.number eq registrationsPagingAll.totalPages - 1} ? 'disabled'">
+                    <a class="page-link"
+                       th:href="@{/registrations/myRegistrationsAllTime?page={id}(id=${registrationsPagingAll.number + 2})}"
+                       aria-label="Next" title="Next Page" data-toggle="tooltip">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</body>
+</html>

@@ -32,6 +32,10 @@ public interface RegistrationRepository
 
     Page<Registration> findAllByClientAndIsActive(Client client, Boolean is_active, Pageable pageRequest);
 
+    Page<Registration> findAllByClient(Client currentClient, Pageable pageable);
+
+//    Page<Registration> findAllAndOrderByIsActiveBefore(Boolean is_active, Pageable pageable);
+//    Page<Registration> findAll(Pageable pageable);
 }
 
 

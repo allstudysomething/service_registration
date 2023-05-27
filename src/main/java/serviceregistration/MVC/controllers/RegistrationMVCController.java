@@ -111,10 +111,10 @@ public class RegistrationMVCController {
         // static doctorDTOId appropriation
         doctorDTOIdForFuture = doctorDTOId;
 
-        return "redirect:/registrations/addRegistrationThree";
+        return "redirect:/registrations/addRegistrationThird";
     }
 
-    @GetMapping("/addRegistrationThree")
+    @GetMapping("/addRegistrationThird")
     public String reserveDoctorSlotByClient(Model model) {
         List<Day> dayList = doctorSlotService.findDaysByDoctorDTOIdAndNotRegisteredAndDateBetween(doctorDTOIdForFuture,
                 localDateCurrent, plusDateCurrent);
@@ -125,10 +125,10 @@ public class RegistrationMVCController {
         return "registrations/chooseDateOfDoctorWork";
     }
 
-    @PostMapping("/addRegistrationThree")
+    @PostMapping("/addRegistrationThird")
     public String reserveDoctorSlotByClient(@RequestParam("day") Long dayId,
                                             Model model) {
-        System.out.println("in addRegistrationThree");
+        System.out.println("in addRegistrationThird");
         System.out.println("dayId : " + dayId);
 
         // static dayId appropriation
@@ -167,11 +167,24 @@ public class RegistrationMVCController {
     }
 
     @GetMapping("/listAll")
-    public String listAll(Model model) {
-        List<RegistrationDTO> registrations = registrationService.listAll();
-        model.addAttribute("registrations", registrations);
+    public String listAll(@RequestParam(value = "page", defaultValue = "1") int page,
+                          @RequestParam(value = "size", defaultValue = "4") int pageSize,
+                          Model model) {
+        PageRequest pageRequest = PageRequest.of(page - 1, pageSize, Sort.by(Sort.Direction.DESC, "isActive"));
+//        PageRequest pageRequest = PageRequest.of(page - 1, pageSize);
+        Page<RegistrationDTO> registrationsPaging = registrationService.listAllCurrentPagedNotSorted(pageRequest);
+
+//        List<RegistrationDTO> registrations = registrationService.listAll();
+        model.addAttribute("registrationsPaging", registrationsPaging);
         return "registrations/listAll";
     }
+
+//    @GetMapping("/listAll")
+//    public String listAll(Model model) {
+//        List<RegistrationDTO> registrations = registrationService.listAll();
+//        model.addAttribute("registrations", registrations);
+//        return "registrations/listAll";
+//    }
 
     @GetMapping("myRegistrations")
     public String getAll(@RequestParam(value = "page", defaultValue = "1") int page,
@@ -179,7 +192,7 @@ public class RegistrationMVCController {
                          Model model) {
         PageRequest pageRequest = PageRequest.of(page - 1, pageSize);
 //        PageRequest pageRequest = PageRequest.of(page - 1, pageSize, Sort.by(Sort.Direction.ASC, "isActive"));
-        Page<RegistrationDTO> currentRegistrations = registrationService.listAllCurrentPaged(pageRequest);
+        Page<RegistrationDTO> currentRegistrations = registrationService.listAllCurrentPagedByClient(pageRequest);
 //        final String userName = SecurityContextHolder.getContext().getAuthentication().getName();
 //        if (ADMIN.equalsIgnoreCase(userName)) {
 //            books = bookService.getAllBooksWithAuthors(pageRequest);
@@ -189,6 +202,19 @@ public class RegistrationMVCController {
 //        }
         model.addAttribute("currentRegistrations", currentRegistrations);
         return "registrations/myList";
+    }
+
+    @GetMapping("myRegistrationsAllTime")
+    public String getAllAlways(@RequestParam(value = "page", defaultValue = "1") int page,
+                         @RequestParam(value = "size", defaultValue = "6") int pageSize,
+                         Model model) {
+        PageRequest pageRequest = PageRequest.of(page - 1, pageSize, Sort.by(Sort.Direction.DESC, "createdWhen"));
+//        PageRequest pageRequest = PageRequest.of(page - 1, pageSize);
+        Page<RegistrationDTO> registrationsPagingAll = registrationService.listAllPagedByClient(pageRequest);
+
+//        List<RegistrationDTO> registrations = registrationService.listAll();
+        model.addAttribute("registrationsPagingAll", registrationsPagingAll);
+        return "registrations/myListAllTime";
     }
 
 //    @GetMapping("/myRegistrations")
