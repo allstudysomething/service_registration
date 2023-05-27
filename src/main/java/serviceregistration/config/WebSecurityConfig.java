@@ -52,7 +52,8 @@ public class WebSecurityConfig {
                     "/doctorslots",
                     "/doctorslots/schedule",
                     "/doctorslots/addSchedule",
-                    "/doctorslots/delete"
+                    "/doctorslots/delete",
+                    "/doctorslots/getActualSchedule"
             );
 
     private final List<String> DOCTORSLOTS_PERMISSION_LIST_FOR_DOCTOR = List.of

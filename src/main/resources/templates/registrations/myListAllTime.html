@@ -47,10 +47,10 @@
                     <td th:classappend="${registration.getIsActive() == false} ? 'not-active-reg' : 'active-reg'"
                         th:text="${registration.getIsActive()} == false ? 'Не активна' : 'Активна'"></td>
                     <td>
-                        <div sec:authorize="isAuthenticated() && (hasRole('ADMIN') || hasRole('CLIENT'))">
-                            <!--                    <a class="btn btn-sm btn-outline-success" th:href="'/regbooks/update/' + ${book.id}">Обновить</a>-->
-                            <a class="btn btn-sm btn-outline-danger" th:href="'/registrations/deleteRecord/' + ${registration.getId()}">Удалить</a>
-                        </div>
+<!--                        <div sec:authorize="isAuthenticated() && (hasRole('ADMIN') || hasRole('CLIENT'))">-->
+<!--                            &lt;!&ndash;                    <a class="btn btn-sm btn-outline-success" th:href="'/regbooks/update/' + ${book.id}">Обновить</a>&ndash;&gt;-->
+<!--                            <a class="btn btn-sm btn-outline-danger" th:href="'/registrations/deleteRecord/' + ${registration.getId()}">Удалить</a>-->
+<!--                        </div>-->
     <!--                    <a th:if="${book.getAmount() > 0}" sec:authorize="!hasRole('ADMIN')" class="btn btn-sm btn-outline-success"-->
     <!--                       th:href="'/rent/book/' + ${book.id}">Арендовать книгу</a>-->
                     </td>

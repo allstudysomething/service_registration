@@ -1,6 +1,7 @@
 package serviceregistration.repository;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -79,5 +80,26 @@ public interface DoctorSlotRepository
 //                    where day > TIMESTAMP 'today' and ds.is_registered = false
 //                    group by dc.id, d.id""")
 //    List<DoctorDay> groupByDoctorSlot();
+
+    // from zotov
+    @Query(nativeQuery = true,
+            value = """
+                    select ds.*
+                    from doctors_slots ds
+                        join days d on ds.day_id = d.id
+                    order by day, doctor_id, slot_id
+                    """)
+    Page<DoctorSlot> findAllSchedule(Pageable pageable);
+
+    // from zotov
+    @Query(nativeQuery = true,
+            value = """
+                    select ds.*
+                    from doctors_slots ds
+                        join days d on ds.day_id = d.id
+                    where day >= TIMESTAMP 'today'
+                    order by day, doctor_id, slot_id
+                    """)
+    Page<DoctorSlot> findActualSchedule(PageRequest pageable);
 
 }

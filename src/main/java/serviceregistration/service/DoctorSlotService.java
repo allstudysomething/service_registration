@@ -2,6 +2,7 @@ package serviceregistration.service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -84,7 +85,15 @@ public class DoctorSlotService extends GenericService<DoctorSlot, DoctorSlotDTO>
     }
 
     public Page<DoctorSlotDTO> listAllPaging(Pageable pageable) {
-        Page<DoctorSlot> doctorSlotPage = doctorSlotRepository.findAll(pageable);
+//        Page<DoctorSlot> doctorSlotPage = doctorSlotRepository.findAll(pageable);
+        Page<DoctorSlot> doctorSlotPage = doctorSlotRepository.findAllSchedule(pageable);
+        List<DoctorSlotDTO> result = doctorSlotMapper.toDTOs(doctorSlotPage.getContent());
+        return new PageImpl<>(result, pageable, doctorSlotPage.getTotalElements());
+    }
+
+    public Page<DoctorSlotDTO> listAllCurrentPaging(PageRequest pageable) {
+//        Page<DoctorSlot> doctorSlotPage = doctorSlotRepository.findAll(pageable);
+        Page<DoctorSlot> doctorSlotPage = doctorSlotRepository.findActualSchedule(pageable);
         List<DoctorSlotDTO> result = doctorSlotMapper.toDTOs(doctorSlotPage.getContent());
         return new PageImpl<>(result, pageable, doctorSlotPage.getTotalElements());
     }
