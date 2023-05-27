@@ -1,5 +1,9 @@
 package serviceregistration.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -82,5 +86,13 @@ public class RegistrationService extends GenericService<Registration, Registrati
 //        List<Registration> registrationList = registrationRepository.findAllByClientAndIsActiveOrderByDayAndSlot(currentClient.getLogin(), true);
 //        registrationList.forEach(s -> System.out.println(s.getDoctorSlot()));
         return registrationList;
+    }
+
+    public Page<RegistrationDTO> listAllCurrentPaged(Pageable pageable) {
+        Client currentClient = clientRepository.findClientById(getCurrentUserId());
+        Page<Registration> registrationPage = registrationRepository.findAllByClientAndIsActive(currentClient,
+                true, pageable);
+        List<RegistrationDTO> result = mapper.toDTOs(registrationPage.getContent());
+        return new PageImpl<>(result, pageable, registrationPage.getTotalElements());
     }
 }

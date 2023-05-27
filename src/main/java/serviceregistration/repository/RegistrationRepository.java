@@ -1,5 +1,7 @@
 package serviceregistration.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import serviceregistration.model.Client;
@@ -26,6 +28,9 @@ public interface RegistrationRepository
 //        where c.login = :clientLogin
 //        order by d.day, s.time_slot """)
 //    List<Registration> findAllByClientAndIsActiveOrderByDayAndSlot(String clientLogin, Boolean is_active);
+
+
+    Page<Registration> findAllByClientAndIsActive(Client client, Boolean is_active, Pageable pageRequest);
 
 }
 
