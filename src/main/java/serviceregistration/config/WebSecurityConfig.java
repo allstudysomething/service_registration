@@ -42,7 +42,9 @@ public class WebSecurityConfig {
 
     private final List<String> DOCTORS_PERMISSION_LIST_FOR_ADMIN = List.of
             (
-                    "/doctors/add"
+                    "/doctors/add",
+                    "/doctors/addDoctor",
+                    "/doctors/deleteDoctor"
             );
 
     private final List<String> DOCTORSLOTS_PERMISSION_LIST_FOR_ADMIN = List.of
@@ -74,7 +76,9 @@ public class WebSecurityConfig {
     private final List<String> REGISTRATIONS_PERMISSION_LIST_FOR_CLIENT = List.of
             (
                     "/registrations",
-                    "/registrations/myList"
+                    "/registrations/myList",
+                    "registrations/myRegistrations",
+                    "/registrations/addRegistration"
             );
 
     private final List<String> REGISTRATIONS_PERMISSION_LIST_FOR_ADMIN = List.of
@@ -116,7 +120,8 @@ public class WebSecurityConfig {
                       .requestMatchers(CLIENTS_PERMISSION_LIST_FOR_ADMIN.toArray(String[]::new)).hasRole(ADMIN)
                       .requestMatchers(REGISTRATIONS_PERMISSION_LIST_FOR_CLIENT.toArray(String[]::new)).hasRole(CLIENT)
                       .requestMatchers(REGISTRATIONS_PERMISSION_LIST_FOR_ADMIN.toArray(String[]::new)).hasRole(ADMIN)
-                      .anyRequest().authenticated())
+//                      .anyRequest().authenticated())
+              )
               //Настройка для входа в систему
               .formLogin((form) -> form
                                .loginPage("/login")

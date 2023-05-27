@@ -175,7 +175,7 @@ public class RegistrationMVCController {
 
     @GetMapping("myRegistrations")
     public String getAll(@RequestParam(value = "page", defaultValue = "1") int page,
-                         @RequestParam(value = "size", defaultValue = "3") int pageSize,
+                         @RequestParam(value = "size", defaultValue = "7") int pageSize,
                          Model model) {
         PageRequest pageRequest = PageRequest.of(page - 1, pageSize);
 //        PageRequest pageRequest = PageRequest.of(page - 1, pageSize, Sort.by(Sort.Direction.ASC, "isActive"));
