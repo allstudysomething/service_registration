@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import serviceregistration.dto.DoctorDTO;
 import serviceregistration.dto.DoctorSlotDTO;
 import serviceregistration.dto.RegistrationDTO;
+import serviceregistration.dto.RegistrationSearchAdminDTO;
 import serviceregistration.model.*;
 import serviceregistration.service.*;
 
@@ -72,10 +73,6 @@ public class RegistrationMVCController {
             , Model model
 //            , BindingResult bindingResult
     ) {
-//        System.out.println(specialization.getId() + " " + specialization.getTitleSpecialization());
-//        System.out.println("******************");
-//        if(!Objects.isNull(specialization.getTitleSpecialization()) && !Objects.isNull(specialization.getSpecializationDescription())) {
-
             // static specialization appropriation
             specializationForFuture = specialization;
 
@@ -84,8 +81,6 @@ public class RegistrationMVCController {
 
     @GetMapping("/addRegistrationSecond")
     public String chooseDoctorWorkDay(Model model) {
-//        List<DoctorDTO> doctorDTOList = doctorService.findAllDoctorsBySpecialization(specializationForFuture);
-//        doctorDTOList.forEach(System.out::println);
 
         // ONLY FOR CURRENT EXAMPLE (plus 60 days)
 //        localDateCurrent = LocalDate.of(2023, 6, 1);
@@ -94,7 +89,6 @@ public class RegistrationMVCController {
         List<DoctorDTO> doctorDTOS = doctorSlotService.findDoctorDTOBySpecializationIdAndDayBetween(specializationForFuture.getId(),
                 localDateCurrent, plusDateCurrent);
 
-//            doctorDTOS.forEach(System.out::println);
         model.addAttribute("doctorDTOList", doctorDTOS);
         model.addAttribute("doctorDTOForm", new DoctorDTO());
         return "registrations/chooseDoctor";
@@ -104,10 +98,7 @@ public class RegistrationMVCController {
     public String chooseDoctorWorkDay(@RequestParam("doctorDTO") Long doctorDTOId
             , Model model
 //            , BindingResult bindingResult
-    ) {
-//        log.info("in addRegistrationTwo");
-        System.out.println("doctorDTOId : " + doctorDTOId);
-
+                                            ) {
         // static doctorDTOId appropriation
         doctorDTOIdForFuture = doctorDTOId;
 
@@ -118,8 +109,6 @@ public class RegistrationMVCController {
     public String reserveDoctorSlotByClient(Model model) {
         List<Day> dayList = doctorSlotService.findDaysByDoctorDTOIdAndNotRegisteredAndDateBetween(doctorDTOIdForFuture,
                 localDateCurrent, plusDateCurrent);
-//        dayList.forEach(s -> System.out.println(s.getDay()));
-
         model.addAttribute("doctorDTOForm", new DoctorDTO());
         model.addAttribute("doctorWorkDates", dayList);
         return "registrations/chooseDateOfDoctorWork";
@@ -128,12 +117,8 @@ public class RegistrationMVCController {
     @PostMapping("/addRegistrationThird")
     public String reserveDoctorSlotByClient(@RequestParam("day") Long dayId,
                                             Model model) {
-        System.out.println("in addRegistrationThird");
-        System.out.println("dayId : " + dayId);
-
         // static dayId appropriation
         dayIdForFuture = dayId;
-//        doctorSlotService.
 
         return "redirect:/registrations/addRegistrationFourth";
     }
@@ -145,7 +130,6 @@ public class RegistrationMVCController {
 //        System.out.println("userId :" + userId);
 
         List<Slot> freeTimeSlots = slotService.getFreeSlotsByDoctorDTOIdAndDayId(doctorDTOIdForFuture, dayIdForFuture);
-//        freeTimeSlots.forEach(s -> System.out.println(s.getTimeSlot()));
         model.addAttribute("freeTimeSlots", freeTimeSlots);
         return "registrations/chooseTimeOfDayRegistration";
     }
@@ -153,29 +137,22 @@ public class RegistrationMVCController {
     @PostMapping("/addRegistrationFourth")
     public String chooseTimeOfDayRegistration(@RequestParam("freeTime") Long slotId,
                                               Model model) {
-        System.out.print("slotId : " + slotId);
-
         // static slotId appropriation
         slotIdForFuture = slotId;
 
         Long doctorSlotId = doctorSlotService.getDoctorSlotByDoctorAndDayAndSlot(doctorDTOIdForFuture, dayIdForFuture, slotIdForFuture);
-//        System.out.println(doctorSlotDTO.getId() + " ___ " + doctorSlotDTO.getDay().getDay() + " ___ " + doctorSlotDTO.getCabinet().getCabinetNumber());
         registrationService.addRecord(doctorSlotId);
-//        System.out.println(doctorSlotId);
-
         return "registrations/allDoneRegistration";
     }
 
     @GetMapping("/listAll")
     public String listAll(@RequestParam(value = "page", defaultValue = "1") int page,
-                          @RequestParam(value = "size", defaultValue = "4") int pageSize,
+                          @RequestParam(value = "size", defaultValue = "3") int pageSize,
                           Model model) {
         PageRequest pageRequest = PageRequest.of(page - 1, pageSize, Sort.by(Sort.Direction.DESC, "isActive"));
-//        PageRequest pageRequest = PageRequest.of(page - 1, pageSize);
         Page<RegistrationDTO> registrationsPaging = registrationService.listAllCurrentPagedNotSorted(pageRequest);
-
-//        List<RegistrationDTO> registrations = registrationService.listAll();
         model.addAttribute("registrationsPaging", registrationsPaging);
+        model.addAttribute("registrationSearchFormAdmin", new RegistrationSearchAdminDTO());
         return "registrations/listAll";
     }
 
@@ -209,10 +186,7 @@ public class RegistrationMVCController {
                          @RequestParam(value = "size", defaultValue = "6") int pageSize,
                          Model model) {
         PageRequest pageRequest = PageRequest.of(page - 1, pageSize, Sort.by(Sort.Direction.DESC, "createdWhen"));
-//        PageRequest pageRequest = PageRequest.of(page - 1, pageSize);
         Page<RegistrationDTO> registrationsPagingAll = registrationService.listAllPagedByClient(pageRequest);
-
-//        List<RegistrationDTO> registrations = registrationService.listAll();
         model.addAttribute("registrationsPagingAll", registrationsPagingAll);
         return "registrations/myListAllTime";
     }
@@ -227,15 +201,25 @@ public class RegistrationMVCController {
 
     @RequestMapping(value = "/deleteRecord/{id}")
     public String deleteRecordById(@PathVariable(value = "id") Long registrationId) {
-//        System.out.println(registrationId);
         Long doctorSlotId = registrationService.getOne(registrationId).getDoctorSlot().getId();
-//        System.out.println(doctorSlotId);
         DoctorSlotDTO updatedDoctorSlot = doctorSlotService.getOne(doctorSlotId);
         updatedDoctorSlot.setIsRegistered(false);
         doctorSlotService.update(updatedDoctorSlot);
         registrationService.delete(registrationId);
-
         return "redirect:/registrations/myRegistrations";
+    }
+
+    @PostMapping("/search")
+    public String searchAll(@RequestParam(value = "page", defaultValue = "1") int page,
+                            @RequestParam(value = "size", defaultValue = "4") int pageSize,
+                            @ModelAttribute("registrationSearchFormAdmin") RegistrationSearchAdminDTO registrationSearchAdminDTO,
+                            Model model) {
+//        System.out.println(registrationSearchAdminDTO);
+        PageRequest pageRequest = PageRequest.of(page - 1, pageSize
+//                , Sort.by(Sort.Direction.DESC, "isActive")
+                );
+        model.addAttribute("registrationsPaging", registrationService.findRegistrationByMany(registrationSearchAdminDTO, pageRequest));
+        return "registrations/listAll";
     }
 
 }

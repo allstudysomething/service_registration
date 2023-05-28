@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.webjars.NotFoundException;
 import serviceregistration.dto.DoctorSlotDTO;
 import serviceregistration.dto.RegistrationDTO;
+import serviceregistration.dto.RegistrationSearchAdminDTO;
 import serviceregistration.mapper.DoctorSlotMapper;
 import serviceregistration.mapper.RegistrationMapper;
 import serviceregistration.model.Client;
@@ -114,4 +115,22 @@ public class RegistrationService extends GenericService<Registration, Registrati
         return new PageImpl<>(result, pageable, registrationPage.getTotalElements());
     }
 
+    public Page<RegistrationDTO> findRegistrationByMany(RegistrationSearchAdminDTO registrationSearchAdminDTO, Pageable pageable) {
+        String getRegistrationDay = registrationSearchAdminDTO.getRegistrationDay() == null ?
+                "%" : registrationSearchAdminDTO.getRegistrationDay().toString();
+        Page<Registration> registrationPage =
+                registrationRepository.findRegistrationByMany(registrationSearchAdminDTO.getClientLastName(),
+                                                            registrationSearchAdminDTO.getClientFirstName(),
+                                                            registrationSearchAdminDTO.getClientMiddleName(),
+                                                            registrationSearchAdminDTO.getDoctorLastName(),
+                                                            registrationSearchAdminDTO.getDoctorFirstName(),
+                                                            registrationSearchAdminDTO.getDoctorMiddleName(),
+                                                            registrationSearchAdminDTO.getTitleSpecialization(),
+                                                            getRegistrationDay,
+//                                                            registrationSearchAdminDTO.getRegistrationDay(),
+                                                            pageable);
+//        registrationPage.getContent().forEach(System.out::println);
+        List<RegistrationDTO> result = mapper.toDTOs(registrationPage.getContent());
+        return new PageImpl<>(result, pageable, registrationPage.getTotalElements());
+    }
 }

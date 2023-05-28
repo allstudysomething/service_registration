@@ -9,58 +9,129 @@
 </head>
 <body>
 <div layout:fragment="content">
-    <h1 align="center">Архив записей клиентов</h1>
-    <div class="row">
-        <div class="col">
-        </div>
-        <table class="table table-hover">
-            <thead>
-            <tr>
-                <th scope="col">ФИО клиента</th>
-                <th scope="col">ФИО врача</th>
-                <th scope="col">Время записи</th>
-                <th scope="col">Кабинет</th>
-                <th scope="col">Статус</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="registration : ${registrationsPaging}">
-                <td th:text="${registration.getClient().getLastName() + ' ' + registration.getClient().getFirstName() + ' ' + registration.getClient().getMidName()}"></td>
-                <td th:text="${registration.getDoctorSlot().getDoctor().getLastName() + ' ' +
-                               registration.getDoctorSlot().getDoctor().getFirstName() + ' ' +
-                               registration.getDoctorSlot().getDoctor().getMidName()}"></td>
-                <td th:text="${registration.getDoctorSlot().getDay().getDay() + ' ' + registration.getDoctorSlot().getSlot().getTimeSlot()}"></td>
-                <td th:text="${registration.getDoctorSlot().getCabinet().getCabinetNumber()}"></td>
-                <td th:classappend="${registration.getIsActive() == false} ? 'not-active-reg' : 'active-reg'"
-                    th:text="${registration.getIsActive()} == false ? 'Не активна' : 'Активна'"></td>
-            </tr>
-            </tbody>
-        </table>
+    <div>
+        <hr class="hr"/>
+        <h3>Поиск записей в базе по параметрам</h3>
+        <form method="POST" th:action="@{/registrations/search}" th:object="${registrationSearchFormAdmin}">
+            <div class="mt-0 row g-2">
+                <div class="col-md">
+                    <div class="form-floating">
+                        <input name="clientLastName" type="text" class="form-control" id="clientLastName" placeholder="Фамилия пациента">
+                        <label for="clientLastName">Фамилия пациента</label>
+                    </div>
+                </div>
+                <div class="col-md">
+                    <div class="form-floating">
+                        <input name="clientFirstName" type="text" class="form-control" id="clientFirstName" placeholder="Имя пациента">
+                        <label for="clientFirstName">Имя пациента</label>
+                    </div>
+                </div>
+                <div class="col-md">
+                    <div class="form-floating">
+                        <input name="clientMiddleName" type="text" class="form-control" id="clientMiddleName" placeholder="Отчество пациента">
+                        <label for="clientMiddleName">Отчество пациента</label>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-0 row g-2">
+                <div class="col-md">
+                    <div class="form-floating">
+                        <input name="doctorLastName" type="text" class="form-control" id="doctorLastName" placeholder="Фамилия врача">
+                        <label for="doctorLastName">Фамилия врача</label>
+                    </div>
+                </div>
+                <div class="col-md">
+                    <div class="form-floating">
+                        <input name="doctorFirstName" type="text" class="form-control" id="doctorFirstName" placeholder="Имя врача">
+                        <label for="doctorFirstName">Имя врача</label>
+                    </div>
+                </div>
+                <div class="col-md">
+                    <div class="form-floating">
+                        <input name="doctorMiddleName" type="text" class="form-control" id="doctorMiddleName" placeholder="Отчество врача">
+                        <label for="doctorMiddleName">Отчество врача</label>
+                    </div>
+                </div>
+                <div class="col-md">
+                    <div class="form-floating">
+                        <input name="titleSpecialization" type="text" class="form-control" id="titleSpecialization" placeholder="Специализация врача">
+                        <label for="titleSpecialization">Специализация врача</label>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-0 row g-2">
+                <div class="col-md">
+                    <div class="form-floating">
+                        <input name="registrationDay" type="date" class="form-control" id="registrationDay" placeholder="Введите дату приема врача">
+                        <label for="registrationDay">Дата приема врача</label>
+                        <div class="invalid-feedback">Обязательное поле для заполнения</div>
+                    </div>
+                </div>
+            </div>
+            <div class="row g-2">
+                <button type="submit" class="btn btn-secondary">Найти</button>
+            </div>
+        </form>
     </div>
-    <nav aria-label="Pagination" th:if="${registrationsPaging.totalPages gt 0}">
-        <ul class="pagination justify-content-center font-weight-bold">
-            <li class="page-item" th:classappend="${registrationsPaging.number eq 0} ? 'disabled'">
-                <a class="page-link"
-                   th:href="@{/registrations/listAll?page={id}(id=${registrationsPaging.number lt 2 ? 1 : registrationsPaging.number})}"
-                   aria-label="Previous" title="Previous Page" data-toggle="tooltip">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
-            </li>
-            <li class="page-item"
-                th:each="i : ${#numbers.sequence(1, registrationsPaging.totalPages, 1)}"
-                th:classappend="${i eq registrationsPaging.number + 1} ? 'active'">
-                <a class="page-link" th:href="@{/registrations/listAll?page={id}(id=${i})}" th:text="${i}"
-                   th:title="${'Page '+ i}" data-toggle="tooltip"></a>
-            </li>
-            <li class="page-item" th:classappend="${registrationsPaging.number eq registrationsPaging.totalPages - 1} ? 'disabled'">
-                <a class="page-link"
-                   th:href="@{/registrations/listAll?page={id}(id=${registrationsPaging.number + 2})}"
-                   aria-label="Next" title="Next Page" data-toggle="tooltip">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
-        </ul>
-    </nav>
-</div>
+<!--    <hr class="mt-3 hr"/>-->
+<!--    <div class="mt-5">-->
+        <div class="row">
+            <div class="col">
+                <h1 align="center">Архив записей клиентов</h1>
+            </div>
+<!--        </div>-->
+<!--        <div>-->
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th scope="col">ФИО клиента</th>
+                    <th scope="col">ФИО врача</th>
+                    <th scope="col">Время записи</th>
+                    <th scope="col">Кабинет</th>
+                    <th scope="col">Статус</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="registration : ${registrationsPaging}">
+                    <td th:text="${registration.getClient().getLastName() + ' ' + registration.getClient().getFirstName() + ' ' + registration.getClient().getMidName()}"></td>
+                    <td th:text="${registration.getDoctorSlot().getDoctor().getLastName() + ' ' +
+                                   registration.getDoctorSlot().getDoctor().getFirstName() + ' ' +
+                                   registration.getDoctorSlot().getDoctor().getMidName()}"></td>
+                    <td th:text="${registration.getDoctorSlot().getDay().getDay() + ' ' + registration.getDoctorSlot().getSlot().getTimeSlot()}"></td>
+                    <td th:text="${registration.getDoctorSlot().getCabinet().getCabinetNumber()}"></td>
+                    <td th:classappend="${registration.getIsActive() == false} ? 'not-active-reg' : 'active-reg'"
+                        th:text="${registration.getIsActive()} == false ? 'Не активна' : 'Активна'"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+<!--        <div>-->
+            <nav aria-label="Pagination" th:if="${registrationsPaging.totalPages gt 0}">
+                <ul class="pagination justify-content-center font-weight-bold">
+                    <li class="page-item" th:classappend="${registrationsPaging.number eq 0} ? 'disabled'">
+                        <a class="page-link"
+                           th:href="@{/registrations/listAll?page={id}(id=${registrationsPaging.number lt 2 ? 1 : registrationsPaging.number})}"
+                           aria-label="Previous" title="Previous Page" data-toggle="tooltip">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item"
+                        th:each="i : ${#numbers.sequence(1, registrationsPaging.totalPages, 1)}"
+                        th:classappend="${i eq registrationsPaging.number + 1} ? 'active'">
+                        <a class="page-link" th:href="@{/registrations/listAll?page={id}(id=${i})}" th:text="${i}"
+                           th:title="${'Page '+ i}" data-toggle="tooltip"></a>
+                    </li>
+                    <li class="page-item" th:classappend="${registrationsPaging.number eq registrationsPaging.totalPages - 1} ? 'disabled'">
+                        <a class="page-link"
+                           th:href="@{/registrations/listAll?page={id}(id=${registrationsPaging.number + 2})}"
+                           aria-label="Next" title="Next Page" data-toggle="tooltip">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+<!--    </div>-->
+<!--</div>-->
 </body>
 </html>
