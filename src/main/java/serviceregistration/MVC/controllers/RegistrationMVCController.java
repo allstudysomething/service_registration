@@ -66,6 +66,19 @@ public class RegistrationMVCController {
         return "registrations/listAll";
     }
 
+    @PostMapping("/search")
+    public String searchAll(@RequestParam(value = "page", defaultValue = "1") int page,
+                            @RequestParam(value = "size", defaultValue = "2") int pageSize,
+                            @ModelAttribute("registrationSearchFormAdmin") RegistrationSearchAdminDTO registrationSearchAdminDTO,
+                            Model model) {
+//        System.out.println(registrationSearchAdminDTO);
+        PageRequest pageRequest = PageRequest.of(page - 1, pageSize
+//                , Sort.by(Sort.Direction.DESC, "isActive")
+        );
+        model.addAttribute("registrationsPaging", registrationService.findRegistrationByMany(registrationSearchAdminDTO, pageRequest));
+        return "registrations/listAll";
+    }
+
     @GetMapping("/addRegistration")
     public String chooseSpecialization(Model model) {
         specializationForFuture = null;
@@ -207,19 +220,6 @@ public class RegistrationMVCController {
         doctorSlotService.update(updatedDoctorSlot);
         registrationService.delete(registrationId);
         return "redirect:/registrations/myRegistrations";
-    }
-
-    @PostMapping("/search")
-    public String searchAll(@RequestParam(value = "page", defaultValue = "1") int page,
-                            @RequestParam(value = "size", defaultValue = "4") int pageSize,
-                            @ModelAttribute("registrationSearchFormAdmin") RegistrationSearchAdminDTO registrationSearchAdminDTO,
-                            Model model) {
-//        System.out.println(registrationSearchAdminDTO);
-        PageRequest pageRequest = PageRequest.of(page - 1, pageSize
-//                , Sort.by(Sort.Direction.DESC, "isActive")
-                );
-        model.addAttribute("registrationsPaging", registrationService.findRegistrationByMany(registrationSearchAdminDTO, pageRequest));
-        return "registrations/listAll";
     }
 
 }

@@ -9,40 +9,54 @@
 </head>
 <body>
     <div layout:fragment="content">
-    <!--    <div>-->
-    <!--        <hr class="hr"/>-->
-    <!--        <h3>Поиск книги</h3>-->
-    <!--        <form method="POST" th:action="@{/registrations/search}" th:object="${registrationSearchForm}">-->
-    <!--            <div class="mt-0 row g-2">-->
-    <!--                <div class="col-md">-->
-    <!--                    <div class="form-floating">-->
-    <!--                        <input name="bookTitle" type="text" class="form-control" id="bookTitle" placeholder="Название книги">-->
-    <!--                        <label for="bookTitle">Название книги</label>-->
-    <!--                    </div>-->
-    <!--                </div>-->
-    <!--                <div class="col-md">-->
-    <!--                    <div class="form-floating">-->
-    <!--                        <input name="authorFio" type="text" class="form-control" id="authorFio" placeholder="ФИО автора">-->
-    <!--                        <label for="authorFio">Автор</label>-->
-    <!--                    </div>-->
-    <!--                </div>-->
-    <!--                <div class="col-md">-->
-    <!--                    <div class="form-floating">-->
-    <!--                        <select class="form-select" name="genre" id="genre">-->
-    <!--                            <option selected th:value="null">Выберете жанр из списка</option>-->
-    <!--                            <option th:each="genre : ${T(com.sber.java15.spring.springprojectlibrary.library.model.Genre).values()}"-->
-    <!--                                    th:value="${genre}" th:text="${genre.getGenreTextDisplay()}"></option>-->
-    <!--                        </select>-->
-    <!--                        <label for="genre">Жанр</label>-->
-    <!--                    </div>-->
-    <!--                </div>-->
-    <!--                <div class="row g-2">-->
-    <!--                    <button type="submit" class="btn btn-secondary">Найти книгу</button>-->
-    <!--                </div>-->
-    <!--            </div>-->
-    <!--        </form>-->
-    <!--    </div>-->
-        <h1>Расписание врачей</h1>
+        <div>
+<!--            <hr class="hr"/>-->
+            <h3 align="center">поиск раписания врачей по параметрам</h3>
+<!--            <h3>поиск записей в базе по параметрам</h3>-->
+            <form method="POST" th:action="@{/doctorslots/search}" th:object="${doctorslotSearchFormAdmin}">
+                <div class="mt-0 row g-2">
+                    <div class="col-md">
+                        <div class="form-floating">
+                            <input name="doctorLastName" type="text" class="form-control" id="doctorLastName" placeholder="Фамилия врача">
+                            <label for="doctorLastName">Фамилия врача</label>
+                        </div>
+                    </div>
+                    <div class="col-md">
+                        <div class="form-floating">
+                            <input name="doctorFirstName" type="text" class="form-control" id="doctorFirstName" placeholder="Имя врача">
+                            <label for="doctorFirstName">Имя врача</label>
+                        </div>
+                    </div>
+                    <div class="col-md">
+                        <div class="form-floating">
+                            <input name="doctorMiddleName" type="text" class="form-control" id="doctorMiddleName" placeholder="Отчество врача">
+                            <label for="doctorMiddleName">Отчество врача</label>
+                        </div>
+                    </div>
+                    <div class="col-md">
+                        <div class="form-floating">
+                            <input name="titleSpecialization" type="text" class="form-control" id="titleSpecialization" placeholder="Специализация врача">
+                            <label for="titleSpecialization">Специализация врача</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-0 row g-2">
+                    <div class="col-md">
+                        <div class="form-floating">
+                            <input name="registrationDay" type="date" class="form-control" id="registrationDay" placeholder="Введите дату приема врача">
+                            <label for="registrationDay">Дата приема врача</label>
+                            <div class="invalid-feedback">Обязательное поле для заполнения</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row g-2">
+                    <button type="submit" class="btn btn-secondary">Найти</button>
+                </div>
+            </form>
+        </div>
+        <hr class="hr"/>
+        <h3 align="center">расписание врачей</h3>
+<!--        <h1>Расписание врачей</h1>-->
         <div class="row">
             <div class="col">
                 <a href="/doctorslots/deleteSchedule"

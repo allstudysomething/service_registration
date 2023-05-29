@@ -10,6 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import serviceregistration.dto.DoctorDTO;
 import serviceregistration.dto.DoctorSlotDTO;
+import serviceregistration.dto.DoctorSlotSearchAdminDTO;
 import serviceregistration.model.Cabinet;
 import serviceregistration.model.Day;
 import serviceregistration.model.Slot;
@@ -48,6 +49,21 @@ public class DoctorSlotMVCController {
         Page<DoctorSlotDTO> doctorSlots = doctorSlotService.listAllPaging(pageRequest);
         model.addAttribute("doctorslots", doctorSlots);
         return "doctorslots/schedule";
+    }
+
+    @PostMapping("/search")
+    public String getSearchSchedule(@RequestParam(value = "page", defaultValue = "1") int page,
+                                    @RequestParam(value = "size", defaultValue = "2") int pageSize,
+                                    @ModelAttribute("doctorslotSearchFormAdmin") DoctorSlotSearchAdminDTO doctorSlotSearchAdminDTO,
+                                    Model model) {
+//        System.out.println(doctorSlotSearchAdminDTO);
+        PageRequest pageRequest = PageRequest.of(page - 1, pageSize
+//                , Sort.Direction.ASC, "day_id"
+        );
+        Page<DoctorSlotDTO> doctorSlots = doctorSlotService.findDoctorSlotByMany(doctorSlotSearchAdminDTO, pageRequest);
+        model.addAttribute("doctorslots", doctorSlots);
+        return "doctorslots/schedule";
+//        return "registrations/allDoneRegistration";
     }
 
     @GetMapping("/getActualSchedule")

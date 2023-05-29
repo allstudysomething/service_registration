@@ -50,6 +50,7 @@ public class WebSecurityConfig {
     private final List<String> DOCTORSLOTS_PERMISSION_LIST_FOR_ADMIN = List.of
             (
                     "/doctorslots",
+                    "/doctorslots/search",
                     "/doctorslots/schedule",
                     "/doctorslots/addSchedule",
                     "/doctorslots/delete",

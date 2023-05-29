@@ -8,10 +8,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import serviceregistration.dto.DoctorDTO;
 import serviceregistration.dto.DoctorSlotDTO;
+import serviceregistration.dto.DoctorSlotSearchAdminDTO;
+import serviceregistration.dto.RegistrationDTO;
 import serviceregistration.mapper.DoctorSlotMapper;
 import serviceregistration.mapper.GenericMapper;
 import serviceregistration.model.Day;
 import serviceregistration.model.DoctorSlot;
+import serviceregistration.model.Registration;
 import serviceregistration.repository.DoctorSlotRepository;
 
 import java.time.LocalDate;
@@ -95,6 +98,21 @@ public class DoctorSlotService extends GenericService<DoctorSlot, DoctorSlotDTO>
 //        Page<DoctorSlot> doctorSlotPage = doctorSlotRepository.findAll(pageable);
         Page<DoctorSlot> doctorSlotPage = doctorSlotRepository.findActualSchedule(pageable);
         List<DoctorSlotDTO> result = doctorSlotMapper.toDTOs(doctorSlotPage.getContent());
+        return new PageImpl<>(result, pageable, doctorSlotPage.getTotalElements());
+    }
+
+    public Page<DoctorSlotDTO> findDoctorSlotByMany(DoctorSlotSearchAdminDTO doctorSlotSearchAdminDTO, Pageable pageable) {
+        String getDoctorSlotDay = doctorSlotSearchAdminDTO.getRegistrationDay() == null ?
+                "%" : doctorSlotSearchAdminDTO.getRegistrationDay().toString();
+        Page<DoctorSlot> doctorSlotPage =
+                doctorSlotRepository.findDoctorSlotByMany(doctorSlotSearchAdminDTO.getDoctorLastName(),
+                        doctorSlotSearchAdminDTO.getDoctorFirstName(),
+                        doctorSlotSearchAdminDTO.getDoctorMiddleName(),
+                        doctorSlotSearchAdminDTO.getTitleSpecialization(),
+                        getDoctorSlotDay,
+                        pageable);
+//        registrationPage.getContent().forEach(System.out::println);
+        List<DoctorSlotDTO> result = mapper.toDTOs(doctorSlotPage.getContent());
         return new PageImpl<>(result, pageable, doctorSlotPage.getTotalElements());
     }
 

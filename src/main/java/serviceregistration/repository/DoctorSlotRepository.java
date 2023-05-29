@@ -5,6 +5,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import serviceregistration.dto.DoctorDTO;
 import serviceregistration.model.*;
 
@@ -102,4 +103,22 @@ public interface DoctorSlotRepository
                     """)
     Page<DoctorSlot> findActualSchedule(PageRequest pageable);
 
+    @Query(nativeQuery = true, value = """
+        select ds.* from doctors_slots ds
+            join doctors d on d.id = ds.doctor_id
+            join specializations s on s.id = d.specialization_id
+            join days d2 on d2.id = ds.day_id
+        where d.last_name ilike '%' || coalesce(:doctorLastName, '%') || '%'
+          and d.first_name ilike '%' || coalesce(:doctorFirstName, '%') || '%'
+          and d.mid_name ilike '%' || coalesce(:doctorMiddleName, '%') || '%'
+          and s.title ilike '%' || coalesce(:titleSpecialization, '%') || '%'
+          and cast(d2.day as text) like '%' || coalesce(:doctorSlotDay, '%') || '%'
+
+        """)
+    Page<DoctorSlot> findDoctorSlotByMany(@Param(value = "doctorLastName") String doctorLastName,
+                                          @Param(value = "doctorFirstName") String doctorFirstName,
+                                          @Param(value = "doctorMiddleName") String doctorMiddleName,
+                                          @Param(value = "titleSpecialization") String titleSpecialization,
+                                          @Param(value = "doctorSlotDay") String doctorSlotDay,
+                                          Pageable pageable);
 }
