@@ -43,7 +43,7 @@ public class DoctorSlotMVCController {
 
     @GetMapping("")
     public String getSchedule(@RequestParam(value = "page", defaultValue = "1") int page,
-                              @RequestParam(value = "size", defaultValue = "2") int pageSize,
+                              @RequestParam(value = "size", defaultValue = "15") int pageSize,
                               Model model) {
         PageRequest pageRequest = PageRequest.of(page - 1, pageSize, Sort.Direction.ASC, "day_id");
         Page<DoctorSlotDTO> doctorSlots = doctorSlotService.listAllPaging(pageRequest);
@@ -53,7 +53,7 @@ public class DoctorSlotMVCController {
 
     @PostMapping("/search")
     public String getSearchSchedule(@RequestParam(value = "page", defaultValue = "1") int page,
-                                    @RequestParam(value = "size", defaultValue = "2") int pageSize,
+                                    @RequestParam(value = "size", defaultValue = "15") int pageSize,
                                     @ModelAttribute("doctorslotSearchFormAdmin") DoctorSlotSearchAdminDTO doctorSlotSearchAdminDTO,
                                     Model model) {
 //        System.out.println(doctorSlotSearchAdminDTO);
@@ -68,7 +68,7 @@ public class DoctorSlotMVCController {
 
     @GetMapping("/getActualSchedule")
     public String getActualSchedule(@RequestParam(value = "page", defaultValue = "1") int page,
-                              @RequestParam(value = "size", defaultValue = "7") int pageSize,
+                              @RequestParam(value = "size", defaultValue = "15") int pageSize,
                               Model model) {
         PageRequest pageRequest = PageRequest.of(page - 1, pageSize, Sort.Direction.ASC, "day_id");
         Page<DoctorSlotDTO> doctorSlots = doctorSlotService.listAllCurrentPaging(pageRequest);
