@@ -29,6 +29,13 @@ public class ClientMVCController {
         this.userService = userService;
     }
 
+    @GetMapping("")
+    public String getAll(Model model) {
+        List<ClientDTO> clients = clientService.listAll();
+        model.addAttribute("clients", clients);
+        return "clients/list";
+    }
+
     @GetMapping("/registration")
     public String registration(Model model) {
         model.addAttribute("clientForm", new ClientDTO());
@@ -52,14 +59,6 @@ public class ClientMVCController {
         clientService.create(clientDTO);
         return "redirect:login";
     }
-
-    @GetMapping("/list")
-    public String getAll(Model model) {
-        List<ClientDTO> clients = clientService.listAll();
-        model.addAttribute("clients", clients);
-        return "clients/list";
-    }
-
 
 }
 

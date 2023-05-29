@@ -70,13 +70,14 @@ public class WebSecurityConfig {
 
     private final List<String> CLIENTS_PERMISSION_LIST_FOR_ADMIN = List.of
             (
-                    "/clients",
-                    "/clients/list"
+                    "/clients"
+//                    ,
+//                    "/clients/list"
             );
 
     private final List<String> REGISTRATIONS_PERMISSION_LIST_FOR_CLIENT = List.of
             (
-                    "/registrations",
+
                     "/registrations/myList",
                     "registrations/myRegistrations",
                     "registrations/myRegistrationsAllTime",
@@ -88,7 +89,8 @@ public class WebSecurityConfig {
 
     private final List<String> REGISTRATIONS_PERMISSION_LIST_FOR_ADMIN = List.of
             (
-                    "registrations/listAll",
+                    "/registrations",
+//                    "registrations/listAll",
                     "registrations/search"
             );
 

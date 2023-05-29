@@ -15,7 +15,7 @@
                         <a class="nav-link active" aria-current="page" href="/doctors">Врачи</a>
                     </li>
                     <li sec:authorize="isAuthenticated() && hasRole('ADMIN')" class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/clients/list">Клиенты</a>
+                        <a class="nav-link active" aria-current="page" href="/clients">Клиенты</a>
                     </li>
                     <li sec:authorize="isAuthenticated() && hasRole('ADMIN')" class="nav-item">
                         <a class="nav-link active" aria-current="page" href="/doctorslots">Расписание</a>
@@ -34,7 +34,7 @@
                     </li>
 
                     <li sec:authorize="isAuthenticated() && hasRole('ADMIN')" class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/registrations/listAll">Архив записей</a>
+                        <a class="nav-link active" aria-current="page" href="/registrations">Архив записей</a>
                     </li>
                     <li sec:authorize="isAuthenticated() && hasRole('DOCTOR')" class="nav-item">
                         <a class="nav-link active" aria-current="page" href="/registrations/doctorList">Мои записи</a>

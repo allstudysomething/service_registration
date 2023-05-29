@@ -55,6 +55,17 @@ public class RegistrationMVCController {
 //        return "registrations/faceWindowClientRegistrations";
 //    }
 
+    @GetMapping("")
+    public String listAll(@RequestParam(value = "page", defaultValue = "1") int page,
+                          @RequestParam(value = "size", defaultValue = "2") int pageSize,
+                          Model model) {
+        PageRequest pageRequest = PageRequest.of(page - 1, pageSize, Sort.by(Sort.Direction.DESC, "isActive"));
+        Page<RegistrationDTO> registrationsPaging = registrationService.listAllCurrentPagedNotSorted(pageRequest);
+        model.addAttribute("registrationsPaging", registrationsPaging);
+        model.addAttribute("registrationSearchFormAdmin", new RegistrationSearchAdminDTO());
+        return "registrations/listAll";
+    }
+
     @GetMapping("/addRegistration")
     public String chooseSpecialization(Model model) {
         specializationForFuture = null;
@@ -143,17 +154,6 @@ public class RegistrationMVCController {
         Long doctorSlotId = doctorSlotService.getDoctorSlotByDoctorAndDayAndSlot(doctorDTOIdForFuture, dayIdForFuture, slotIdForFuture);
         registrationService.addRecord(doctorSlotId);
         return "registrations/allDoneRegistration";
-    }
-
-    @GetMapping("/listAll")
-    public String listAll(@RequestParam(value = "page", defaultValue = "1") int page,
-                          @RequestParam(value = "size", defaultValue = "3") int pageSize,
-                          Model model) {
-        PageRequest pageRequest = PageRequest.of(page - 1, pageSize, Sort.by(Sort.Direction.DESC, "isActive"));
-        Page<RegistrationDTO> registrationsPaging = registrationService.listAllCurrentPagedNotSorted(pageRequest);
-        model.addAttribute("registrationsPaging", registrationsPaging);
-        model.addAttribute("registrationSearchFormAdmin", new RegistrationSearchAdminDTO());
-        return "registrations/listAll";
     }
 
 //    @GetMapping("/listAll")
