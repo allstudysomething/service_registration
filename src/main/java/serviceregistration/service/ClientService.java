@@ -38,17 +38,31 @@ public class ClientService extends GenericService<Client, ClientDTO> {
         return mapper.toDTO(((ClientRepository) repository).findClientByPolicy(policy));
     }
 
-    public ClientDTO create(ClientDTO newObj) {
-        int age = Period.between(LocalDate.from(newObj.getBirthDate()), LocalDate.now()).getYears();
-//        System.out.println(ChronoUnit.YEARS.between(localDate, LocalDate.now())); //returns 11
-        newObj.setAge(age);
+    public ClientDTO create(ClientDTO clientDTO) {
+        int age = Period.between(LocalDate.from(clientDTO.getBirthDate()), LocalDate.now()).getYears();
+        clientDTO.setAge(age);
         RoleDTO roleDTO = new RoleDTO();
         roleDTO.setId(1L);
-        newObj.setRole(roleDTO);
-        newObj.setPassword(bCryptPasswordEncoder.encode(newObj.getPassword()));
-        userService.createUser(newObj.getLogin(), newObj.getRole().getId());
-        return mapper.toDTO(repository.save(mapper.toEntity(newObj)));
+        clientDTO.setRole(roleDTO);
+        System.out.println("+++++++++++++++++++"+clientDTO.getPassword()+"+++++++++++++++++");
+        clientDTO.setPassword(bCryptPasswordEncoder.encode(clientDTO.getPassword()));
+        if (userService.findUserByLogin(clientDTO.getLogin()) == null) {
+            userService.createUser(clientDTO.getLogin(), clientDTO.getRole().getId());
+        }
+        return mapper.toDTO(repository.save(mapper.toEntity(clientDTO)));
     }
+
+//    public ClientDTO create(ClientDTO newObj) {
+//        int age = Period.between(LocalDate.from(newObj.getBirthDate()), LocalDate.now()).getYears();
+////        System.out.println(ChronoUnit.YEARS.between(localDate, LocalDate.now())); //returns 11
+//        newObj.setAge(age);
+//        RoleDTO roleDTO = new RoleDTO();
+//        roleDTO.setId(1L);
+//        newObj.setRole(roleDTO);
+//        newObj.setPassword(bCryptPasswordEncoder.encode(newObj.getPassword()));
+//        userService.createUser(newObj.getLogin(), newObj.getRole().getId());
+//        return mapper.toDTO(repository.save(mapper.toEntity(newObj)));
+//    }
 
     public void delete(final Long id) {
         userService.deleteByLogin(getOne(id).getLogin());

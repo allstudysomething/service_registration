@@ -1,5 +1,9 @@
 package serviceregistration.MVC.controllers;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -27,11 +31,24 @@ public class DoctorMVCController {
     }
 
     @GetMapping("")
-    public String getAll(Model model) {
-        List<DoctorDTO> doctors = doctorService.listAll();
-        model.addAttribute("doctors", doctors);
+    public String getAll(@RequestParam(value = "page", defaultValue = "1") int page,
+                         @RequestParam(value = "size", defaultValue = "5") int pageSize,
+                         Model model) {
+        PageRequest pageRequest = PageRequest.of(page - 1, pageSize
+//                , Sort.by(Sort.Direction.DESC, "isActive")
+        );
+        Page<DoctorDTO> doctorDTOPage = doctorService.listAll(pageRequest);
+//        List<DoctorDTO> doctors = doctorService.listAll();
+        model.addAttribute("doctors", doctorDTOPage);
         return "doctors/list";
     }
+
+//    @GetMapping("")
+//    public String getAll(Model model) {
+//        List<DoctorDTO> doctors = doctorService.listAll();
+//        model.addAttribute("doctors", doctors);
+//        return "doctors/list";
+//    }
 
     @GetMapping("/addDoctor")
     public String addDoctor(Model model) {

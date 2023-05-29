@@ -1,5 +1,9 @@
 package serviceregistration.service;
 
+import groovyjarjarpicocli.CommandLine;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import serviceregistration.dto.DoctorDTO;
 import serviceregistration.dto.RoleDTO;
@@ -14,9 +18,13 @@ import java.util.List;
 @Service
 public class DoctorService extends GenericService<Doctor, DoctorDTO> {
 
+    private final DoctorRepository doctorRepository;
+
     public DoctorService(DoctorRepository repository,
-                         DoctorMapper mapper) {
+                         DoctorMapper mapper,
+                         DoctorRepository doctorRepository) {
         super(repository, mapper);
+        this.doctorRepository = doctorRepository;
     }
 
     public DoctorDTO create(DoctorDTO newObj) {
@@ -33,6 +41,12 @@ public class DoctorService extends GenericService<Doctor, DoctorDTO> {
 
     public List<DoctorDTO> findAllDoctorsBySpecialization(Specialization specialization){
         return mapper.toDTOs(((DoctorRepository)repository).findAllBySpecialization(specialization));
+    }
+
+    public Page<DoctorDTO> listAll(Pageable pageable) {
+        Page<Doctor> page = doctorRepository.findAll(pageable);
+        List<DoctorDTO> result = mapper.toDTOs(page.getContent());
+        return new PageImpl<>(result, pageable, page.getTotalElements());
     }
 
 }

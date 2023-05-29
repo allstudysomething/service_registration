@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import serviceregistration.constants.UserRolesConstants;
 import serviceregistration.model.Client;
+import serviceregistration.model.Userable;
 import serviceregistration.repository.ClientRepository;
 
 import java.util.ArrayList;
@@ -42,6 +43,11 @@ public class CustomUserDetailsService implements UserDetailsService {
                     List.of(new SimpleGrantedAuthority("ROLE_" + UserRolesConstants.ADMIN)));
         }
         else {
+//            return getUserDetails(userRepository.findRoleByLogin(username) == 1
+//                            ? clientRepository.findClientByLogin(username)
+//                            : doctorRepository.findDoctorByLogin(username),
+//                    username);
+
             Client client = clientRepository.findClientByLogin(username);
             System.out.println(client.getLogin() + " ***** " + client.getEmail());
             List<GrantedAuthority> authorities = new ArrayList<>();
@@ -50,6 +56,12 @@ public class CustomUserDetailsService implements UserDetailsService {
                                                        "ROLE_" + UserRolesConstants.DOCTOR));
             return new CustomUserDetails(client.getId().intValue(), username, client.getPassword(), authorities);
         }
+    }
+
+    public UserDetails getUserDetails(final Userable user, final String username) {
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority("ROLE_" + user.getRole().getTitle()));
+        return new CustomUserDetails(user.getId().intValue(), username, user.getPassword(), authorities);
     }
 
 }
