@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import serviceregistration.dto.CustomInterfaces.CustomDoctorSpecializationDay;
 import serviceregistration.dto.DoctorDTO;
 import serviceregistration.dto.DoctorSlotDTO;
 import serviceregistration.dto.DoctorSlotSearchAdminDTO;
@@ -100,6 +101,14 @@ public class DoctorSlotService extends GenericService<DoctorSlot, DoctorSlotDTO>
 //        Page<DoctorSlot> doctorSlotPage = doctorSlotRepository.findAll(pageable);
         Page<DoctorSlot> doctorSlotPage = doctorSlotRepository.findAllSchedule(pageable);
         List<DoctorSlotDTO> result = doctorSlotMapper.toDTOs(doctorSlotPage.getContent());
+        return new PageImpl<>(result, pageable, doctorSlotPage.getTotalElements());
+    }
+
+    public Page<CustomDoctorSpecializationDay> listCurrentDays(Pageable pageable) {
+//        Page<DoctorSlot> doctorSlotPage = doctorSlotRepository.findAll(pageable);
+        Page<CustomDoctorSpecializationDay> doctorSlotPage = doctorSlotRepository.findAllCurrentDays(pageable);
+        List<CustomDoctorSpecializationDay> result = doctorSlotPage.getContent();
+        result.forEach(System.out::println);
         return new PageImpl<>(result, pageable, doctorSlotPage.getTotalElements());
     }
 

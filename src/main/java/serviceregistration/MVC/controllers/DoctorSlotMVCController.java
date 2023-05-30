@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import serviceregistration.dto.CustomInterfaces.CustomDoctorSpecializationDay;
 import serviceregistration.dto.DoctorDTO;
 import serviceregistration.dto.DoctorSlotDTO;
 import serviceregistration.dto.DoctorSlotSearchAdminDTO;
@@ -56,14 +57,22 @@ public class DoctorSlotMVCController {
                                     @RequestParam(value = "size", defaultValue = "15") int pageSize,
                                     @ModelAttribute("doctorslotSearchFormAdmin") DoctorSlotSearchAdminDTO doctorSlotSearchAdminDTO,
                                     Model model) {
-//        System.out.println(doctorSlotSearchAdminDTO);
-        PageRequest pageRequest = PageRequest.of(page - 1, pageSize
-//                , Sort.Direction.ASC, "day_id"
-        );
+        PageRequest pageRequest = PageRequest.of(page - 1, pageSize);
         Page<DoctorSlotDTO> doctorSlots = doctorSlotService.findDoctorSlotByMany(doctorSlotSearchAdminDTO, pageRequest);
         model.addAttribute("doctorslots", doctorSlots);
         return "doctorslots/schedule";
-//        return "registrations/allDoneRegistration";
+    }
+
+    @GetMapping("/currentDays")
+    public String getCurrentDays(@RequestParam(value = "page", defaultValue = "1") int page,
+                              @RequestParam(value = "size", defaultValue = "15") int pageSize,
+                              Model model) {
+        PageRequest pageRequest = PageRequest.of(page - 1, pageSize
+                //, Sort.Direction.ASC, "day_id"
+                 );
+        Page<CustomDoctorSpecializationDay> doctorSlots = doctorSlotService.listCurrentDays(pageRequest);
+        model.addAttribute("doctorslots", doctorSlots);
+        return "doctorslots/scheduleForAll";
     }
 
     @GetMapping("/getActualSchedule")

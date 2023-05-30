@@ -48,6 +48,11 @@ public class WebSecurityConfig {
                     "/doctors/deleteDoctor"
             );
 
+    private final List<String> DOCTORSLOTS_WHITE_LIST = List.of
+            (
+                "/doctorslots/currentDays"
+            );
+
     private final List<String> DOCTORSLOTS_PERMISSION_LIST_FOR_ADMIN = List.of
             (
                     "/doctorslots",
@@ -73,13 +78,10 @@ public class WebSecurityConfig {
     private final List<String> CLIENTS_PERMISSION_LIST_FOR_ADMIN = List.of
             (
                     "/clients"
-//                    ,
-//                    "/clients/list"
             );
 
     private final List<String> REGISTRATIONS_PERMISSION_LIST_FOR_CLIENT = List.of
             (
-
                     "/registrations/myList",
                     "registrations/myRegistrations",
                     "registrations/myRegistrationsAllTime",
@@ -123,6 +125,7 @@ public class WebSecurityConfig {
               .authorizeHttpRequests((requests) -> requests
                       .requestMatchers(RESOURCES_WHITE_LIST.toArray(String[]::new)).permitAll()
                       .requestMatchers(DOCTORS_WHITE_LIST.toArray(String[]::new)).permitAll()
+                      .requestMatchers(DOCTORSLOTS_WHITE_LIST.toArray(String[]::new)).permitAll()
                       .requestMatchers(CLIENTS_WHITE_LIST.toArray(String[]::new)).permitAll()
                       .requestMatchers(DOCTORS_PERMISSION_LIST_FOR_ADMIN.toArray(String[]::new)).hasRole(ADMIN)
                       .requestMatchers(DOCTORSLOTS_PERMISSION_LIST_FOR_ADMIN.toArray(String[]::new)).hasRole(ADMIN)

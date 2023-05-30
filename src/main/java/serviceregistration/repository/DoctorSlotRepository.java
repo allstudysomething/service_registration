@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import serviceregistration.dto.CustomInterfaces.CustomDoctorSpecializationDay;
 import serviceregistration.dto.DoctorDTO;
 import serviceregistration.model.*;
 
@@ -122,4 +123,29 @@ public interface DoctorSlotRepository
                                           @Param(value = "titleSpecialization") String titleSpecialization,
                                           @Param(value = "doctorSlotDay") String doctorSlotDay,
                                           Pageable pageable);
+
+//    @Query(nativeQuery = true, value = """
+//        select ds.* from doctors_slots ds
+//            left join doctors d on d.id = ds.doctor_id
+//            left join days d2 on d2.id = ds.day_id
+//            left join cabinets c on c.id = ds.cabinet_id
+//            left join specializations s on s.id = d.specialization_id
+//        where d2.day > now() and d2.day < now() + interval '10 days'
+//        order by d2.day, s.title
+//        """)
+//    Page<DoctorSlot> findAllCurrentDays(Pageable pageable);
+//}
+
+    @Query(nativeQuery = true, value = """
+        select distinct d2.day as Day, d.first_name as FirstName, d.last_name as LastName, d.mid_name as MidName,
+            s.title as TitleSpecialization
+        from doctors_slots ds
+            join doctors d on d.id = ds.doctor_id
+            join days d2 on d2.id = ds.day_id
+            join cabinets c on c.id = ds.cabinet_id
+            join specializations s on s.id = d.specialization_id
+        where d2.day > now() and d2.day < now() + interval '10 days'
+        order by d2.day, s.title
+        """)
+    Page<CustomDoctorSpecializationDay> findAllCurrentDays(Pageable pageable);
 }
