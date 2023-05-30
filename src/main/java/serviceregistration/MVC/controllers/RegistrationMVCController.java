@@ -57,7 +57,7 @@ public class RegistrationMVCController {
 
     @GetMapping("")
     public String listAll(@RequestParam(value = "page", defaultValue = "1") int page,
-                          @RequestParam(value = "size", defaultValue = "17") int pageSize,
+                          @RequestParam(value = "size", defaultValue = "7") int pageSize,
                           Model model) {
         PageRequest pageRequest = PageRequest.of(page - 1, pageSize, Sort.by(Sort.Direction.DESC, "isActive"));
         Page<RegistrationDTO> registrationsPaging = registrationService.listAllCurrentPagedNotSorted(pageRequest);
@@ -68,7 +68,7 @@ public class RegistrationMVCController {
 
     @PostMapping("/search")
     public String searchAll(@RequestParam(value = "page", defaultValue = "1") int page,
-                            @RequestParam(value = "size", defaultValue = "17") int pageSize,
+                            @RequestParam(value = "size", defaultValue = "7") int pageSize,
                             @ModelAttribute("registrationSearchFormAdmin") RegistrationSearchAdminDTO registrationSearchAdminDTO,
                             Model model) {
 //        System.out.println(registrationSearchAdminDTO);
@@ -153,7 +153,7 @@ public class RegistrationMVCController {
 //        Long userId = Long.valueOf(customUserDetails.getUserId());
 //        System.out.println("userId :" + userId);
 
-        List<Slot> freeTimeSlots = slotService.getFreeSlotsByDoctorDTOIdAndDayId(doctorDTOIdForFuture, dayIdForFuture);
+        List<Slot> freeTimeSlots = doctorSlotService.getFreeSlotsByDoctorDTOIdAndDayId(doctorDTOIdForFuture, dayIdForFuture);
         model.addAttribute("freeTimeSlots", freeTimeSlots);
         return "registrations/chooseTimeOfDayRegistration";
     }
@@ -178,7 +178,7 @@ public class RegistrationMVCController {
 
     @GetMapping("myRegistrations")
     public String getAll(@RequestParam(value = "page", defaultValue = "1") int page,
-                         @RequestParam(value = "size", defaultValue = "7") int pageSize,
+                         @RequestParam(value = "size", defaultValue = "16") int pageSize,
                          Model model) {
         PageRequest pageRequest = PageRequest.of(page - 1, pageSize);
 //        PageRequest pageRequest = PageRequest.of(page - 1, pageSize, Sort.by(Sort.Direction.ASC, "isActive"));
@@ -196,7 +196,7 @@ public class RegistrationMVCController {
 
     @GetMapping("myRegistrationsAllTime")
     public String getAllAlways(@RequestParam(value = "page", defaultValue = "1") int page,
-                         @RequestParam(value = "size", defaultValue = "6") int pageSize,
+                         @RequestParam(value = "size", defaultValue = "16") int pageSize,
                          Model model) {
         PageRequest pageRequest = PageRequest.of(page - 1, pageSize, Sort.by(Sort.Direction.DESC, "createdWhen"));
         Page<RegistrationDTO> registrationsPagingAll = registrationService.listAllPagedByClient(pageRequest);

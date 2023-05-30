@@ -44,7 +44,8 @@ public interface DoctorSlotRepository
                  JOIN days d2 on d2.id = doctors_slots.day_id
                  where s.id = :specializationId
         --          where s.title = 'Хирург'
-                   and d2.day between :currentDay AND :plusDays """)
+                   and d2.day between :currentDay and :plusDays
+                   and doctors_slots.is_registered = false""")
     List<Long> findDoctorIDsBySpecializationAndDayBetween(Long specializationId, LocalDate currentDay, LocalDate plusDays);
 
     @Query(nativeQuery = true, value = """

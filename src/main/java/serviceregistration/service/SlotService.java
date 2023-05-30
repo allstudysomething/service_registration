@@ -21,10 +21,5 @@ public class SlotService {
         return slotRepository.findAll();
     }
 
-    public List<Slot> getFreeSlotsByDoctorDTOIdAndDayId(Long doctorDTOIdForFuture, Long dayIdForFuture) {
-        List<Long> slotIDs = slotRepository.findFreeSlotsByDoctorDTOIdAndDayId(doctorDTOIdForFuture, dayIdForFuture);
-//        System.out.println(" *** print slotIDs ***");
-//        slotIDs.forEach(s -> System.out.println(s.intValue()));
-        return slotRepository.findAllById(slotIDs);
-    }
+
 }
