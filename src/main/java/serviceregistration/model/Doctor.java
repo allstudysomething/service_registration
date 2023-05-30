@@ -17,7 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @SequenceGenerator(name = "default_generator", sequenceName = "doctors_seq", allocationSize = 1)
 
-public class Doctor extends GenericModel {
+public class Doctor extends GenericModel implements Userable {
 
     @Column(name = "login", nullable = false)
     private String login;

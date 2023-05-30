@@ -9,9 +9,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import serviceregistration.constants.UserRolesConstants;
-import serviceregistration.model.Client;
 import serviceregistration.model.Userable;
 import serviceregistration.repository.ClientRepository;
+import serviceregistration.repository.DoctorRepository;
+import serviceregistration.repository.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +24,9 @@ import java.util.List;
 public class CustomUserDetailsService implements UserDetailsService {
     
     private final ClientRepository clientRepository;
-    
+    private final UserRepository userRepository;
+    private final DoctorRepository doctorRepository;
+
     @Value("${spring.security.user.name}")
     private String adminUserName;
     @Value("${spring.security.user.password}")
@@ -31,8 +34,10 @@ public class CustomUserDetailsService implements UserDetailsService {
 //    @Value("${spring.security.user.roles}")
 //    private String adminRole;
 
-    public CustomUserDetailsService(ClientRepository clientRepository) {
+    public CustomUserDetailsService(ClientRepository clientRepository, UserRepository userRepository, DoctorRepository doctorRepository) {
         this.clientRepository = clientRepository;
+        this.userRepository = userRepository;
+        this.doctorRepository = doctorRepository;
     }
     
     @Override
@@ -43,18 +48,18 @@ public class CustomUserDetailsService implements UserDetailsService {
                     List.of(new SimpleGrantedAuthority("ROLE_" + UserRolesConstants.ADMIN)));
         }
         else {
-//            return getUserDetails(userRepository.findRoleByLogin(username) == 1
-//                            ? clientRepository.findClientByLogin(username)
-//                            : doctorRepository.findDoctorByLogin(username),
-//                    username);
+            return getUserDetails(userRepository.findRoleByLogin(username) == 1
+                            ? clientRepository.findClientByLogin(username)
+                            : doctorRepository.findDoctorByLogin(username),
+                    username);
 
-            Client client = clientRepository.findClientByLogin(username);
-            System.out.println(client.getLogin() + " ***** " + client.getEmail());
-            List<GrantedAuthority> authorities = new ArrayList<>();
-            //ROLE_CLIENT, ROLE_DOCTOR
-            authorities.add(new SimpleGrantedAuthority(client.getRole().getId() == 1L ? "ROLE_" + UserRolesConstants.CLIENT :
-                                                       "ROLE_" + UserRolesConstants.DOCTOR));
-            return new CustomUserDetails(client.getId().intValue(), username, client.getPassword(), authorities);
+//            Client client = clientRepository.findClientByLogin(username);
+//            System.out.println(client.getLogin() + " ***** " + client.getEmail());
+//            List<GrantedAuthority> authorities = new ArrayList<>();
+//            //ROLE_CLIENT, ROLE_DOCTOR
+//            authorities.add(new SimpleGrantedAuthority(client.getRole().getId() == 1L ? "ROLE_" + UserRolesConstants.CLIENT :
+//                                                       "ROLE_" + UserRolesConstants.DOCTOR));
+//            return new CustomUserDetails(client.getId().intValue(), username, client.getPassword(), authorities);
         }
     }
 

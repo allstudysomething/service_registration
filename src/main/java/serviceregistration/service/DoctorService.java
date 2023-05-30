@@ -1,10 +1,9 @@
 package serviceregistration.service;
 
-import groovyjarjarpicocli.CommandLine;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import serviceregistration.dto.DoctorDTO;
 import serviceregistration.dto.DoctorSearchAllDTO;
@@ -20,13 +19,17 @@ import java.util.List;
 @Service
 public class DoctorService extends GenericService<Doctor, DoctorDTO> {
 
+    private final UserService userService;
     private final DoctorRepository doctorRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public DoctorService(DoctorRepository repository,
                          DoctorMapper mapper,
-                         DoctorRepository doctorRepository) {
+                         UserService userService, DoctorRepository doctorRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
         super(repository, mapper);
+        this.userService = userService;
         this.doctorRepository = doctorRepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     public DoctorDTO create(DoctorDTO newObj) {
@@ -34,6 +37,8 @@ public class DoctorService extends GenericService<Doctor, DoctorDTO> {
         RoleDTO roleDTO = new RoleDTO();
         roleDTO.setId(2L);
         newObj.setRole(roleDTO);
+        newObj.setPassword(bCryptPasswordEncoder.encode(newObj.getPassword()));
+        userService.createUser(newObj.getLogin(), newObj.getRole().getId());
         return mapper.toDTO(repository.save(mapper.toEntity(newObj)));
     }
 
