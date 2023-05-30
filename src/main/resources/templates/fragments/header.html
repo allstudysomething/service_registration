@@ -1,9 +1,9 @@
 <div xmlns:th="http://www.thymeleaf.org"
      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
      th:fragment="header">
-    <nav class="navbar navbar-expand-lg" style="background-color: #ee0505">
+    <nav class="navbar navbar-expand-lg fixed-top" style="background-color: #ee0505" >
         <div class="container-fluid">
-            <a class="navbar-brand" href="/" style="color: #000000">Запись к врачу</a>
+            <a class="navbar-brand" href="/" style="color: #000000">главная страница</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
@@ -12,32 +12,32 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/doctors">Врачи</a>
+                        <a class="nav-link active" aria-current="page" href="/doctors">врачи</a>
                     </li>
                     <li sec:authorize="isAuthenticated() && hasRole('ADMIN')" class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/clients">Клиенты</a>
+                        <a class="nav-link active" aria-current="page" href="/clients">клиенты</a>
                     </li>
                     <li sec:authorize="isAuthenticated() && hasRole('ADMIN')" class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/doctorslots">Расписание</a>
+                        <a class="nav-link active" aria-current="page" href="/doctorslots">расписание</a>
                     </li>
                     <li sec:authorize="isAuthenticated() && hasRole('DOCTOR')" class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/doctorslots/mySchedule">Мое расписание</a>
+                        <a class="nav-link active" aria-current="page" href="/doctorslots/mySchedule">мое расписание</a>
                     </li>
                     <li sec:authorize="isAuthenticated() && hasRole('CLIENT')" class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/registrations/addRegistration">Записаться</a>
+                        <a class="nav-link active" aria-current="page" href="/registrations/addRegistration">записаться</a>
                     </li>
                     <li sec:authorize="isAuthenticated() && hasRole('CLIENT')" class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/registrations/myRegistrations">Мои текущие записи</a>
+                        <a class="nav-link active" aria-current="page" href="/registrations/myRegistrations">мои текущие записи</a>
 
                     <li sec:authorize="isAuthenticated() && hasRole('CLIENT')" class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/registrations/myRegistrationsAllTime">Мои записи (Все время)</a>
+                        <a class="nav-link active" aria-current="page" href="/registrations/myRegistrationsAllTime">мои записи (Все время)</a>
                     </li>
 
                     <li sec:authorize="isAuthenticated() && hasRole('ADMIN')" class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/registrations">Архив записей</a>
+                        <a class="nav-link active" aria-current="page" href="/registrations">архив записей</a>
                     </li>
                     <li sec:authorize="isAuthenticated() && hasRole('DOCTOR')" class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/registrations/doctorList">Мои записи</a>
+                        <a class="nav-link active" aria-current="page" href="/registrations/doctorList">мои записи</a>
                     </li>
 <!--                    <li sec:authorize="isAuthenticated() && (hasRole('USER'))" class="nav-item">-->
 <!--                        <a class="nav-link active" aria-current="page" href="/my/films">Мои фильмы</a>-->
@@ -46,9 +46,9 @@
 <!--                        <a class="nav-link active" aria-current="page" href="users/list">Пользователи</a>-->
 <!--                    </li>-->
                 </ul>
-<!--                <div sec:authorize="isAuthenticated() && !(hasRole('ADMIN'))">-->
-<!--                    <a class="nav-link active" style="float: right" th:href="'users/profile' + ${#authentication.getPrincipal().getUserId()}">Профиль</a>-->
-<!--                </div>-->
+                <div sec:authorize="isAuthenticated() && !(hasRole('ADMIN'))">
+                    <a class="nav-link active" style="float: right" th:href="'users/profile' + ${#authentication.getPrincipal().getUserId()}">Профиль</a>
+                </div>
 <!--                <form class="d-flex" sec:authorize="!isAuthenticated()">-->
 <!--                    <a href="/login" class="btn btn-primary" role="button" aria-disabled="true">Войти</a>-->
 <!--                </form>-->
@@ -56,14 +56,14 @@
 <!--                    <a href="/logout" class="btn btn-primary" role="button" aria-disabled="true">Выйти</a>-->
 <!--                </form>-->
 
-                <div>
-                    <a class="nav-link active" style="float: right" href="users/profile">Профиль</a>
-                </div>
+<!--                <div>-->
+<!--                    <a class="nav-link active" style="float: right" href="users/profile">профиль</a>-->
+<!--                </div>-->
                 <form class="d-flex" sec:authorize="!isAuthenticated()">
-                    <a href="/login" class="btn btn-primary" role="button" aria-disabled="true">Войти</a>
+                    <a href="/login" class="btn btn-primary" role="button" aria-disabled="true">войти</a>
                 </form>
                 <form class="d-flex" sec:authorize="isAuthenticated()">
-                    <a href="/logout" class="btn btn-primary" role="button" aria-disabled="true">Выйти</a>
+                    <a href="/logout" class="btn btn-primary" role="button" aria-disabled="true">выйти</a>
                 </form>
             </div>
         </div>

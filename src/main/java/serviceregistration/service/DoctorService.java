@@ -3,9 +3,11 @@ package serviceregistration.service;
 import groovyjarjarpicocli.CommandLine;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import serviceregistration.dto.DoctorDTO;
+import serviceregistration.dto.DoctorSearchAllDTO;
 import serviceregistration.dto.RoleDTO;
 import serviceregistration.mapper.DoctorMapper;
 import serviceregistration.model.Doctor;
@@ -49,4 +51,13 @@ public class DoctorService extends GenericService<Doctor, DoctorDTO> {
         return new PageImpl<>(result, pageable, page.getTotalElements());
     }
 
+    public Page<DoctorDTO> listAllSearched(DoctorSearchAllDTO doctorSearchAllDTO, Pageable pageable) {
+        Page<Doctor> page = doctorRepository.findAllSearched(doctorSearchAllDTO.getDoctorLastName(),
+                                                             doctorSearchAllDTO.getDoctorFirstName(),
+                                                             doctorSearchAllDTO.getDoctorMiddleName(),
+                                                             doctorSearchAllDTO.getTitleSpecialization(),
+                                                             pageable);
+        List<DoctorDTO> result = mapper.toDTOs(page.getContent());
+        return new PageImpl<>(result, pageable, page.getTotalElements());
+    }
 }

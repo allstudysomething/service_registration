@@ -57,7 +57,7 @@ public class RegistrationMVCController {
 
     @GetMapping("")
     public String listAll(@RequestParam(value = "page", defaultValue = "1") int page,
-                          @RequestParam(value = "size", defaultValue = "7") int pageSize,
+                          @RequestParam(value = "size", defaultValue = "3") int pageSize,
                           Model model) {
         PageRequest pageRequest = PageRequest.of(page - 1, pageSize, Sort.by(Sort.Direction.DESC, "isActive"));
         Page<RegistrationDTO> registrationsPaging = registrationService.listAllCurrentPagedNotSorted(pageRequest);
@@ -68,7 +68,7 @@ public class RegistrationMVCController {
 
     @PostMapping("/search")
     public String searchAll(@RequestParam(value = "page", defaultValue = "1") int page,
-                            @RequestParam(value = "size", defaultValue = "7") int pageSize,
+                            @RequestParam(value = "size", defaultValue = "3") int pageSize,
                             @ModelAttribute("registrationSearchFormAdmin") RegistrationSearchAdminDTO registrationSearchAdminDTO,
                             Model model) {
 //        System.out.println(registrationSearchAdminDTO);

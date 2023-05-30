@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import serviceregistration.dto.DoctorDTO;
+import serviceregistration.dto.DoctorSearchAllDTO;
 import serviceregistration.model.Specialization;
 import serviceregistration.service.DoctorService;
 import serviceregistration.service.SpecializationService;
@@ -35,10 +36,21 @@ public class DoctorMVCController {
                          @RequestParam(value = "size", defaultValue = "10") int pageSize,
                          Model model) {
         PageRequest pageRequest = PageRequest.of(page - 1, pageSize
-//                , Sort.by(Sort.Direction.DESC, "isActive")
+                , Sort.by(Sort.Direction.ASC, "lastName")
         );
         Page<DoctorDTO> doctorDTOPage = doctorService.listAll(pageRequest);
 //        List<DoctorDTO> doctors = doctorService.listAll();
+        model.addAttribute("doctors", doctorDTOPage);
+        return "doctors/list";
+    }
+
+    @PostMapping("/search")
+    public String getAllSearch(@RequestParam(value = "page", defaultValue = "1") int page,
+                         @RequestParam(value = "size", defaultValue = "2") int pageSize,
+                         @ModelAttribute("doctorsSearchFormAll") DoctorSearchAllDTO doctorSearchAllDTO,
+                         Model model) {
+        PageRequest pageRequest = PageRequest.of(page - 1, pageSize);
+        Page<DoctorDTO> doctorDTOPage = doctorService.listAllSearched(doctorSearchAllDTO, pageRequest);
         model.addAttribute("doctors", doctorDTOPage);
         return "doctors/list";
     }
