@@ -15,7 +15,6 @@ import java.util.List;
 public interface RegistrationRepository
         extends GenericRepository<Registration> {
 
-
     List<Registration> findAllByClientAndIsActiveOrderByDoctorSlotDesc(Client client, Boolean is_active);
 
 //    @Query(nativeQuery = true, value = """
@@ -30,7 +29,6 @@ public interface RegistrationRepository
 //        where c.login = :clientLogin
 //        order by d.day, s.time_slot """)
 //    List<Registration> findAllByClientAndIsActiveOrderByDayAndSlot(String clientLogin, Boolean is_active);
-
 
     Page<Registration> findAllByClientAndIsActive(Client client, Boolean is_active, Pageable pageRequest);
 
