@@ -147,5 +147,19 @@ public interface DoctorSlotRepository
         where d2.day > now() and d2.day < now() + interval '10 days'
         order by d2.day, s.title
         """)
-    Page<CustomDoctorSpecializationDay> findAllCurrentDays(Pageable pageable);
+    Page<CustomDoctorSpecializationDay> findAllCurrentDays10(Pageable pageable);
+
+    @Query(nativeQuery = true, value = """
+        select count(*) from registrations
+            join doctors_slots ds on ds.id = registrations.doctor_slot_id
+            join clients c on c.id = registrations.client_id
+            join days d on d.id = ds.day_id
+            join slots s on s.id = ds.slot_id
+        where c.id = :currentUserId
+            and s.id = :specializationId
+            and d.id = :dayIdForFuture
+        """)
+    Long isActiveRegistrationByClientAndDayIdAndSpecializationId(Long currentUserId,
+                                                                 Long specializationId,
+                                                                 Long dayIdForFuture);
 }

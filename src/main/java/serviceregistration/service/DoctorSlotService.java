@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import serviceregistration.dto.CustomInterfaces.CustomDoctorSpecializationDay;
@@ -17,6 +18,7 @@ import serviceregistration.model.DoctorSlot;
 import serviceregistration.model.Slot;
 import serviceregistration.repository.DoctorSlotRepository;
 import serviceregistration.repository.SlotRepository;
+import serviceregistration.service.userdetails.CustomUserDetails;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -40,6 +42,16 @@ public class DoctorSlotService extends GenericService<DoctorSlot, DoctorSlotDTO>
         this.dayService = dayService;
         this.doctorSlotMapper = doctorSlotMapper;
         this.slotRepository = slotRepository;
+    }
+
+    public Long getCurrentUserId() {
+        CustomUserDetails customUserDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Long userId = Long.valueOf(customUserDetails.getUserId());
+        return userId;
+    }
+
+    public CustomUserDetails getCurrentUser() {
+        return (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
     public void addSchedule(Long doctorId, Long dayId, Long cabinetId) {
@@ -104,11 +116,11 @@ public class DoctorSlotService extends GenericService<DoctorSlot, DoctorSlotDTO>
         return new PageImpl<>(result, pageable, doctorSlotPage.getTotalElements());
     }
 
-    public Page<CustomDoctorSpecializationDay> listCurrentDays(Pageable pageable) {
+    public Page<CustomDoctorSpecializationDay> listCurrentDays10(Pageable pageable) {
 //        Page<DoctorSlot> doctorSlotPage = doctorSlotRepository.findAll(pageable);
-        Page<CustomDoctorSpecializationDay> doctorSlotPage = doctorSlotRepository.findAllCurrentDays(pageable);
+        Page<CustomDoctorSpecializationDay> doctorSlotPage = doctorSlotRepository.findAllCurrentDays10(pageable);
         List<CustomDoctorSpecializationDay> result = doctorSlotPage.getContent();
-        result.forEach(System.out::println);
+//        result.forEach(System.out::println);
         return new PageImpl<>(result, pageable, doctorSlotPage.getTotalElements());
     }
 
@@ -132,6 +144,12 @@ public class DoctorSlotService extends GenericService<DoctorSlot, DoctorSlotDTO>
 //        registrationPage.getContent().forEach(System.out::println);
         List<DoctorSlotDTO> result = mapper.toDTOs(doctorSlotPage.getContent());
         return new PageImpl<>(result, pageable, doctorSlotPage.getTotalElements());
+    }
+
+    public boolean isActiveRegistrationByClientAndDayIdAndSpecializationId(Long specializationId, Long dayIdForFuture) {
+        Long count = doctorSlotRepository.isActiveRegistrationByClientAndDayIdAndSpecializationId(getCurrentUserId(), specializationId, dayIdForFuture);
+        System.out.println(count);
+        return  count >= 1L;
     }
 
 //    public Page<DoctorSlotDTO> getAllDoctorSlot(Pageable pageable) {

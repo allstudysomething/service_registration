@@ -8,6 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import serviceregistration.dto.DoctorDTO;
 import serviceregistration.dto.DoctorSlotDTO;
@@ -141,10 +142,15 @@ public class RegistrationMVCController {
 
     @PostMapping("/addRegistrationThird")
     public String reserveDoctorSlotByClient(@RequestParam("day") Long dayId,
+//                                            BindingResult bindingResult,
                                             Model model) {
         // static dayId appropriation
         dayIdForFuture = dayId;
 
+        if(doctorSlotService.isActiveRegistrationByClientAndDayIdAndSpecializationId(specializationForFuture.getId(), dayIdForFuture)) {
+            dayIdForFuture = null;
+            return "redirect:/registrations/addRegistrationThird";
+        }
         return "redirect:/registrations/addRegistrationFourth";
     }
 
@@ -218,7 +224,7 @@ public class RegistrationMVCController {
 
     @RequestMapping(value = "/deleteRecord/{id}")
     public String deleteRecordById(@PathVariable(value = "id") Long registrationId) {
-        System.out.println("***********" + " in deleteRecord " + "*******");
+//        System.out.println("***********" + " in deleteRecord " + "*******");
         RegistrationDTO registrationDTO = registrationService.getOne(registrationId);
         Long doctorSlotId = registrationDTO.getDoctorSlot().getId();
         DoctorSlotDTO updatedDoctorSlot = doctorSlotService.getOne(doctorSlotId);

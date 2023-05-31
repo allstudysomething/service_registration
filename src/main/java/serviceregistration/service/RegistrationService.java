@@ -69,7 +69,6 @@ public class RegistrationService extends GenericService<Registration, Registrati
     public Long getCurrentUserId() {
         CustomUserDetails customUserDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Long userId = Long.valueOf(customUserDetails.getUserId());
-//        System.out.println("userId :" + userId);
         return userId;
     }
 

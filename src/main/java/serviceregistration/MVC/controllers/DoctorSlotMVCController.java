@@ -65,12 +65,12 @@ public class DoctorSlotMVCController {
 
     @GetMapping("/currentDays")
     public String getCurrentDays(@RequestParam(value = "page", defaultValue = "1") int page,
-                              @RequestParam(value = "size", defaultValue = "15") int pageSize,
+                              @RequestParam(value = "size", defaultValue = "4") int pageSize,
                               Model model) {
         PageRequest pageRequest = PageRequest.of(page - 1, pageSize
                 //, Sort.Direction.ASC, "day_id"
                  );
-        Page<CustomDoctorSpecializationDay> doctorSlots = doctorSlotService.listCurrentDays(pageRequest);
+        Page<CustomDoctorSpecializationDay> doctorSlots = doctorSlotService.listCurrentDays10(pageRequest);
         model.addAttribute("doctorslots", doctorSlots);
         return "doctorslots/scheduleForAll";
     }

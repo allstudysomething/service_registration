@@ -91,6 +91,7 @@
                     <td th:text="${doctorslot.getLastName() + ' ' + doctorslot.getFirstName() + ' ' + doctorslot.getMidName()}"></td>
                     <td th:text="${doctorslot.getTitleSpecialization()}"></td>
                     <td th:text="${doctorslot.getDay()}"></td>
+<!--                    <td th:text="${doctorslot.getTimeSlot().getHour()}"></td>-->
 <!--                    <td th:text="${doctorslot.getSlot().getTimeSlot()}"></td>-->
 <!--                    <td th:text="${doctorslot.getCabinet().getCabinetNumber()}"></td>-->
 <!--                    <td th:classappend="${doctorslot.getIsRegistered() == false} ? 'not-active-reg' : 'active-reg'"-->
@@ -99,30 +100,30 @@
                 </tbody>
             </table>
         </div>
-<!--        <nav aria-label="Pagination" th:if="${doctorslots.totalPages gt 0}">-->
-<!--            <ul class="pagination justify-content-center font-weight-bold">-->
-<!--                <li class="page-item" th:classappend="${doctorslots.number eq 0} ? 'disabled'">-->
-<!--                    <a class="page-link"-->
-<!--                       th:href="@{/doctorslots?page={id}(id=${doctorslots.number lt 2 ? 1 : doctorslots.number})}"-->
-<!--                       aria-label="Previous" title="Previous Page" data-toggle="tooltip">-->
-<!--                        <span aria-hidden="true">&laquo;</span>-->
-<!--                    </a>-->
-<!--                </li>-->
-<!--                <li class="page-item"-->
-<!--                    th:each="i : ${#numbers.sequence(1, doctorslots.totalPages, 1)}"-->
-<!--                    th:classappend="${i eq doctorslots.number + 1} ? 'active'">-->
-<!--                    <a class="page-link" th:href="@{/doctorslots?page={id}(id=${i})}" th:text="${i}"-->
-<!--                       th:title="${'Page '+ i}" data-toggle="tooltip"></a>-->
-<!--                </li>-->
-<!--                <li class="page-item" th:classappend="${doctorslots.number eq doctorslots.totalPages - 1} ? 'disabled'">-->
-<!--                    <a class="page-link"-->
-<!--                       th:href="@{/doctorslots?page={id}(id=${doctorslots.number + 2})}"-->
-<!--                       aria-label="Next" title="Next Page" data-toggle="tooltip">-->
-<!--                        <span aria-hidden="true">&raquo;</span>-->
-<!--                    </a>-->
-<!--                </li>-->
-<!--            </ul>-->
-<!--        </nav>-->
+        <nav aria-label="Pagination" th:if="${doctorslots.totalPages gt 0}">
+            <ul class="pagination justify-content-center font-weight-bold">
+                <li class="page-item" th:classappend="${doctorslots.number eq 0} ? 'disabled'">
+                    <a class="page-link"
+                       th:href="@{/doctorslots/currentDays?page={id}(id=${doctorslots.number lt 2 ? 1 : doctorslots.number})}"
+                       aria-label="Previous" title="Previous Page" data-toggle="tooltip">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li class="page-item"
+                    th:each="i : ${#numbers.sequence(1, doctorslots.totalPages, 1)}"
+                    th:classappend="${i eq doctorslots.number + 1} ? 'active'">
+                    <a class="page-link" th:href="@{/doctorslots/currentDays?page={id}(id=${i})}" th:text="${i}"
+                       th:title="${'Page '+ i}" data-toggle="tooltip"></a>
+                </li>
+                <li class="page-item" th:classappend="${doctorslots.number eq doctorslots.totalPages - 1} ? 'disabled'">
+                    <a class="page-link"
+                       th:href="@{/doctorslots/currentDays?page={id}(id=${doctorslots.number + 2})}"
+                       aria-label="Next" title="Next Page" data-toggle="tooltip">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
     </div>
 <!--</div>-->
 </body>
