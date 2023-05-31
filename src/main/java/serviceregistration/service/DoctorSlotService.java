@@ -159,9 +159,15 @@ public class DoctorSlotService extends GenericService<DoctorSlot, DoctorSlotDTO>
 
     public boolean isActiveRegistrationByClientAndDayIdAndSpecializationId(Long specializationId, Long dayIdForFuture) {
         Long count = doctorSlotRepository.isActiveRegistrationByClientAndDayIdAndSpecializationId(getCurrentUserLogin(), specializationId, dayIdForFuture);
-        System.out.println("*********   " + getCurrentUserLogin() + " : " + count + "   **********");
+//        System.out.println("*********   " + getCurrentUserLogin() + " : " + count + "   **********");
 //        System.out.println(count);
         return count >= 1L;
     }
 
+    public List<DoctorSlotDTO> getMySchedule() {
+        List<DoctorSlot> doctorSlots = doctorSlotRepository.getMySchedule(getCurrentUserLogin());
+        doctorSlots.forEach(System.out::println);
+        List<DoctorSlotDTO> doctorSlotDTOS = mapper.toDTOs(doctorSlots);
+        return doctorSlotDTOS;
+    }
 }

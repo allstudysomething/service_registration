@@ -165,6 +165,18 @@ public interface DoctorSlotRepository
     Long isActiveRegistrationByClientAndDayIdAndSpecializationId(String getCurrentUserLogin,
                                                                  Long specializationId,
                                                                  Long dayIdForFuture);
+
+    @Query(nativeQuery = true, value = """
+        select doctors_slots.* from doctors_slots
+                join cabinets c on c.id = doctors_slots.cabinet_id
+                join doctors d on d.id = doctors_slots.doctor_id
+                join days d2 on d2.id = doctors_slots.day_id
+                join registrations r on doctors_slots.id = r.doctor_slot_id
+        where d.login = :currentUserLogin
+            and d2.day >= now()
+        """)
+    List<DoctorSlot> getMySchedule(String currentUserLogin);
+
 }
 
 //    select count(*) from registrations

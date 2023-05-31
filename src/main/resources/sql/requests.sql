@@ -244,3 +244,12 @@ values (nextval('registrations_seq'), 'login', 1),
        (nextval('registrations_seq'), 'client5login', 1),
        (nextval('registrations_seq'), 'client6login', 1),
        (nextval('registrations_seq'), 'client7login', 1);
+
+insert into users
+values (nextval('registrations_seq'), 'Doctor1Login', 2),
+       (nextval('registrations_seq'), 'Doctor2Login', 2),
+       (nextval('registrations_seq'), 'Doctor3Login', 2),
+       (nextval('registrations_seq'), 'Doctor4Login', 2),
+       (nextval('registrations_seq'), 'Doctor5Login', 2),
+       (nextval('registrations_seq'), 'Doctor6Login', 2),
+       (nextval('registrations_seq'), 'Doctor7Login', 2);

@@ -105,6 +105,7 @@ public class DoctorSlotMVCController {
         model.addAttribute("scheduleForm", new DoctorSlotDTO());
         return "doctorslots/addSchedule";
     }
+
     @PostMapping("/addSchedule")
     public String addSchedule(@ModelAttribute("scheduleForm") DoctorSlotDTO doctorSlotDTO,
                               BindingResult bindingResult,
@@ -137,6 +138,14 @@ public class DoctorSlotMVCController {
     public String deleteSchedule(@ModelAttribute("scheduleForm") DoctorSlotDTO doctorSlotDTO) {
         doctorSlotService.deleteSchedule(doctorSlotDTO.getDoctor().getId(), doctorSlotDTO.getDay().getId());
         return "redirect:/doctorslots";
+    }
+
+    @GetMapping ("/mySchedule")
+    public String mySchedule(Model model) {
+        List<DoctorSlotDTO> doctorslots = doctorSlotService.getMySchedule();
+//        doctorslots.forEach(System.out::println);
+        model.addAttribute("doctorslots", doctorslots);
+        return "doctorslots/mySchedule";
     }
 
 
