@@ -22,11 +22,14 @@ import serviceregistration.service.userdetails.CustomUserDetails;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Transactional
 @Service
 public class DoctorSlotService extends GenericService<DoctorSlot, DoctorSlotDTO> {
+    private static LocalDate localDateCurrent;
+    private static LocalDate plusDateCurrent;
 
     private final DoctorService doctorService;
     private final DoctorSlotRepository doctorSlotRepository;
@@ -54,6 +57,12 @@ public class DoctorSlotService extends GenericService<DoctorSlot, DoctorSlotDTO>
         return (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
+    public String getCurrentUserLogin() {
+        CustomUserDetails customUserDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String currentUserLogin = customUserDetails.getUsername();
+        return currentUserLogin;
+    }
+
     public void addSchedule(Long doctorId, Long dayId, Long cabinetId) {
          doctorSlotRepository.addSchedule(doctorId, dayId, cabinetId);
     }
@@ -71,26 +80,28 @@ public class DoctorSlotService extends GenericService<DoctorSlot, DoctorSlotDTO>
     }
 
     // Потом заменить LocalDate date на LocalDate.Now()
-    public List<DoctorDTO> findDoctorDTOBySpecializationIdAndDayBetween(Long specializationId, LocalDate currenTDate
-            , LocalDate futureDate) {
+    public List<DoctorDTO> findDoctorDTOBySpecializationIdAndDayBetween(Long specializationId) {
+        localDateCurrent = LocalDate.now();
+        plusDateCurrent = localDateCurrent.plusDays(30);
         List<Long> doctorIds = doctorSlotRepository.findDoctorIDsBySpecializationAndDayBetween(specializationId,
-                currenTDate, futureDate);
+                localDateCurrent, plusDateCurrent);
         List<DoctorDTO> doctorDTOS = new ArrayList<>();
         doctorIds.forEach(s -> doctorDTOS.add(doctorService.getOne(s)));
 //        doctorDTOS.stream().forEach(s -> doctorService.getOne(s))
         return doctorDTOS;
     }
 
-    public List<Day> findDaysByDoctorDTOIdAndNotRegisteredAndDateBetween(Long doctorDTOId,
-            LocalDate currenTDate, LocalDate futureDate){
+    public List<Day> findDaysByDoctorDTOIdAndNotRegisteredAndDateBetween(Long doctorDTOId){
+        localDateCurrent = LocalDate.now();
+        plusDateCurrent = localDateCurrent.plusDays(30);
         List<Long> dayIds = doctorSlotRepository.findDaysIdByDoctorDTOIdAndNotRegisteredAndDateBetween(doctorDTOId,
-                currenTDate, futureDate);
+                localDateCurrent, plusDateCurrent);
 //        System.out.println("in doctorslotservice");
 //        dayIds.forEach(System.out::println);
         List<Day> dayList = new ArrayList<>();
         dayIds.forEach(s -> dayList.add(dayService.getDayById(s)));
+        dayList.sort((o1, o2) -> o1.getDay().compareTo(o2.getDay()));
 //        dayIds.stream().forEach(s -> dayList.add(dayService.getDayById(s)));
-//        System.out.println("out doctorslotservice");
 
         return  dayList;
     }
@@ -147,15 +158,10 @@ public class DoctorSlotService extends GenericService<DoctorSlot, DoctorSlotDTO>
     }
 
     public boolean isActiveRegistrationByClientAndDayIdAndSpecializationId(Long specializationId, Long dayIdForFuture) {
-        Long count = doctorSlotRepository.isActiveRegistrationByClientAndDayIdAndSpecializationId(getCurrentUserId(), specializationId, dayIdForFuture);
-        System.out.println(count);
-        return  count >= 1L;
+        Long count = doctorSlotRepository.isActiveRegistrationByClientAndDayIdAndSpecializationId(getCurrentUserLogin(), specializationId, dayIdForFuture);
+        System.out.println("*********   " + getCurrentUserLogin() + " : " + count + "   **********");
+//        System.out.println(count);
+        return count >= 1L;
     }
-
-//    public Page<DoctorSlotDTO> getAllDoctorSlot(Pageable pageable) {
-//        Page<DoctorSlot> doctorSlotsPaginated = doctorSlotRepository.findAllNotLessThanToday(pageable);
-//        List<DoctorSlotDTO> result = mapper.toDTOs(doctorSlotsPaginated.getContent());
-//        return new PageImpl<>(result, pageable, doctorSlotsPaginated.getTotalElements());
-//    }
 
 }

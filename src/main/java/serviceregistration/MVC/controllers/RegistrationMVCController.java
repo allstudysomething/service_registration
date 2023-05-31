@@ -34,9 +34,6 @@ public class RegistrationMVCController {
     private static Long dayIdForFuture;
     private static Long slotIdForFuture;
 
-    private static LocalDate localDateCurrent;
-    private static LocalDate plusDateCurrent;
-
     private final RegistrationService registrationService;
     private final SpecializationService specializationService;
     private final DoctorSlotService doctorSlotService;
@@ -110,10 +107,8 @@ public class RegistrationMVCController {
 
         // ONLY FOR CURRENT EXAMPLE (plus 60 days)
 //        localDateCurrent = LocalDate.of(2023, 6, 1);
-        localDateCurrent = LocalDate.now();
-        plusDateCurrent = localDateCurrent.plusDays(60);
-        List<DoctorDTO> doctorDTOS = doctorSlotService.findDoctorDTOBySpecializationIdAndDayBetween(specializationForFuture.getId(),
-                localDateCurrent, plusDateCurrent);
+
+        List<DoctorDTO> doctorDTOS = doctorSlotService.findDoctorDTOBySpecializationIdAndDayBetween(specializationForFuture.getId());
 
         model.addAttribute("doctorDTOList", doctorDTOS);
         model.addAttribute("doctorDTOForm", new DoctorDTO());
@@ -133,8 +128,7 @@ public class RegistrationMVCController {
 
     @GetMapping("/addRegistrationThird")
     public String reserveDoctorSlotByClient(Model model) {
-        List<Day> dayList = doctorSlotService.findDaysByDoctorDTOIdAndNotRegisteredAndDateBetween(doctorDTOIdForFuture,
-                localDateCurrent, plusDateCurrent);
+        List<Day> dayList = doctorSlotService.findDaysByDoctorDTOIdAndNotRegisteredAndDateBetween(doctorDTOIdForFuture);
         model.addAttribute("doctorDTOForm", new DoctorDTO());
         model.addAttribute("doctorWorkDates", dayList);
         return "registrations/chooseDateOfDoctorWork";

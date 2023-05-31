@@ -44,7 +44,6 @@ public interface DoctorSlotRepository
                  JOIN specializations s on d.specialization_id = s.id
                  JOIN days d2 on d2.id = doctors_slots.day_id
                  where s.id = :specializationId
-        --          where s.title = 'Хирург'
                    and d2.day between :currentDay and :plusDays
                    and doctors_slots.is_registered = false""")
     List<Long> findDoctorIDsBySpecializationAndDayBetween(Long specializationId, LocalDate currentDay, LocalDate plusDays);
@@ -54,7 +53,8 @@ public interface DoctorSlotRepository
             JOIN days d2 on doctors_slots.day_id = d2.id
             WHERE doctor_id = :doctorDTOId
               AND is_registered = 'false'
-              AND d2.day BETWEEN :currentDay AND :plusDays """)
+              AND d2.day BETWEEN :currentDay AND :plusDays
+            """)
     List<Long> findDaysIdByDoctorDTOIdAndNotRegisteredAndDateBetween(Long doctorDTOId, LocalDate currentDay, LocalDate plusDays);
 
     @Query(nativeQuery = true, value = """
@@ -151,15 +151,27 @@ public interface DoctorSlotRepository
 
     @Query(nativeQuery = true, value = """
         select count(*) from registrations
-            join doctors_slots ds on ds.id = registrations.doctor_slot_id
-            join clients c on c.id = registrations.client_id
-            join days d on d.id = ds.day_id
-            join slots s on s.id = ds.slot_id
-        where c.id = :currentUserId
-            and s.id = :specializationId
+                                 join doctors_slots ds on ds.id = registrations.doctor_slot_id
+                                 join clients c on c.id = registrations.client_id
+                                 join days d on d.id = ds.day_id
+                                 join slots s on s.id = ds.slot_id
+                                 join doctors d2 on ds.doctor_id = d2.id
+                                 join specializations s2 on d2.specialization_id = s2.id
+        where c.login = :getCurrentUserLogin
+            and is_active = true
+            and s2.id = :specializationId
             and d.id = :dayIdForFuture
         """)
-    Long isActiveRegistrationByClientAndDayIdAndSpecializationId(Long currentUserId,
+    Long isActiveRegistrationByClientAndDayIdAndSpecializationId(String getCurrentUserLogin,
                                                                  Long specializationId,
                                                                  Long dayIdForFuture);
 }
+
+//    select count(*) from registrations
+//    join doctors_slots ds on ds.id = registrations.doctor_slot_id
+//        join clients c on c.id = registrations.client_id
+//        join days d on d.id = ds.day_id
+//        join slots s on s.id = ds.slot_id
+//        where c.login = :getCurrentUserLogin
+//        and s.id = :specializationId
+//        and d.id = :dayIdForFuture
