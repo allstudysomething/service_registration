@@ -97,16 +97,16 @@ values
     ('2023-07-02');
 
 insert into doctors
-values (nextval('doctors_seq'), null, now(), null, null, false, 'Петр', 'Иванов', 'PeIvLogin', 'Иванович', 'p', 2, 1),
-       (nextval('doctors_seq'), null, now(), null, null, false, 'Семен', 'Семенов', 'SeSeLogin', 'Иванович', 'p', 2, 2),
-       (nextval('doctors_seq'), null, now(), null, null, false, 'Иван', 'Петров', 'IvPeLogin', 'Иванович', 'p', 2, 1),
-       (nextval('doctors_seq'), null, now(), null, null, false, 'Doctor1Name', 'Doctor1LastName', 'Doctor1Login', 'Doctor1MidName', 'p', 2, 3),
-       (nextval('doctors_seq'), null, now(), null, null, false, 'Doctor2Name', 'Doctor2LastName', 'Doctor2Login', 'Doctor2MidName', 'p', 2, 4),
-       (nextval('doctors_seq'), null, now(), null, null, false, 'Doctor3Name', 'Doctor3LastName', 'Doctor3Login', 'Doctor3MidName', 'p', 2, 2),
-       (nextval('doctors_seq'), null, now(), null, null, false, 'Doctor4Name', 'Doctor4LastName', 'Doctor4Login', 'Doctor4MidName', 'p', 2, 1),
-       (nextval('doctors_seq'), null, now(), null, null, false, 'Doctor5Name', 'Doctor5LastName', 'Doctor5Login', 'Doctor5MidName', 'p', 2, 3),
-       (nextval('doctors_seq'), null, now(), null, null, false, 'Doctor6Name', 'Doctor6LastName', 'Doctor6Login', 'Doctor6MidName', 'p', 2, 1),
-       (nextval('doctors_seq'), null, now(), null, null, false, 'Doctor7Name', 'Doctor7LastName', 'Doctor7Login', 'Doctor7MidName', 'p', 2, 4);
+values (nextval('doctors_seq'), null, now(), null, null, false, 'Петр', 'Иванов', 'PeIvLogin', 'Иванович', '$2a$12$FN6OMZ.RuFZ56VJZ9YP3iOzb.TgqQ6U.CF0p9J2tw2eiXGiWtFPXC', 2, 1),
+       (nextval('doctors_seq'), null, now(), null, null, false, 'Семен', 'Семенов', 'SeSeLogin', 'Иванович', '$2a$12$FN6OMZ.RuFZ56VJZ9YP3iOzb.TgqQ6U.CF0p9J2tw2eiXGiWtFPXC', 2, 2),
+       (nextval('doctors_seq'), null, now(), null, null, false, 'Иван', 'Петров', 'IvPeLogin', 'Иванович', '$2a$12$FN6OMZ.RuFZ56VJZ9YP3iOzb.TgqQ6U.CF0p9J2tw2eiXGiWtFPXC', 2, 1),
+       (nextval('doctors_seq'), null, now(), null, null, false, 'Doctor1Name', 'Doctor1LastName', 'Doctor1Login', 'Doctor1MidName', '$2a$12$FN6OMZ.RuFZ56VJZ9YP3iOzb.TgqQ6U.CF0p9J2tw2eiXGiWtFPXC', 2, 3),
+       (nextval('doctors_seq'), null, now(), null, null, false, 'Doctor2Name', 'Doctor2LastName', 'Doctor2Login', 'Doctor2MidName', '$2a$12$FN6OMZ.RuFZ56VJZ9YP3iOzb.TgqQ6U.CF0p9J2tw2eiXGiWtFPXC', 2, 4),
+       (nextval('doctors_seq'), null, now(), null, null, false, 'Doctor3Name', 'Doctor3LastName', 'Doctor3Login', 'Doctor3MidName', '$2a$12$FN6OMZ.RuFZ56VJZ9YP3iOzb.TgqQ6U.CF0p9J2tw2eiXGiWtFPXC', 2, 2),
+       (nextval('doctors_seq'), null, now(), null, null, false, 'Doctor4Name', 'Doctor4LastName', 'Doctor4Login', 'Doctor4MidName', '$2a$12$FN6OMZ.RuFZ56VJZ9YP3iOzb.TgqQ6U.CF0p9J2tw2eiXGiWtFPXC', 2, 1),
+       (nextval('doctors_seq'), null, now(), null, null, false, 'Doctor5Name', 'Doctor5LastName', 'Doctor5Login', 'Doctor5MidName', '$2a$12$FN6OMZ.RuFZ56VJZ9YP3iOzb.TgqQ6U.CF0p9J2tw2eiXGiWtFPXC', 2, 3),
+       (nextval('doctors_seq'), null, now(), null, null, false, 'Doctor6Name', 'Doctor6LastName', 'Doctor6Login', 'Doctor6MidName', '$2a$12$FN6OMZ.RuFZ56VJZ9YP3iOzb.TgqQ6U.CF0p9J2tw2eiXGiWtFPXC', 2, 1),
+       (nextval('doctors_seq'), null, now(), null, null, false, 'Doctor7Name', 'Doctor7LastName', 'Doctor7Login', 'Doctor7MidName', '$2a$12$FN6OMZ.RuFZ56VJZ9YP3iOzb.TgqQ6U.CF0p9J2tw2eiXGiWtFPXC', 2, 4);
 
 -- insert into clients
 -- values (nextval('clients_seq'), now(), null, null, null, null,
@@ -120,19 +120,19 @@ values (nextval('clients_seq'), now(), null, null, null, null,
        (nextval('clients_seq'), now(), null, null, null, null,
         'Изм проспект', 19, now(), 'vs1d2@sf.ru', 'Иван', 1, 'Иванов', 'login2', 'Владимирович', 'pass', '89131103765', '163451634538421', 1),
        (nextval('clients_seq'), now(), null, null, null, null, 'client1address', 45, now(), 'client1@mail.ru', 'client1name',
-           1, 'client1lastname', 'client1login', 'client1midname', '$2a$10$yPgfY6CRQTYUiy6bxEc57ON/Kc07AdpuOGLSa33AhbqJhc2Gy.TM2', '89111112277', '1112277', 1),
+           1, 'client1lastname', 'client1login', 'client1midname', '$2a$12$FN6OMZ.RuFZ56VJZ9YP3iOzb.TgqQ6U.CF0p9J2tw2eiXGiWtFPXC', '89111112277', '1112277', 1),
        (nextval('clients_seq'), now(), null, null, null, null, 'client2address', 21, now(), 'client2@mail.ru', 'client2name',
-           1, 'client2lastname', 'client2login', 'client2midname', '$2a$10$yPgfY6CRQTYUiy6bxEc57ON/Kc07AdpuOGLSa33AhbqJhc2Gy.TM2', '89222222277', '2222277', 1),
+           1, 'client2lastname', 'client2login', 'client2midname', '$2a$12$FN6OMZ.RuFZ56VJZ9YP3iOzb.TgqQ6U.CF0p9J2tw2eiXGiWtFPXC', '89222222277', '2222277', 1),
        (nextval('clients_seq'), now(), null, null, null, null, 'client3address', 33, now(), 'client3@mail.ru', 'client3name',
-           1, 'client3lastname', 'client3login', 'client3midname', '$2a$10$yPgfY6CRQTYUiy6bxEc57ON/Kc07AdpuOGLSa33AhbqJhc2Gy.TM2', '89333332277', '3332277', 1),
+           1, 'client3lastname', 'client3login', 'client3midname', '$2a$12$FN6OMZ.RuFZ56VJZ9YP3iOzb.TgqQ6U.CF0p9J2tw2eiXGiWtFPXC', '89333332277', '3332277', 1),
        (nextval('clients_seq'), now(), null, null, null, null, 'client4address', 68, now(), 'client4@mail.ru', 'client4name',
-           1, 'client4lastname', 'client4login', 'client4midname', '$2a$10$yPgfY6CRQTYUiy6bxEc57ON/Kc07AdpuOGLSa33AhbqJhc2Gy.TM2', '89444442277', '4442277', 1),
+           1, 'client4lastname', 'client4login', 'client4midname', '$2a$12$FN6OMZ.RuFZ56VJZ9YP3iOzb.TgqQ6U.CF0p9J2tw2eiXGiWtFPXC', '89444442277', '4442277', 1),
        (nextval('clients_seq'), now(), null, null, null, null, 'client5address', 14, now(), 'client5@mail.ru', 'client5name',
-           1, 'client5lastname', 'client5login', 'client5midname', '$2a$10$yPgfY6CRQTYUiy6bxEc57ON/Kc07AdpuOGLSa33AhbqJhc2Gy.TM2', '89555552277', '5552277', 1),
+           1, 'client5lastname', 'client5login', 'client5midname', '$2a$12$FN6OMZ.RuFZ56VJZ9YP3iOzb.TgqQ6U.CF0p9J2tw2eiXGiWtFPXC', '89555552277', '5552277', 1),
        (nextval('clients_seq'), now(), null, null, null, null, 'client6address', 27, now(), 'client6@mail.ru', 'client6name',
-           1, 'client6lastname', 'client6login', 'client6midname', '$2a$10$yPgfY6CRQTYUiy6bxEc57ON/Kc07AdpuOGLSa33AhbqJhc2Gy.TM2', '8966662277', '6662277', 1),
+           1, 'client6lastname', 'client6login', 'client6midname', '$2a$12$FN6OMZ.RuFZ56VJZ9YP3iOzb.TgqQ6U.CF0p9J2tw2eiXGiWtFPXC', '8966662277', '6662277', 1),
        (nextval('clients_seq'), now(), null, null, null, null, 'client7address', 31, now(), 'client7@mail.ru', 'client7name',
-           1, 'client7lastname', 'client7login', 'client7midname', '$2a$10$yPgfY6CRQTYUiy6bxEc57ON/Kc07AdpuOGLSa33AhbqJhc2Gy.TM2', '89777772277', '7772277', 1);
+           1, 'client7lastname', 'client7login', 'client7midname', '$2a$12$FN6OMZ.RuFZ56VJZ9YP3iOzb.TgqQ6U.CF0p9J2tw2eiXGiWtFPXC', '89777772277', '7772277', 1);
 
 insert into doctors_slots
 select nextval('doctor_slot_seq'), null, now(), null, null, null, false, cabinets.id, days.id, doctors.id, slots.id

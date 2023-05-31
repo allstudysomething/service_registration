@@ -32,7 +32,10 @@
     <!--                <th scope="col">Статус</th>-->
                     <th scope="col">Дата и время записи</th>
                     <th scope="col">Кабинет</th>
+                    <th scope="col">Доктор</th>
+                    <th scope="col">Специальность</th>
                     <th scope="col">Статус</th>
+                    <th scope="col">Дата/Время удаления</th>
                     <th scope="col"></th>
                 </tr>
                 </thead>
@@ -44,8 +47,11 @@
     <!--                <td th:text="${registration.isActive.booleanValue()}"></td>-->
                     <td th:text="${registration.getDoctorSlot().getDay().getDay() + ' ' + registration.getDoctorSlot().getSlot().getTimeSlot()}"></td>
                     <td th:text="${registration.getDoctorSlot().getCabinet().getCabinetNumber()}"></td>
+                    <td th:text="${registration.getDoctorSlot().getDoctor().getLastName() + ' ' + registration.getDoctorSlot().getDoctor().getFirstName() + ' ' + registration.getDoctorSlot().getDoctor().getMidName()}"></td>
+                    <td th:text="${registration.getDoctorSlot().getDoctor().getSpecialization().getTitleSpecialization()}"></td>
                     <td th:classappend="${registration.getIsActive() == false} ? 'not-active-reg' : 'active-reg'"
                         th:text="${registration.getIsActive()} == false ? 'Не активна' : 'Активна'"></td>
+                    <td th:text="${#temporals.format(registration.getDeletedWhen(), 'dd-MM-yyyy HH:mm')}"></td>
                     <td>
 <!--                        <div sec:authorize="isAuthenticated() && (hasRole('ADMIN') || hasRole('CLIENT'))">-->
 <!--                            &lt;!&ndash;                    <a class="btn btn-sm btn-outline-success" th:href="'/regbooks/update/' + ${book.id}">Обновить</a>&ndash;&gt;-->

@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import serviceregistration.dto.DoctorDTO;
@@ -158,6 +159,7 @@ public class RegistrationMVCController {
         return "registrations/chooseTimeOfDayRegistration";
     }
 
+    @Transactional
     @PostMapping("/addRegistrationFourth")
     public String chooseTimeOfDayRegistration(@RequestParam("freeTime") Long slotId,
                                               Model model) {
@@ -198,8 +200,10 @@ public class RegistrationMVCController {
     public String getAllAlways(@RequestParam(value = "page", defaultValue = "1") int page,
                          @RequestParam(value = "size", defaultValue = "16") int pageSize,
                          Model model) {
-        PageRequest pageRequest = PageRequest.of(page - 1, pageSize, Sort.by(Sort.Direction.DESC, "createdWhen"));
-        Page<RegistrationDTO> registrationsPagingAll = registrationService.listAllPagedByClient(pageRequest);
+        PageRequest pageRequest = PageRequest.of(page - 1, pageSize
+//                , Sort.by(Sort.Direction.DESC, "createdWhen")
+        );
+        Page<RegistrationDTO> registrationsPagingAll = registrationService.listArchivePagedByClient(pageRequest);
         model.addAttribute("registrationsPagingAll", registrationsPagingAll);
         return "registrations/myListAllTime";
     }
@@ -214,11 +218,15 @@ public class RegistrationMVCController {
 
     @RequestMapping(value = "/deleteRecord/{id}")
     public String deleteRecordById(@PathVariable(value = "id") Long registrationId) {
-        Long doctorSlotId = registrationService.getOne(registrationId).getDoctorSlot().getId();
+        System.out.println("***********" + " in deleteRecord " + "*******");
+        RegistrationDTO registrationDTO = registrationService.getOne(registrationId);
+        Long doctorSlotId = registrationDTO.getDoctorSlot().getId();
         DoctorSlotDTO updatedDoctorSlot = doctorSlotService.getOne(doctorSlotId);
         updatedDoctorSlot.setIsRegistered(false);
         doctorSlotService.update(updatedDoctorSlot);
-        registrationService.delete(registrationId);
+        //safe delete
+//        registrationService.delete(registrationId);
+        registrationService.safeDelete(registrationDTO);
         return "redirect:/registrations/myRegistrations";
     }
 

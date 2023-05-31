@@ -88,7 +88,8 @@ public class WebSecurityConfig {
                     "/registrations/addRegistration",
                     "/registrations/addRegistrationSecond",
                     "/registrations/addRegistrationThird",
-                    "/registrations/addRegistrationFourth"
+                    "/registrations/addRegistrationFourth",
+                    "/registrations/deleteRecord/**"
             );
 
     private final List<String> REGISTRATIONS_PERMISSION_LIST_FOR_ADMIN = List.of

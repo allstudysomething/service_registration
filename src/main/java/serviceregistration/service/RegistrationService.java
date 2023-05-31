@@ -101,15 +101,15 @@ public class RegistrationService extends GenericService<Registration, Registrati
 
     public Page<RegistrationDTO> listAllCurrentPagedByClient(Pageable pageable) {
         Client currentClient = clientRepository.findClientById(getCurrentUserId());
-        Page<Registration> registrationPage = registrationRepository.findAllByClientAndIsActive(currentClient,
-                true, pageable);
+        Page<Registration> registrationPage = registrationRepository.findAllByClientAndIsActiveAndDateCurrentPlus(currentClient.getLogin(),
+                pageable);
         List<RegistrationDTO> result = mapper.toDTOs(registrationPage.getContent());
         return new PageImpl<>(result, pageable, registrationPage.getTotalElements());
     }
 
-    public Page<RegistrationDTO> listAllPagedByClient(Pageable pageable) {
+    public Page<RegistrationDTO> listArchivePagedByClient(Pageable pageable) {
         Client currentClient = clientRepository.findClientById(getCurrentUserId());
-        Page<Registration> registrationPage = registrationRepository.findAllByClient(currentClient,
+        Page<Registration> registrationPage = registrationRepository.findAllByClientAndNotIsActiveAndDateCurrentMinus(currentClient.getLogin(),
                 pageable);
         List<RegistrationDTO> result = mapper.toDTOs(registrationPage.getContent());
         return new PageImpl<>(result, pageable, registrationPage.getTotalElements());
@@ -132,5 +132,12 @@ public class RegistrationService extends GenericService<Registration, Registrati
 //        registrationPage.getContent().forEach(System.out::println);
         List<RegistrationDTO> result = mapper.toDTOs(registrationPage.getContent());
         return new PageImpl<>(result, pageable, registrationPage.getTotalElements());
+    }
+
+    public void safeDelete(RegistrationDTO registrationDTO) {
+        registrationDTO.setIsActive(false);
+        registrationDTO.setDeletedBy(getCurrentUser().getUsername());
+        registrationDTO.setDeletedWhen(LocalDateTime.now());
+        registrationRepository.save(mapper.toEntity(registrationDTO));
     }
 }

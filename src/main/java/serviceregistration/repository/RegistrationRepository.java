@@ -30,9 +30,36 @@ public interface RegistrationRepository
 //        order by d.day, s.time_slot """)
 //    List<Registration> findAllByClientAndIsActiveOrderByDayAndSlot(String clientLogin, Boolean is_active);
 
-    Page<Registration> findAllByClientAndIsActive(Client client, Boolean is_active, Pageable pageRequest);
+//    Page<Registration> findAllByClientAndIsActive(Client client, Boolean is_active, Pageable pageRequest);
+    @Query(nativeQuery = true, value = """
+        select registrations.* from registrations
+            join clients c on c.id = registrations.client_id
+            join doctors_slots ds on ds.id = registrations.doctor_slot_id
+            join cabinets c2 on c2.id = ds.cabinet_id
+            join days d on d.id = ds.day_id
+        where c.login = :clientLogin
+            and registrations.is_active = true
+            and d.day >= now()
+        """)
+    Page<Registration> findAllByClientAndIsActiveAndDateCurrentPlus(@Param(value = "clientLogin") String clientLogin,
+                                                  Pageable pageRequest);
+    @Query(nativeQuery = true, value = """
+        select registrations.* from registrations
+            join clients c on c.id = registrations.client_id
+            join doctors_slots ds on ds.id = registrations.doctor_slot_id
+            join cabinets c2 on c2.id = ds.cabinet_id
+            join days d on d.id = ds.day_id
+            join slots s on s.id = ds.slot_id
+        where c.login = :clientLogin
+            and registrations.is_active = false
 
-    Page<Registration> findAllByClient(Client currentClient, Pageable pageable);
+
+        """)
+    Page<Registration> findAllByClientAndNotIsActiveAndDateCurrentMinus(@Param(value = "clientLogin") String clientLogin,
+                                                                        Pageable pageRequest);
+
+//    and d.day < now()
+    //        order by d.day
 
     @Query(nativeQuery = true, value = """
         select registrations.* from registrations left join doctors_slots ds on registrations.doctor_slot_id = ds.id
