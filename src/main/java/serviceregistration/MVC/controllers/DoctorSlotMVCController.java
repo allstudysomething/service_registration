@@ -125,6 +125,7 @@ public class DoctorSlotMVCController {
         return "redirect:/doctorslots";
     }
 
+    //TODO male soft delete
     @GetMapping("/deleteSchedule")
     public String deleteSchedule(Model model) {
         List<DoctorDTO> doctors = doctorService.listAll();
@@ -143,7 +144,6 @@ public class DoctorSlotMVCController {
     @GetMapping ("/mySchedule")
     public String mySchedule(Model model) {
         List<DoctorSlotDTO> doctorslots = doctorSlotService.getMySchedule();
-//        doctorslots.forEach(System.out::println);
         model.addAttribute("doctorslots", doctorslots);
         return "doctorslots/mySchedule";
     }

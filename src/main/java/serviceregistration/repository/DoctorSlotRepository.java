@@ -144,7 +144,7 @@ public interface DoctorSlotRepository
             join days d2 on d2.id = ds.day_id
             join cabinets c on c.id = ds.cabinet_id
             join specializations s on s.id = d.specialization_id
-        where d2.day > now() and d2.day < now() + interval '10 days'
+        where d2.day > now() - interval '1 day' and d2.day < now() + interval '10 days'
         order by d2.day, s.title
         """)
     Page<CustomDoctorSpecializationDay> findAllCurrentDays10(Pageable pageable);
@@ -161,6 +161,7 @@ public interface DoctorSlotRepository
             and is_active = true
             and s2.id = :specializationId
             and d.id = :dayIdForFuture
+            and registrations.is_active = true
         """)
     Long isActiveRegistrationByClientAndDayIdAndSpecializationId(String getCurrentUserLogin,
                                                                  Long specializationId,
@@ -171,9 +172,9 @@ public interface DoctorSlotRepository
                 join cabinets c on c.id = doctors_slots.cabinet_id
                 join doctors d on d.id = doctors_slots.doctor_id
                 join days d2 on d2.id = doctors_slots.day_id
-                join registrations r on doctors_slots.id = r.doctor_slot_id
         where d.login = :currentUserLogin
-            and d2.day >= now()
+            and d2.day > now() - interval '1 day'
+        order by d2.day, doctors_slots.slot_id
         """)
     List<DoctorSlot> getMySchedule(String currentUserLogin);
 

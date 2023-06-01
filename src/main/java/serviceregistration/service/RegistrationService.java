@@ -19,10 +19,12 @@ import serviceregistration.model.Registration;
 import serviceregistration.model.ResultMeet;
 import serviceregistration.repository.ClientRepository;
 import serviceregistration.repository.RegistrationRepository;
+import serviceregistration.repository.UserRepository;
 import serviceregistration.service.userdetails.CustomUserDetails;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 
 @Service
@@ -33,17 +35,20 @@ public class RegistrationService extends GenericService<Registration, Registrati
     private final RegistrationRepository registrationRepository;
     private final RegistrationMapper registrationMapper;
     private final ClientRepository clientRepository;
+    private final UserRepository userRepository;
 
     public RegistrationService(RegistrationRepository repository,
                                RegistrationMapper mapper, DoctorSlotMapper doctorSlotMapper, DoctorSlotService doctorSlotService,
                                RegistrationRepository registrationRepository, RegistrationMapper registrationMapper,
-                               ClientRepository clientRepository) {
+                               ClientRepository clientRepository,
+                               UserRepository userRepository) {
         super(repository, mapper);
         this.doctorSlotMapper = doctorSlotMapper;
         this.doctorSlotService = doctorSlotService;
         this.registrationRepository = registrationRepository;
         this.registrationMapper = registrationMapper;
         this.clientRepository = clientRepository;
+        this.userRepository = userRepository;
     }
 
     public void addRecord(Long doctorSlotId) {
@@ -74,6 +79,10 @@ public class RegistrationService extends GenericService<Registration, Registrati
 
     public CustomUserDetails getCurrentUser() {
         return (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }
+
+    public Long getCurrentUserRoleId() {
+        return userRepository.findRoleByLogin(getCurrentUser().getUsername());
     }
 
     public List<Registration> listAllCurrent() {
@@ -133,10 +142,41 @@ public class RegistrationService extends GenericService<Registration, Registrati
         return new PageImpl<>(result, pageable, registrationPage.getTotalElements());
     }
 
-    public void safeDelete(RegistrationDTO registrationDTO) {
+//    public void safeDelete(RegistrationDTO registrationDTO) {
+    public void safeDelete(Long roleId, Long toDeleteId) {
+        RegistrationDTO registrationDTO;
+        DoctorSlotDTO updatedDoctorSlot;
+        if (roleId == 1L) {
+            registrationDTO = getOne(toDeleteId);
+            Long doctorSlotId = registrationDTO.getDoctorSlot().getId();
+            updatedDoctorSlot = doctorSlotService.getOne(doctorSlotId);
+        } else if (roleId == 2L) {
+//            System.out.println("****** in roleId == 2L *********");
+            updatedDoctorSlot = doctorSlotService.getOne(toDeleteId);
+//            System.out.println("updatedDoctorSlot");
+//            System.out.println(updatedDoctorSlot);
+//            System.out.println();
+            Registration registration = registrationRepository.findByDoctorSlot(
+                    doctorSlotMapper.toEntity(updatedDoctorSlot));
+            if(Objects.isNull(registration)) return;
+//            System.out.println("registration");
+//            System.out.println(registration);
+//            System.out.println();
+            registrationDTO = registrationMapper.toDTO(registration);
+//            System.out.println("registrationDTO");
+//            System.out.println(registrationDTO);
+        } else return;
+
+        updatedDoctorSlot.setIsRegistered(false);
+        doctorSlotService.update(updatedDoctorSlot);
         registrationDTO.setIsActive(false);
         registrationDTO.setDeletedBy(getCurrentUser().getUsername());
         registrationDTO.setDeletedWhen(LocalDateTime.now());
+        registrationDTO.setResultMeet(ResultMeet.CANCEL);
         registrationRepository.save(mapper.toEntity(registrationDTO));
+//        System.out.println("**********   " + getCurrentUserRoleId() + "    **************");
+//        return userRepository.findRoleByLogin(getCurrentUser().getUsername());
+//        return roleId;
     }
+
 }

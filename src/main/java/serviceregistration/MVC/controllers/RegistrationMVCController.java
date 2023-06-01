@@ -8,26 +8,23 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import serviceregistration.dto.DoctorDTO;
-import serviceregistration.dto.DoctorSlotDTO;
 import serviceregistration.dto.RegistrationDTO;
 import serviceregistration.dto.RegistrationSearchAdminDTO;
 import serviceregistration.model.*;
+import serviceregistration.repository.UserRepository;
 import serviceregistration.service.*;
+import serviceregistration.service.userdetails.CustomUserDetails;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
-
-import static serviceregistration.constants.UserRolesConstants.ADMIN;
 
 
 @Slf4j
 @Controller
 @RequestMapping("/registrations")
 public class RegistrationMVCController {
+    private final UserRepository userRepository;
 
     private static Specialization specializationForFuture;
     private static Long doctorDTOIdForFuture;
@@ -35,17 +32,21 @@ public class RegistrationMVCController {
     private static Long slotIdForFuture;
 
     private final RegistrationService registrationService;
+    private final UserService userService;
     private final SpecializationService specializationService;
     private final DoctorSlotService doctorSlotService;
     private final DoctorService doctorService;
     private SlotService slotService;
 
-    public RegistrationMVCController(RegistrationService registrationService, SpecializationService specializationService, DoctorSlotService doctorSlotService, DoctorService doctorService, SlotService slotService) {
+    public RegistrationMVCController(RegistrationService registrationService, SpecializationService specializationService, DoctorSlotService doctorSlotService, DoctorService doctorService, SlotService slotService,
+                                     UserRepository userRepository, UserService userService) {
         this.registrationService = registrationService;
         this.specializationService = specializationService;
         this.doctorSlotService = doctorSlotService;
         this.doctorService = doctorService;
         this.slotService = slotService;
+        this.userRepository = userRepository;
+        this.userService = userService;
     }
 
 //    @GetMapping("")
@@ -216,18 +217,21 @@ public class RegistrationMVCController {
 //        return "registrations/myList";
 //    }
 
+    // Костыль метод(чтобы не плодить). При передаче из под учетки Доктора в registrationId будет передан doctorslotId
     @RequestMapping(value = "/deleteRecord/{id}")
-    public String deleteRecordById(@PathVariable(value = "id") Long registrationId) {
+    public String deleteRecordById(@PathVariable(value = "id") Long toDeleteId) {
 //        System.out.println("***********" + " in deleteRecord " + "*******");
-        RegistrationDTO registrationDTO = registrationService.getOne(registrationId);
-        Long doctorSlotId = registrationDTO.getDoctorSlot().getId();
-        DoctorSlotDTO updatedDoctorSlot = doctorSlotService.getOne(doctorSlotId);
-        updatedDoctorSlot.setIsRegistered(false);
-        doctorSlotService.update(updatedDoctorSlot);
-        //safe delete
-//        registrationService.delete(registrationId);
-        registrationService.safeDelete(registrationDTO);
-        return "redirect:/registrations/myRegistrations";
+
+//        registrationService.safeDelete(registrationDTO);
+
+        Long roleId = registrationService.getCurrentUserRoleId();
+//        System.out.println("***********   " + roleId + "  **********   " + toDeleteId);
+//        roleId = 5L;
+        registrationService.safeDelete(roleId, toDeleteId);
+//        roleId = registrationService.getCurrentUserRoleId();
+//        System.out.println("******** in out of registrationService.safeDelete(roleId, toDeleteId); **********");
+        return (roleId == 1L) ? "redirect:/registrations/myRegistrations"
+            : "redirect:/doctorslots/mySchedule";
     }
 
 }

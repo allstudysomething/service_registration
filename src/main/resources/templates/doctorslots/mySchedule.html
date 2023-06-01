@@ -58,23 +58,23 @@
         <h3 align="center">мое расписание</h3>
 <!--        <h1>Расписание врачей</h1>-->
         <div class="row">
-            <div class="col">
-                <a href="/doctorslots/deleteSchedule"
-                   class="btn btn-success"
-                   role="button"
-                   style="float: right"
-                   aria-disabled="true">Удалить</a>
-                <a href="/doctorslots/addSchedule"
-                   class="btn btn-success"
-                   role="button"
-                   style="float: right"
-                   aria-disabled="true">Добавить</a>
-                <a href="/doctorslots/getActualSchedule"
-                   class="btn btn-sm btn-success"
-                   role="button"
-                   style="float: left"
-                   aria-disabled="true">Актуальное расписание</a>
-            </div>
+<!--            <div class="col">-->
+<!--                <a href="/doctorslots/deleteSchedule"-->
+<!--                   class="btn btn-success"-->
+<!--                   role="button"-->
+<!--                   style="float: right"-->
+<!--                   aria-disabled="true">Удалить</a>-->
+<!--                <a href="/doctorslots/addSchedule"-->
+<!--                   class="btn btn-success"-->
+<!--                   role="button"-->
+<!--                   style="float: right"-->
+<!--                   aria-disabled="true">Добавить</a>-->
+<!--                <a href="/doctorslots/getActualSchedule"-->
+<!--                   class="btn btn-sm btn-success"-->
+<!--                   role="button"-->
+<!--                   style="float: left"-->
+<!--                   aria-disabled="true">Актуальное расписание</a>-->
+<!--            </div>-->
             <table class="table table-hover">
                 <thead>
                 <tr>
@@ -95,6 +95,16 @@
                     <td th:text="${doctorslot.getCabinet().getCabinetNumber()}"></td>
                     <td th:classappend="${doctorslot.getIsRegistered() == false} ? 'not-active-reg' : 'active-reg'"
                         th:text="${doctorslot.getIsRegistered()} == false ? 'Свободно' : 'Занято'"></td>
+<!--                    <td th:classappend="${doctorslot.getIsRegistered() == false} ? 'not-active-reg' : 'active-reg'"-->
+<!--                        th:text="${doctorslot.getIsRegistered()} == false ? 'Свободно' : doctorslot.get'Занято'"></td>-->
+                    <td>
+                        <div sec:authorize="isAuthenticated() && (hasRole('DOCTOR'))">
+                            <!--                    <a class="btn btn-sm btn-outline-success" th:href="'/regbooks/update/' + ${book.id}">Обновить</a>-->
+                            <a class="btn btn-sm btn-outline-danger" th:href="'/registrations/deleteRecord/' + ${doctorslot.getId()}">Удалить</a>
+                        </div>
+                        <!--                    <a th:if="${book.getAmount() > 0}" sec:authorize="!hasRole('ADMIN')" class="btn btn-sm btn-outline-success"-->
+                        <!--                       th:href="'/rent/book/' + ${book.id}">Арендовать книгу</a>-->
+                    </td>
                 </tr>
                 </tbody>
             </table>

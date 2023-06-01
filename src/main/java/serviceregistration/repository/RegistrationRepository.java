@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import serviceregistration.model.Client;
+import serviceregistration.model.DoctorSlot;
 import serviceregistration.model.Registration;
 
 import java.time.LocalDate;
@@ -39,7 +40,7 @@ public interface RegistrationRepository
             join days d on d.id = ds.day_id
         where c.login = :clientLogin
             and registrations.is_active = true
-            and d.day >= now()
+            and d.day >= now() - interval '1 day'
         """)
     Page<Registration> findAllByClientAndIsActiveAndDateCurrentPlus(@Param(value = "clientLogin") String clientLogin,
                                                   Pageable pageRequest);
@@ -57,9 +58,6 @@ public interface RegistrationRepository
         """)
     Page<Registration> findAllByClientAndNotIsActiveAndDateCurrentMinus(@Param(value = "clientLogin") String clientLogin,
                                                                         Pageable pageRequest);
-
-//    and d.day < now()
-    //        order by d.day
 
     @Query(nativeQuery = true, value = """
         select registrations.* from registrations left join doctors_slots ds on registrations.doctor_slot_id = ds.id
@@ -87,6 +85,8 @@ public interface RegistrationRepository
                                               @Param(value = "titleSpecialization") String titleSpecialization,
                                               @Param(value = "registrationDay") String registrationDay,
                                               Pageable pageable);
+
+    Registration findByDoctorSlot(DoctorSlot doctorSlot);
 
 //    Page<Registration> findAllAndOrderByIsActiveBefore(Boolean is_active, Pageable pageable);
 //    Page<Registration> findAll(Pageable pageable);

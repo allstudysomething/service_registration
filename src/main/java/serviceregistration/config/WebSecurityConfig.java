@@ -59,7 +59,8 @@ public class WebSecurityConfig {
                     "/doctorslots/search",
                     "/doctorslots/schedule",
                     "/doctorslots/addSchedule",
-                    "/doctorslots/delete",
+//                    "/doctorslots/delete",
+                    "/doctorslots/deleteSchedule",
                     "/doctorslots/getActualSchedule"
             );
 
@@ -93,7 +94,13 @@ public class WebSecurityConfig {
                     "/registrations/addRegistration",
                     "/registrations/addRegistrationSecond",
                     "/registrations/addRegistrationThird",
-                    "/registrations/addRegistrationFourth",
+                    "/registrations/addRegistrationFourth"
+//                    ,
+//                    "/registrations/deleteRecord/**"
+            );
+
+    private final List<String> REGISTRATIONS_PERMISSION_LIST_FOR_CLIENT_DOCTOR = List.of
+            (
                     "/registrations/deleteRecord/**"
             );
 
@@ -139,6 +146,7 @@ public class WebSecurityConfig {
                       .requestMatchers(CLIENTS_PERMISSION_LIST_FOR_ADMIN.toArray(String[]::new)).hasAnyRole(ADMIN, DOCTOR)
 //                      .requestMatchers(CLIENTS_PERMISSION_LIST_FOR_DOCTOR.toArray(String[]::new)).hasRole(ADMIN)
                       .requestMatchers(REGISTRATIONS_PERMISSION_LIST_FOR_CLIENT.toArray(String[]::new)).hasRole(CLIENT)
+                      .requestMatchers(REGISTRATIONS_PERMISSION_LIST_FOR_CLIENT_DOCTOR.toArray(String[]::new)).hasAnyRole(CLIENT,DOCTOR)
                       .requestMatchers(REGISTRATIONS_PERMISSION_LIST_FOR_ADMIN.toArray(String[]::new)).hasRole(ADMIN)
 //                      .anyRequest().authenticated())
               )
