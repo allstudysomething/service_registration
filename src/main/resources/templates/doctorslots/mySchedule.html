@@ -11,9 +11,9 @@
     <div layout:fragment="content">
         <div>
 <!--            <hr class="hr"/>-->
-            <h3 align="center">поиск раписания по параметрам</h3>
+            <h3 align="center">поиск раписания по дате</h3>
 <!--            <h3>поиск записей в базе по параметрам</h3>-->
-            <form method="POST" th:action="@{/doctorslots/search}" th:object="${doctorslotSearchFormDoctor}">
+            <form method="POST" th:action="@{/doctorslots/myScheduleSearch}" th:object="${doctorslotSearchFormDoctor}">
 <!--                <div class="mt-0 row g-2">-->
 <!--                    <div class="col-md">-->
 <!--                        <div class="form-floating">-->

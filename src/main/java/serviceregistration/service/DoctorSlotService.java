@@ -166,7 +166,13 @@ public class DoctorSlotService extends GenericService<DoctorSlot, DoctorSlotDTO>
 
     public List<DoctorSlotDTO> getMySchedule() {
         List<DoctorSlot> doctorSlots = doctorSlotRepository.getMySchedule(getCurrentUserLogin());
-        doctorSlots.forEach(System.out::println);
+//        doctorSlots.forEach(System.out::println);
+        List<DoctorSlotDTO> doctorSlotDTOS = mapper.toDTOs(doctorSlots);
+        return doctorSlotDTOS;
+    }
+
+    public List<DoctorSlotDTO> getMySearchedSchedule(LocalDate registrationDay) {
+        List<DoctorSlot> doctorSlots = doctorSlotRepository.findDoctorSlotByDay(getCurrentUserLogin(), registrationDay);
         List<DoctorSlotDTO> doctorSlotDTOS = mapper.toDTOs(doctorSlots);
         return doctorSlotDTOS;
     }

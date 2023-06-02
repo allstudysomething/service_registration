@@ -178,7 +178,20 @@ public interface DoctorSlotRepository
         """)
     List<DoctorSlot> getMySchedule(String currentUserLogin);
 
+    @Query(nativeQuery = true, value = """
+        select doctors_slots.* from doctors_slots
+            join doctors d on d.id = doctors_slots.doctor_id
+            join cabinets c on c.id = doctors_slots.cabinet_id
+            join days d2 on d2.id = doctors_slots.day_id
+        where cast(d2.day as text) like coalesce(cast(:registrationDay as text), '%')
+            and d.login = :getCurrentUserLogin
+        """)
+    List<DoctorSlot> findDoctorSlotByDay(String getCurrentUserLogin, LocalDate registrationDay);
 }
+
+//    join registrations r on doctors_slots.id = r.doctor_slot_id
+
+
 
 //    select count(*) from registrations
 //    join doctors_slots ds on ds.id = registrations.doctor_slot_id

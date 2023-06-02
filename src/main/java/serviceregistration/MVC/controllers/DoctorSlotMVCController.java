@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import serviceregistration.dto.CustomInterfaces.CustomDoctorSpecializationDay;
+import serviceregistration.dto.DateSearchDTO;
 import serviceregistration.dto.DoctorDTO;
 import serviceregistration.dto.DoctorSlotDTO;
 import serviceregistration.dto.DoctorSlotSearchAdminDTO;
@@ -17,6 +18,7 @@ import serviceregistration.model.Day;
 import serviceregistration.model.Slot;
 import serviceregistration.service.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Slf4j
@@ -125,7 +127,7 @@ public class DoctorSlotMVCController {
         return "redirect:/doctorslots";
     }
 
-    //TODO male soft delete
+    //TODO make soft delete (if needed)
     @GetMapping("/deleteSchedule")
     public String deleteSchedule(Model model) {
         List<DoctorDTO> doctors = doctorService.listAll();
@@ -145,6 +147,16 @@ public class DoctorSlotMVCController {
     public String mySchedule(Model model) {
         List<DoctorSlotDTO> doctorslots = doctorSlotService.getMySchedule();
         model.addAttribute("doctorslots", doctorslots);
+        return "doctorslots/mySchedule";
+    }
+
+    // TODO продумать как реализовать чтобы после поиска можно было удалить запись и остаться на поиске
+    @PostMapping ("/myScheduleSearch")
+    public String myScheduleSearch(Model model,
+                                   @ModelAttribute("doctorslotSearchFormDoctor") DateSearchDTO dateSearchDTO) {
+//        System.out.println(" ***********  " + dateSearchDTO + "  *************");
+        List<DoctorSlotDTO> searchDoctorslots = doctorSlotService.getMySearchedSchedule(dateSearchDTO.getRegistrationDay());
+        model.addAttribute("doctorslots", searchDoctorslots);
         return "doctorslots/mySchedule";
     }
 

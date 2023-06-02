@@ -66,7 +66,9 @@ public class WebSecurityConfig {
 
     private final List<String> DOCTORSLOTS_PERMISSION_LIST_FOR_DOCTOR = List.of
             (
-                    "/doctorslots/mySchedule"
+                    "/doctorslots/mySchedule",
+                    "/doctorslots/myScheduleSearch"
+
             );
 
     private final List<String> CLIENTS_WHITE_LIST = List.of
