@@ -1,28 +1,36 @@
 package serviceregistration.service;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import serviceregistration.constants.MailConstants;
 import serviceregistration.dto.ClientDTO;
 import serviceregistration.dto.RoleDTO;
 import serviceregistration.mapper.ClientMapper;
 import serviceregistration.model.Client;
 import serviceregistration.repository.ClientRepository;
-import serviceregistration.repository.UserRepository;
+import serviceregistration.utils.MailUtils;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.UUID;
 
+@Slf4j
 @Service
 public class ClientService extends GenericService<Client, ClientDTO> {
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final UserService userService;
+    private final JavaMailSender javaMailSender;
 
     public ClientService(ClientRepository repository,
-                         ClientMapper mapper, BCryptPasswordEncoder bCryptPasswordEncoder, UserService userService) {
+                         ClientMapper mapper, BCryptPasswordEncoder bCryptPasswordEncoder, UserService userService, JavaMailSender javaMailSender) {
         super(repository, mapper);
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.userService = userService;
+        this.javaMailSender = javaMailSender;
     }
     public ClientDTO getClientByLogin(String login) {
         return mapper.toDTO(((ClientRepository) repository).findClientByLogin(login));
@@ -39,19 +47,27 @@ public class ClientService extends GenericService<Client, ClientDTO> {
         return mapper.toDTO(((ClientRepository) repository).findClientByPolicy(policy));
     }
 
-    public ClientDTO create(ClientDTO clientDTO) {
+    public ClientDTO create(ClientDTO clientDTO, Boolean encode) {
         int age = Period.between(LocalDate.from(clientDTO.getBirthDate()), LocalDate.now()).getYears();
         clientDTO.setAge(age);
         RoleDTO roleDTO = new RoleDTO();
         roleDTO.setId(1L);
         clientDTO.setRole(roleDTO);
 //        System.out.println("+++++++++++++++++++"+clientDTO.getPassword()+"+++++++++++++++++");
-        clientDTO.setPassword(bCryptPasswordEncoder.encode(clientDTO.getPassword()));
-
+        if(encode) {
+            clientDTO.setPassword(bCryptPasswordEncoder.encode(clientDTO.getPassword()));
+        } else {
+            clientDTO.setPassword(clientDTO.getPassword());
+        }
         if (userService.findUserByLogin(clientDTO.getLogin()) == null) {
             userService.createUser(clientDTO.getLogin(), clientDTO.getRole().getId());
         }
         return mapper.toDTO(repository.save(mapper.toEntity(clientDTO)));
+    }
+
+    public ClientDTO create(ClientDTO clientDTO) {
+        clientDTO = create(clientDTO, false);
+        return clientDTO;
     }
 
 //    public ClientDTO create(ClientDTO newObj) {
@@ -79,4 +95,16 @@ public class ClientService extends GenericService<Client, ClientDTO> {
         update(clientDTO);
     }
 
+    public void sendChangePasswordEmail(final ClientDTO clientDTO) {
+        UUID uuid = UUID.randomUUID();
+        clientDTO.setChangePasswordToken(uuid.toString());
+        log.info(uuid.toString());
+        log.info(clientDTO.toString());
+        update(clientDTO);
+        SimpleMailMessage mailMessage = MailUtils.crateMailMessage(clientDTO.getEmail(),
+                MailConstants.MAIL_SUBJECT_FOR_REMEMBER_PASSWORD,
+                MailConstants.MAIL_MESSAGE_FOR_REMEMBER_PASSWORD + uuid);
+
+        javaMailSender.send(mailMessage);
+    }
 }

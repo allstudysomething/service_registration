@@ -67,7 +67,9 @@ public interface SecurityConstants {
 
     List<String> CLIENTS_PERMISSION_LIST_FOR_CLIENT = List.of
             (
-                    "/clients/profile/**"
+                    "/clients/profile/**",
+                    "/clients/change-password/client",
+                    "/clients/change-password/**"
             );
 
     List<String> REGISTRATIONS_PERMISSION_LIST_FOR_CLIENT = List.of

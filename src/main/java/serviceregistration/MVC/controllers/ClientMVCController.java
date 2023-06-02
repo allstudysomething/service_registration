@@ -69,7 +69,7 @@ public class ClientMVCController {
             bindingResult.rejectValue("email", "email.error", "Этот email уже существует");
             return "registration";
         }
-        clientService.create(clientDTO);
+        clientService.create(clientDTO, true);
         return "redirect:login";
     }
 
@@ -134,21 +134,31 @@ public class ClientMVCController {
         foundUser.setEmail(clientDTOFromUpdateForm.getEmail());
         foundUser.setBirthDate(clientDTOFromUpdateForm.getBirthDate());
 //        foundUser.setPassword(currentPassword);
+
         // TODO проверить на idea community edition или на другом проекте get/set Enum
 //        foundUser.setGender(clientDTOFromUpdateForm.getGender());
-        int age = Period.between(LocalDate.from(clientDTOFromUpdateForm.getBirthDate()), LocalDate.now()).getYears();
-        foundUser.setAge(age);
+
+//        int age = Period.between(LocalDate.from(clientDTOFromUpdateForm.getBirthDate()), LocalDate.now()).getYears();
+//        foundUser.setAge(age);
         foundUser.setPhone(clientDTOFromUpdateForm.getPhone());
         foundUser.setAddress(clientDTOFromUpdateForm.getAddress());
-//        clientService.update(foundUser);
-        clientRepository.save(clientMapper.toEntity(foundUser));
+        clientService.update(foundUser);
+//        clientRepository.save(clientMapper.toEntity(foundUser));
 //        clientService.profileUpdateBySpareTwoUsers(userEmailDuplicated, foundUser);
         return "redirect:/clients/profile/" + clientDTOFromUpdateForm.getId();
+    }
+
+    @GetMapping("/change-password")
+    public String changePassword(@PathParam(value = "uuid") String uuid,
+                                 Model model) {
+        model.addAttribute("uuid", uuid);
+        return "clients/changePassword";
     }
 
     @PostMapping("/change-password")
     public String changePassword(@PathParam(value = "uuid") String uuid,
                                  @ModelAttribute("changePasswordForm") ClientDTO clientDTO) {
+//        System.out.println(clientDTO);
         clientService.changePassword(uuid, clientDTO.getPassword());
         return "redirect:/login";
     }
@@ -161,7 +171,26 @@ public class ClientMVCController {
         clientDTO.setChangePasswordToken(uuid.toString());
         clientService.update(clientDTO);
         model.addAttribute("uuid", uuid);
-        return "users/changePassword";
+        return "clients/changePassword";
+    }
+
+    @GetMapping("/remember-password")
+    public String rememberPassword() {
+        return "clients/rememberPassword";
+    }
+
+    @PostMapping("/remember-password")
+    public String rememberPassword(@ModelAttribute("changePasswordForm") ClientDTO clientDTO) {
+        clientDTO = clientService.getClientByEmail(clientDTO.getEmail());
+        if (Objects.isNull(clientDTO)) {
+//            return "Error!";
+            System.out.println("Objects.isNull(clientDTO) : is null");
+            return "redirect:/remember-password";
+        }
+        else {
+            clientService.sendChangePasswordEmail(clientDTO);
+            return "redirect:/login";
+        }
     }
 
 
