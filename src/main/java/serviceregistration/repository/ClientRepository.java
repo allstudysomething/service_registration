@@ -11,4 +11,5 @@ public interface ClientRepository
     Client findClientByPolicy(String policy);
     Client findClientById(Long id);
 
+    Client findUserByChangePasswordToken(String uuid);
 }

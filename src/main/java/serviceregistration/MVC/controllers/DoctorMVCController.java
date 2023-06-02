@@ -1,20 +1,26 @@
 package serviceregistration.MVC.controllers;
 
+import jakarta.security.auth.message.AuthException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import serviceregistration.constants.Errors;
 import serviceregistration.dto.DoctorDTO;
 import serviceregistration.dto.DoctorSearchAllDTO;
 import serviceregistration.model.Specialization;
 import serviceregistration.service.DoctorService;
 import serviceregistration.service.SpecializationService;
+import serviceregistration.service.userdetails.CustomUserDetails;
 
 import java.util.List;
+import java.util.Objects;
 
 import static serviceregistration.constants.UserRolesConstants.ADMIN;
 
@@ -97,6 +103,23 @@ public class DoctorMVCController {
 //        System.out.println(doctorDTOId);
         doctorService.delete(doctorDTOId);
         return "redirect:/doctors";
+    }
+
+    @GetMapping("/profile/{id}")
+    public String userProfile(@PathVariable Integer id,
+//                              @ModelAttribute(value = "exception") String exception,
+                              Model model) throws AuthException {
+        CustomUserDetails customUserDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (!Objects.isNull(customUserDetails.getUserId())) {
+            if (!ADMIN.equalsIgnoreCase(customUserDetails.getUsername())) {
+                if (!id.equals(customUserDetails.getUserId())) {
+                    throw new AuthException(HttpStatus.FORBIDDEN + ": " + Errors.Users.USER_FORBIDDEN_ERROR);
+                }
+            }
+        }
+        model.addAttribute("doctorDTO", doctorService.getOne(Long.valueOf(id)));
+//        model.addAttribute("exception", exception);
+        return "profile/viewDoctor";
     }
 
 }

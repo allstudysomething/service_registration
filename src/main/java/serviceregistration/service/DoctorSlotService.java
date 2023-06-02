@@ -164,6 +164,7 @@ public class DoctorSlotService extends GenericService<DoctorSlot, DoctorSlotDTO>
         return count >= 1L;
     }
 
+    // TODO нужно ли расписание архив для доктора? (реализовать при необходимости)
     public List<DoctorSlotDTO> getMySchedule() {
         List<DoctorSlot> doctorSlots = doctorSlotRepository.getMySchedule(getCurrentUserLogin());
 //        doctorSlots.forEach(System.out::println);

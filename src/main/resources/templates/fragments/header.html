@@ -49,6 +49,9 @@
 <!--                        <a class="nav-link active" aria-current="page" href="users/list">Пользователи</a>-->
 <!--                    </li>-->
                 </ul>
+                <form class="d-flex" sec:authorize="isAuthenticated()">
+                    <span th:text="${#authentication.getPrincipal().getUsername() + '  '}"></span>
+                </form>
 <!--                <div sec:authorize="isAuthenticated() && !(hasRole('ADMIN'))">-->
 <!--                    <a class="nav-link active" style="float: right" th:href="'users/profile' + ${#authentication.getPrincipal().getUserId()}">Профиль</a>-->
 <!--                </div>-->

@@ -184,6 +184,7 @@ public interface DoctorSlotRepository
             join cabinets c on c.id = doctors_slots.cabinet_id
             join days d2 on d2.id = doctors_slots.day_id
         where cast(d2.day as text) like coalesce(cast(:registrationDay as text), '%')
+            and d2.day > now() - interval '1 day'
             and d.login = :getCurrentUserLogin
         """)
     List<DoctorSlot> findDoctorSlotByDay(String getCurrentUserLogin, LocalDate registrationDay);

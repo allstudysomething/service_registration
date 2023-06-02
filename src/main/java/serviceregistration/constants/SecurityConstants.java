@@ -25,6 +25,11 @@ public interface SecurityConstants {
                     "/doctors/deleteDoctor"
             );
 
+    List<String> DOCTORS_PERMISSION_LIST_FOR_DOCTOR = List.of
+            (
+                    "/doctors/profile/**"
+            );
+
     List<String> DOCTORSLOTS_WHITE_LIST = List.of
             (
                     "/doctorslots/currentDays"
@@ -60,10 +65,10 @@ public interface SecurityConstants {
                     "/clients"
             );
 
-//    private final List<String> CLIENTS_PERMISSION_LIST_FOR_DOCTOR = List.of
-//            (
-//                    "/clients"
-//            );
+    List<String> CLIENTS_PERMISSION_LIST_FOR_CLIENT = List.of
+            (
+                    "/clients/profile/**"
+            );
 
     List<String> REGISTRATIONS_PERMISSION_LIST_FOR_CLIENT = List.of
             (
@@ -74,6 +79,7 @@ public interface SecurityConstants {
                     "/registrations/addRegistrationSecond",
                     "/registrations/addRegistrationThird",
                     "/registrations/addRegistrationFourth"
+
 //                    ,
 //                    "/registrations/deleteRecord/**"
             );
