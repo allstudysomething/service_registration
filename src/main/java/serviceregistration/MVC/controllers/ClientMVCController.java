@@ -1,18 +1,21 @@
 package serviceregistration.MVC.controllers;
 
+import jakarta.security.auth.message.AuthException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import serviceregistration.constants.Errors;
 import serviceregistration.dto.ClientDTO;
 import serviceregistration.service.ClientService;
 import serviceregistration.service.UserService;
+import serviceregistration.service.userdetails.CustomUserDetails;
 
 import java.util.List;
+import java.util.Objects;
 
 import static serviceregistration.constants.UserRolesConstants.ADMIN;
 
@@ -58,6 +61,23 @@ public class ClientMVCController {
         }
         clientService.create(clientDTO);
         return "redirect:login";
+    }
+
+    @GetMapping("/profile/{id}")
+    public String userProfile(@PathVariable Integer id,
+//                              @ModelAttribute(value = "exception") String exception,
+                              Model model) throws AuthException {
+        CustomUserDetails customUserDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (!Objects.isNull(customUserDetails.getUserId())) {
+            if (!ADMIN.equalsIgnoreCase(customUserDetails.getUsername())) {
+                if (!id.equals(customUserDetails.getUserId())) {
+                    throw new AuthException(HttpStatus.FORBIDDEN + ": " + Errors.Users.USER_FORBIDDEN_ERROR);
+                }
+            }
+        }
+        model.addAttribute("client", clientService.getOne(Long.valueOf(id)));
+//        model.addAttribute("exception", exception);
+        return "profile/viewClient";
     }
 
 }

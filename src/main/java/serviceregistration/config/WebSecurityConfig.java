@@ -17,6 +17,7 @@ import serviceregistration.service.userdetails.CustomUserDetailsService;
 import java.util.Arrays;
 import java.util.List;
 
+import static serviceregistration.constants.SecurityConstants.*;
 import static serviceregistration.constants.UserRolesConstants.*;
 
 
@@ -26,92 +27,7 @@ public class WebSecurityConfig {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final CustomUserDetailsService customUserDetailsService;
     
-    private final List<String> RESOURCES_WHITE_LIST = List.of("/resources/**",
-                                                              "/static/**",
-                                                              "/js/**",
-                                                              "/images/**",
-                                                              "/css/**",
-                                                              "/",
-                                                              "/swagger-ui/**",
-                                                              "/v3/api-docs/**");
 
-    private final List<String> DOCTORS_WHITE_LIST = List.of
-            (
-                    "/doctors",
-                    "/doctors/search"
-            );
-
-    private final List<String> DOCTORS_PERMISSION_LIST_FOR_ADMIN = List.of
-            (
-                    "/doctors/add",
-                    "/doctors/addDoctor",
-                    "/doctors/deleteDoctor"
-            );
-
-    private final List<String> DOCTORSLOTS_WHITE_LIST = List.of
-            (
-                "/doctorslots/currentDays"
-            );
-
-    private final List<String> DOCTORSLOTS_PERMISSION_LIST_FOR_ADMIN = List.of
-            (
-                    "/doctorslots",
-                    "/doctorslots/search",
-                    "/doctorslots/schedule",
-                    "/doctorslots/addSchedule",
-//                    "/doctorslots/delete",
-                    "/doctorslots/deleteSchedule",
-                    "/doctorslots/getActualSchedule"
-            );
-
-    private final List<String> DOCTORSLOTS_PERMISSION_LIST_FOR_DOCTOR = List.of
-            (
-                    "/doctorslots/mySchedule",
-                    "/doctorslots/myScheduleSearch"
-
-            );
-
-    private final List<String> CLIENTS_WHITE_LIST = List.of
-            (
-                    "/login",
-                    "/clients/registration",
-                    "/clients/remember-password"
-            );
-
-    private final List<String> CLIENTS_PERMISSION_LIST_FOR_ADMIN = List.of
-            (
-                    "/clients"
-            );
-
-//    private final List<String> CLIENTS_PERMISSION_LIST_FOR_DOCTOR = List.of
-//            (
-//                    "/clients"
-//            );
-
-    private final List<String> REGISTRATIONS_PERMISSION_LIST_FOR_CLIENT = List.of
-            (
-                    "/registrations/myList",
-                    "registrations/myRegistrations",
-                    "registrations/myRegistrationsAllTime",
-                    "/registrations/addRegistration",
-                    "/registrations/addRegistrationSecond",
-                    "/registrations/addRegistrationThird",
-                    "/registrations/addRegistrationFourth"
-//                    ,
-//                    "/registrations/deleteRecord/**"
-            );
-
-    private final List<String> REGISTRATIONS_PERMISSION_LIST_FOR_CLIENT_DOCTOR = List.of
-            (
-                    "/registrations/deleteRecord/**"
-            );
-
-    private final List<String> REGISTRATIONS_PERMISSION_LIST_FOR_ADMIN = List.of
-            (
-                    "/registrations",
-//                    "registrations/listAll",
-                    "registrations/search"
-            );
 
     public WebSecurityConfig(BCryptPasswordEncoder bCryptPasswordEncoder
                         ,CustomUserDetailsService customUserDetailsService) {

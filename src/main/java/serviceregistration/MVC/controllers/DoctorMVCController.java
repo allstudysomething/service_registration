@@ -22,6 +22,8 @@ import static serviceregistration.constants.UserRolesConstants.ADMIN;
 @RequestMapping("/doctors")
 public class DoctorMVCController {
 
+    // TODO продумать нужен ли поиск по доктору/id доктора ? (doctor/{id})
+
     private final DoctorService doctorService;
     private final SpecializationService specializationService;
 
