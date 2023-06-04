@@ -10,7 +10,9 @@ public interface SecurityConstants {
             "/css/**",
             "/",
             "/swagger-ui/**",
-            "/v3/api-docs/**");
+            "/v3/api-docs/**",
+            "clients/change-password/**"
+     );
 
     List<String> DOCTORS_WHITE_LIST = List.of
             (

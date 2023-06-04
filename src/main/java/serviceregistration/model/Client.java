@@ -66,6 +66,9 @@ public class Client extends GenericModel implements Userable {
     @Column(name = "change_password_token")
     private String changePasswordToken;
 
+    @Column(name = "change_password_token_expire_date")
+    private LocalDateTime changePasswordTokenExpireDateTime;
+
     @ManyToOne
     @JoinColumn(name = "role_id", nullable = false, foreignKey = @ForeignKey(name = "FK_CLIENTS_ROLES"))
     private Role role;

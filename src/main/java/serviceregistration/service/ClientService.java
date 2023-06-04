@@ -14,6 +14,7 @@ import serviceregistration.repository.ClientRepository;
 import serviceregistration.utils.MailUtils;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.UUID;
 
@@ -98,6 +99,7 @@ public class ClientService extends GenericService<Client, ClientDTO> {
     public void sendChangePasswordEmail(final ClientDTO clientDTO) {
         UUID uuid = UUID.randomUUID();
         clientDTO.setChangePasswordToken(uuid.toString());
+        clientDTO.setChangePasswordTokenExpireDateTime(LocalDateTime.now().plusHours(1));
         log.info(uuid.toString());
         log.info(clientDTO.toString());
         update(clientDTO);
@@ -106,5 +108,16 @@ public class ClientService extends GenericService<Client, ClientDTO> {
                 MailConstants.MAIL_MESSAGE_FOR_REMEMBER_PASSWORD + uuid);
 
         javaMailSender.send(mailMessage);
+    }
+
+    public Boolean checkExpiredDate(String uuid) {
+        ClientDTO clientDTO = mapper.toDTO(((ClientRepository) repository).findUserByChangePasswordToken(uuid));
+        Boolean x = LocalDateTime.now().isAfter(clientDTO.getChangePasswordTokenExpireDateTime());
+        if (x) {
+            System.out.println(LocalDateTime.now() + "    is before " + clientDTO.getChangePasswordTokenExpireDateTime());
+        } else {
+            System.out.println(LocalDateTime.now() + "    is after " + clientDTO.getChangePasswordTokenExpireDateTime());
+        }
+        return x;
     }
 }

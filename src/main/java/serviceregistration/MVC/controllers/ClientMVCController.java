@@ -151,8 +151,15 @@ public class ClientMVCController {
     @GetMapping("/change-password")
     public String changePassword(@PathParam(value = "uuid") String uuid,
                                  Model model) {
+//        Boolean checkExpiredDate = true;
+        Boolean checkExpiredDate = clientService.checkExpiredDate(uuid);
+        if(checkExpiredDate) {
+            return "redirect:/clients/remember-password";
+        } else {
         model.addAttribute("uuid", uuid);
+//        return "registrations/allDoneRegistration";
         return "clients/changePassword";
+        }
     }
 
     @PostMapping("/change-password")
@@ -188,6 +195,7 @@ public class ClientMVCController {
             return "redirect:/remember-password";
         }
         else {
+            System.out.println(clientDTO);
             clientService.sendChangePasswordEmail(clientDTO);
             return "redirect:/login";
         }
