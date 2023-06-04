@@ -10,6 +10,7 @@ import serviceregistration.model.DoctorSlot;
 import serviceregistration.model.Registration;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -88,6 +89,21 @@ public interface RegistrationRepository
 
     Registration findByDoctorSlot(DoctorSlot doctorSlot);
 
+    @Query(nativeQuery = true, value = """
+        select registrations.* from registrations join doctors_slots ds on registrations.doctor_slot_id = ds.id
+                                    join doctors d on d.id = ds.doctor_id
+                                    join clients c on c.id = registrations.client_id
+                                    join slots s on s.id = ds.slot_id
+                                    join days d2 on d2.id = ds.day_id
+        where registrations.is_active = true
+            and d2.day <= cast(:localDateTime as date)
+            and s.time_slot <= cast(:localDateTime as time)
+        """)
+    List<Registration> findExpiredRegistrations(LocalDateTime localDateTime);
+
+//    and s.time_slot <= cast(:localDateTime as time) - interval '6 hours'
+//    and d2.day <= cast(now() + interval '3 hours' as date)
+//    and s.time_slot <= cast(now() - interval '1 hours' as time);
 //    Page<Registration> findAllAndOrderByIsActiveBefore(Boolean is_active, Pageable pageable);
 //    Page<Registration> findAll(Pageable pageable);
 }

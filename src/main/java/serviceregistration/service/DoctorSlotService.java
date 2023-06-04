@@ -177,4 +177,5 @@ public class DoctorSlotService extends GenericService<DoctorSlot, DoctorSlotDTO>
         List<DoctorSlotDTO> doctorSlotDTOS = mapper.toDTOs(doctorSlots);
         return doctorSlotDTOS;
     }
+
 }

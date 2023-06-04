@@ -142,11 +142,18 @@ public class RegistrationService extends GenericService<Registration, Registrati
         return new PageImpl<>(result, pageable, registrationPage.getTotalElements());
     }
 
-//    public void safeDelete(RegistrationDTO registrationDTO) {
+    public void safeDelete(List<Registration> registrationList) {
+//        registrationList.forEach(s -> safeDelete(3L, s.getId()));
+        registrationList.forEach(s -> {
+            System.out.println(s);
+            System.out.println(doctorSlotService.getOne(getOne(s.getId()).getDoctorSlot().getId()));
+            System.out.println("*******         ***********         **********");});
+    }
+
     public void safeDelete(Long roleId, Long toDeleteId) {
         RegistrationDTO registrationDTO;
         DoctorSlotDTO updatedDoctorSlot;
-        if (roleId == 1L) {
+        if (roleId == 1L || roleId == 3) {
             registrationDTO = getOne(toDeleteId);
             Long doctorSlotId = registrationDTO.getDoctorSlot().getId();
             updatedDoctorSlot = doctorSlotService.getOne(doctorSlotId);
@@ -165,12 +172,17 @@ public class RegistrationService extends GenericService<Registration, Registrati
             registrationDTO = registrationMapper.toDTO(registration);
 //            System.out.println("registrationDTO");
 //            System.out.println(registrationDTO);
+//        } else if(roleId == 3) {
+//            registrationDTO =
         } else return;
 
         updatedDoctorSlot.setIsRegistered(false);
         doctorSlotService.update(updatedDoctorSlot);
         registrationDTO.setIsActive(false);
-        registrationDTO.setDeletedBy(getCurrentUser().getUsername());
+        String deletedBy = "unknown";
+        if (roleId == 1) deletedBy = getCurrentUser().getUsername();
+        if (roleId == 3) deletedBy = "scheduler";
+        registrationDTO.setDeletedBy(deletedBy);
         registrationDTO.setDeletedWhen(LocalDateTime.now());
         registrationDTO.setResultMeet(ResultMeet.CANCEL);
         registrationRepository.save(mapper.toEntity(registrationDTO));
@@ -179,4 +191,8 @@ public class RegistrationService extends GenericService<Registration, Registrati
 //        return roleId;
     }
 
+    public List<Registration> getExpiredRegistrations(){
+        LocalDateTime localDateTime = LocalDateTime.now();
+        return registrationRepository.findExpiredRegistrations(localDateTime);
+    }
 }
