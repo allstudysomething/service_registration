@@ -38,11 +38,11 @@ public class Client extends GenericModel implements Userable {
     @Column(name = "first_name", nullable = false)
     private String firstName;
 
-    @Column(name = "last_name", nullable = false)
-    private String lastName;
-
     @Column(name = "mid_name")
     private String midName;
+
+    @Column(name = "last_name", nullable = false)
+    private String lastName;
 
     @Column(name = "gender", nullable = false)
     @Enumerated
