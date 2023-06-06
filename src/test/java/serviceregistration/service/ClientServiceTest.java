@@ -16,6 +16,7 @@ import serviceregistration.repository.ClientRepository;
 import serviceregistration.repository.UserRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -48,27 +49,43 @@ public class ClientServiceTest extends GenericTest<Client, ClientDTO> {
     @Order(2)
     @Override
     protected void getOne() {
-//        Mockito.when(repository.)
+        Mockito.when(repository.findById(4L)).thenReturn(Optional.of(ClientTestData.CLIENT_4));
+        Mockito.when(mapper.toDTO(ClientTestData.CLIENT_4)).thenReturn(ClientTestData.CLIENT_DTO_4);
+        ClientDTO clientDTO = service.getOne(4L);
+        log.info("Testing getOne() : " + clientDTO);
+        assertEquals(ClientTestData.CLIENT_DTO_4, clientDTO);
     }
 
     @Test
     @Order(3)
     @Override
     protected void create() {
-
+        Mockito.when(repository.save(ClientTestData.CLIENT_2)).thenReturn(ClientTestData.CLIENT_2);
+        Mockito.when(mapper.toDTO(ClientTestData.CLIENT_2)).thenReturn(ClientTestData.CLIENT_DTO_2);
+        Mockito.when(mapper.toEntity(ClientTestData.CLIENT_DTO_2)).thenReturn(ClientTestData.CLIENT_2);
+        ClientDTO clientDTO = service.create(ClientTestData.CLIENT_DTO_2);
+        log.info("Testing create : " + clientDTO);
+        assertEquals(ClientTestData.CLIENT_DTO_2, clientDTO);
     }
 
     @Test
     @Order(4)
     @Override
     protected void update() {
-
+//        Mockito.when(repository.save(ClientTestData.CLIENT_2)).thenReturn(ClientTestData.CLIENT_2);
+//        Mockito.when(mapper.toDTO(ClientTestData.CLIENT_2)).thenReturn(ClientTestData.CLIENT_DTO_2);
+//        Mockito.when(mapper.toEntity(ClientTestData.CLIENT_DTO_2)).thenReturn(ClientTestData.CLIENT_2);
+        Mockito.when(service.create(ClientTestData.CLIENT_DTO_2)).thenReturn(ClientTestData.CLIENT_DTO_2);
+        ClientDTO clientDTO = service.update(ClientTestData.CLIENT_DTO_2);
+        log.info("Testing create : " + clientDTO);
+        assertEquals(ClientTestData.CLIENT_DTO_2, clientDTO);
     }
 
     @Test
     @Order(5)
     @Override
     protected void delete() {
-
+//        Mockito.when(repository.deleteById(2L)).thenReturn(null);
+//        Mockito.when(service.delete(2L)).thenReturn(null);
     }
 }

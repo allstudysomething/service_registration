@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import serviceregistration.constants.Errors;
 import serviceregistration.dto.DoctorDTO;
 import serviceregistration.dto.DoctorSearchAllDTO;
+import serviceregistration.exception.MyDeleteException;
 import serviceregistration.model.Specialization;
 import serviceregistration.service.DoctorService;
 import serviceregistration.service.SpecializationService;
@@ -28,7 +29,7 @@ import static serviceregistration.constants.UserRolesConstants.ADMIN;
 @RequestMapping("/doctors")
 public class DoctorMVCController {
 
-    // TODO продумать нужен ли поиск по доктору/id доктора ? (doctor/{id})
+    // TODO продумать : нужен ли поиск по доктору/id доктора ? (doctor/{id})
 
     private final DoctorService doctorService;
     private final SpecializationService specializationService;
@@ -87,21 +88,33 @@ public class DoctorMVCController {
             bindingResult.rejectValue("login", "error.login", "Этот логин уже существует");
             return "doctors/addDoctor";
         }
-        doctorService.create(doctorDTO);
+        doctorService.create(doctorDTO, true);
         return "redirect:/doctors";
     }
 
-    @GetMapping("/deleteDoctor")
-    public String deleteDoctor(Model model) {
-        List<DoctorDTO> doctors = doctorService.listAll();
-        model.addAttribute("doctors", doctors);
-        return "doctors/deleteDoctor";
+//    @GetMapping("/deleteDoctor")
+//    public String deleteDoctor(Model model) {
+//        List<DoctorDTO> doctors = doctorService.listAll();
+//        model.addAttribute("doctors", doctors);
+//        return "doctors/deleteDoctor";
+//    }
+//
+//    @PostMapping("/deleteDoctor")
+//    public String deleteDoctor(@RequestParam("doctorDelete") Long doctorDTOId) {
+////        System.out.println(doctorDTOId);
+//        doctorService.delete(doctorDTOId);
+//        return "redirect:/doctors";
+//    }
+
+    @GetMapping("/deleteSoft/{id}")
+    public String delete(@PathVariable Long id) throws MyDeleteException {
+        doctorService.deleteSoft(id);
+        return "redirect:/doctors";
     }
 
-    @PostMapping("/deleteDoctor")
-    public String deleteDoctor(@RequestParam("doctorDelete") Long doctorDTOId) {
-//        System.out.println(doctorDTOId);
-        doctorService.delete(doctorDTOId);
+    @GetMapping("/restore/{id}")
+    public String restore(@PathVariable Long id) {
+        doctorService.restore(id);
         return "redirect:/doctors";
     }
 

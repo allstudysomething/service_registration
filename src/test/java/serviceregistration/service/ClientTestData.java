@@ -70,6 +70,25 @@ public interface ClientTestData {
             new ArrayList<>()
     );
 
+    ClientDTO CLIENT_DTO_4 = new ClientDTO(
+            "client2login",
+            "pass",
+            "2222277",
+            "client2name",
+            "client2midname",
+            "client2lastname",
+            Gender.MALE,
+            21,
+            LocalDate.of(2023, 05, 31),
+            "89222222277",
+            "client2@mail.ru",
+            "client2address",
+            null,
+            null,
+            new RoleDTO(1L, "CLIENT", "cliennt"),
+            new ArrayList<>()
+    );
+
     List<ClientDTO> CLIENT_DTO_LIST = Arrays.asList(CLIENT_DTO_1, CLIENT_DTO_2, CLIENT_DTO_3_DELETED);
 
     Client CLIENT_1 = new Client(
@@ -123,6 +142,25 @@ public interface ClientTestData {
             "8903333333",
             "email@mail.ru3",
             "address3",
+            null,
+            null,
+            new Role(1L, "CLIENT", "cliennt"),
+            new ArrayList<>()
+    );
+
+    Client CLIENT_4 = new Client(
+            "client2login",
+            "pass",
+            "2222277",
+            "client2name",
+            "client2midname",
+            "client2lastname",
+            Gender.MALE,
+            21,
+            LocalDate.of(2023, 05, 31),
+            "89222222277",
+            "client2@mail.ru",
+            "client2address",
             null,
             null,
             new Role(1L, "CLIENT", "cliennt"),

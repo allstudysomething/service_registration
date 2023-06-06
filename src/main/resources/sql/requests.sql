@@ -28,9 +28,10 @@ values ('Врач общей практики', 'Терапевт'),
        ('Диетолог', 'Диетолог');
 
 insert into roles(description, title)
-values
-('Стандарт', 'CLIENT'),
-('Врач', 'DOCTOR');
+values ('Стандарт', 'CLIENT'),
+       ('Врач', 'DOCTOR'),
+       ('Scheduler', 'SCHEDULER'),
+       ('Admin', 'ADMIN');
 
 insert into cabinets(description, number)
 values ('Кабинет № 1', 1),

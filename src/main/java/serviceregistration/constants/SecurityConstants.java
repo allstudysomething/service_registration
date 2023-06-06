@@ -24,7 +24,9 @@ public interface SecurityConstants {
             (
                     "/doctors/add",
                     "/doctors/addDoctor",
-                    "/doctors/deleteDoctor"
+                    "/doctors/deleteDoctor",
+                    "/doctors/deleteSoft/**",
+                    "/doctors/restore/**"
             );
 
     List<String> DOCTORS_PERMISSION_LIST_FOR_DOCTOR = List.of

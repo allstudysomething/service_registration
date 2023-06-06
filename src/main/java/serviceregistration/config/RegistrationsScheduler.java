@@ -33,7 +33,7 @@ public class RegistrationsScheduler {
         List<Registration> registrationList = registrationService.getExpiredRegistrations();
         System.out.println("************ here list of registrations expired ****************");
         registrationList.forEach(System.out::println);
-        registrationService.safeDelete(registrationList);
+        registrationService.safeDelete(registrationList, 3L);
     }
 
 }

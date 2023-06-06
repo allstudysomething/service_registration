@@ -142,9 +142,9 @@ public class RegistrationService extends GenericService<Registration, Registrati
         return new PageImpl<>(result, pageable, registrationPage.getTotalElements());
     }
 
-    public void safeDelete(List<Registration> registrationList) {
+    public void safeDelete(List<Registration> registrationList, Long roleId) {
         System.out.println("************ here in safe delete public void safeDelete(List<Registration> registrationList) { ****************");
-        registrationList.forEach(s -> safeDelete(3L, s.getId()));
+        registrationList.forEach(s -> safeDelete(roleId, s.getId()));
 
 //        registrationList.forEach(s -> {
 //            System.out.println(s);
@@ -155,7 +155,7 @@ public class RegistrationService extends GenericService<Registration, Registrati
     public void safeDelete(Long roleId, Long toDeleteId) {
         RegistrationDTO registrationDTO;
         DoctorSlotDTO updatedDoctorSlot;
-        if (roleId == 1L || roleId == 3) {
+        if (roleId == 1L || roleId == 3L || roleId == 4L) {
             registrationDTO = getOne(toDeleteId);
             Long doctorSlotId = registrationDTO.getDoctorSlot().getId();
             updatedDoctorSlot = doctorSlotService.getOne(doctorSlotId);
@@ -182,8 +182,9 @@ public class RegistrationService extends GenericService<Registration, Registrati
         doctorSlotService.update(updatedDoctorSlot);
         registrationDTO.setIsActive(false);
         String deletedBy = "unknown";
-        if (roleId == 1) deletedBy = getCurrentUser().getUsername();
-        if (roleId == 3) deletedBy = "scheduler";
+        if (roleId == 1L) deletedBy = getCurrentUser().getUsername();
+        if (roleId == 3L) deletedBy = "scheduler";
+        if (roleId == 4L) deletedBy = "admin";
         registrationDTO.setDeletedBy(deletedBy);
         registrationDTO.setDeletedWhen(LocalDateTime.now());
         registrationDTO.setResultMeet(ResultMeet.CANCEL);
@@ -196,5 +197,9 @@ public class RegistrationService extends GenericService<Registration, Registrati
     public List<Registration> getExpiredRegistrations(){
         LocalDateTime localDateTime = LocalDateTime.now();
         return registrationRepository.findExpiredRegistrations(localDateTime);
+    }
+
+    public List<Registration> findCurrentRegistrationsByDoctorId(Long id) {
+        return registrationRepository.findCurrentRegistrationsByDoctorId(id);
     }
 }

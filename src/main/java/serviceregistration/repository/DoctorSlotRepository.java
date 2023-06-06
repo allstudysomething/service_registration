@@ -43,9 +43,12 @@ public interface DoctorSlotRepository
         SELECT DISTINCT doctor_id FROM doctors_slots JOIN doctors d on doctors_slots.doctor_id = d.id
                  JOIN specializations s on d.specialization_id = s.id
                  JOIN days d2 on d2.id = doctors_slots.day_id
+                 join doctors d3 on d3.id = doctors_slots.doctor_id
                  where s.id = :specializationId
                    and d2.day between :currentDay and :plusDays
-                   and doctors_slots.is_registered = false""")
+                   and doctors_slots.is_registered = false
+                   and d3.is_deleted = false
+                   """)
     List<Long> findDoctorIDsBySpecializationAndDayBetween(Long specializationId, LocalDate currentDay, LocalDate plusDays);
 
     @Query(nativeQuery = true, value = """

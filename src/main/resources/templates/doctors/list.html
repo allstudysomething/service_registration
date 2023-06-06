@@ -59,12 +59,12 @@
 <!--    <h1>врачи</h1>-->
     <div class="row">
         <div class="col">
-            <a sec:authorize="isAuthenticated() && hasRole('ADMIN')"
-               href="/doctors/deleteDoctor"
-               class="btn btn-success"
-               role="button"
-               style="float: right"
-               aria-disabled="true">Удалить</a>
+<!--            <a sec:authorize="isAuthenticated() && hasRole('ADMIN')"-->
+<!--               href="/doctors/safeDeleteDoctor"-->
+<!--               class="btn btn-success"-->
+<!--               role="button"-->
+<!--               style="float: right"-->
+<!--               aria-disabled="true">Удалить</a>-->
             <a sec:authorize="isAuthenticated() && hasRole('ADMIN')"
                href="/doctors/addDoctor"
                class="btn btn-success"
@@ -77,12 +77,30 @@
             <tr>
                 <th scope="col">ФИО</th>
                 <th scope="col">Специализация</th>
+                <th scope="col"></th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="doctor : ${doctors}">
-                <td th:text="${doctor.getLastName() + ' ' + doctor.getFirstName() + ' ' + doctor.getMidName()}"></td>
+                <td>
+                    <a class="text-link text-blue" th:href="'/doctors/' + ${doctor.getId()}" th:text="${doctor.getLastName() + ' ' + doctor.getFirstName() + ' ' + doctor.getMidName()}"></a>
+                </td>
+<!--                <td th:text="${doctor.getLastName() + ' ' + doctor.getFirstName() + ' ' + doctor.getMidName()}"></td>-->
                 <td th:text="${doctor.getSpecialization().getTitleSpecialization()}"></td>
+                <td>
+                    <div sec:authorize="isAuthenticated() && (hasRole('ADMIN'))">
+<!--                        <a class="btn btn-sm btn-outline-success" th:href="'/authors/update/' + ${author.getId()}">Обновить</a>-->
+                        <a th:if="${!doctor.isDeleted()}" class="btn btn-sm btn-outline-danger" th:href="'/doctors/deleteSoft/' + ${doctor.getId()}"
+                           onclick="return confirm('Вы действительно хотите удалить врача?');">Удалить</a>
+                        <a th:if="${doctor.isDeleted()}" class="btn btn-sm btn-outline-warning" th:href="'/doctors/restore/' + ${doctor.getId()}">Восстановить</a>
+                    </div>
+<!--                    <a sec:authorize="isAuthenticated() && hasRole('ADMIN')"-->
+<!--                       href="/doctors/safeDeleteDoctor"-->
+<!--                       class="btn btn-success"-->
+<!--                       role="button"-->
+<!--                       style="float: right"-->
+<!--                       aria-disabled="true">Удалить</a>-->
+                </td>
             </tr>
             </tbody>
         </table>

@@ -101,6 +101,19 @@ public interface RegistrationRepository
         """)
     List<Registration> findExpiredRegistrations(LocalDateTime localDateTime);
 
+    @Query(nativeQuery = true, value = """
+        select registrations.* from registrations join doctors_slots ds on ds.id = registrations.doctor_slot_id
+                join doctors d on d.id = ds.doctor_id
+                join clients c on c.id = registrations.client_id
+                join cabinets c2 on c2.id = ds.cabinet_id
+                join slots s on s.id = ds.slot_id
+                join days d2 on d2.id = ds.day_id
+        where doctor_id = :id
+            and registrations.is_active
+            and d2.day > timestamp 'today'
+        """)
+    List<Registration> findCurrentRegistrationsByDoctorId(Long id);
+
 //    and s.time_slot <= cast(:localDateTime as time) - interval '6 hours'
 //    and d2.day <= cast(now() + interval '3 hours' as date)
 //    and s.time_slot <= cast(now() - interval '1 hours' as time);
