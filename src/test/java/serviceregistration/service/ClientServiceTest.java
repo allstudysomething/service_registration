@@ -72,11 +72,11 @@ public class ClientServiceTest extends GenericTest<Client, ClientDTO> {
     @Order(4)
     @Override
     protected void update() {
-//        Mockito.when(repository.save(ClientTestData.CLIENT_2)).thenReturn(ClientTestData.CLIENT_2);
-//        Mockito.when(mapper.toDTO(ClientTestData.CLIENT_2)).thenReturn(ClientTestData.CLIENT_DTO_2);
-//        Mockito.when(mapper.toEntity(ClientTestData.CLIENT_DTO_2)).thenReturn(ClientTestData.CLIENT_2);
-        Mockito.when(service.create(ClientTestData.CLIENT_DTO_2)).thenReturn(ClientTestData.CLIENT_DTO_2);
-        ClientDTO clientDTO = service.update(ClientTestData.CLIENT_DTO_2);
+        Mockito.when(repository.save(ClientTestData.CLIENT_2)).thenReturn(ClientTestData.CLIENT_2);
+        Mockito.when(mapper.toDTO(ClientTestData.CLIENT_2)).thenReturn(ClientTestData.CLIENT_DTO_2);
+        Mockito.when(mapper.toEntity(ClientTestData.CLIENT_DTO_2)).thenReturn(ClientTestData.CLIENT_2);
+//        Mockito.when(service.create(ClientTestData.CLIENT_DTO_2)).thenReturn(ClientTestData.CLIENT_DTO_2);
+        ClientDTO clientDTO = service.create(ClientTestData.CLIENT_DTO_2);
         log.info("Testing create : " + clientDTO);
         assertEquals(ClientTestData.CLIENT_DTO_2, clientDTO);
     }
@@ -85,7 +85,7 @@ public class ClientServiceTest extends GenericTest<Client, ClientDTO> {
     @Order(5)
     @Override
     protected void delete() {
-//        Mockito.when(repository.deleteById(2L)).thenReturn(null);
+        Mockito.when(repository.findById(2L)).thenReturn(Optional.of(ClientTestData.CLIENT_2));
 //        Mockito.when(service.delete(2L)).thenReturn(null);
     }
 }

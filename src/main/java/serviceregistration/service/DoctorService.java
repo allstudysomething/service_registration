@@ -20,6 +20,7 @@ import serviceregistration.repository.DoctorRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class DoctorService extends GenericService<Doctor, DoctorDTO> {
@@ -46,7 +47,10 @@ public class DoctorService extends GenericService<Doctor, DoctorDTO> {
     }
 
     public DoctorDTO create(DoctorDTO doctorDTO, Boolean encode) {
-        doctorDTO.setCreatedWhen(LocalDateTime.now());
+        if (Objects.isNull(doctorDTO.getCreatedWhen())) {
+            doctorDTO.setCreatedWhen(LocalDateTime.now());
+        }
+        doctorDTO.setCreatedBy("admin");
         RoleDTO roleDTO = new RoleDTO();
         roleDTO.setId(2L);
         doctorDTO.setRole(roleDTO);
@@ -99,6 +103,8 @@ public class DoctorService extends GenericService<Doctor, DoctorDTO> {
 //        registrationList.forEach(System.out::println);
         registrationService.safeDelete(registrationList, 4L);
         doctor.setIsDeleted(true);
+        doctor.setDeletedWhen(LocalDateTime.now());
+        doctor.setDeletedBy("admin");
         update(mapper.toDTO(doctor));
 //        registrationService.safeDelete();
     }
@@ -106,6 +112,8 @@ public class DoctorService extends GenericService<Doctor, DoctorDTO> {
     public void restore(Long id) {
         Doctor doctor = doctorRepository.findById(id).orElseThrow(() -> new NotFoundException("Doctor not found here"));
         doctor.setIsDeleted(false);
+        doctor.setDeletedBy(null);
+        doctor.setDeletedWhen(null);
         update(mapper.toDTO(doctor));
     }
 }

@@ -105,12 +105,7 @@ public class RegistrationMVCController {
 
     @GetMapping("/addRegistrationSecond")
     public String chooseDoctorWorkDay(Model model) {
-
-        // ONLY FOR CURRENT EXAMPLE (plus 60 days)
-//        localDateCurrent = LocalDate.of(2023, 6, 1);
-
         List<DoctorDTO> doctorDTOS = doctorSlotService.findDoctorDTOBySpecializationIdAndDayBetween(specializationForFuture.getId());
-
         model.addAttribute("doctorDTOList", doctorDTOS);
         model.addAttribute("doctorDTOForm", new DoctorDTO());
         return "registrations/chooseDoctor";
@@ -118,9 +113,7 @@ public class RegistrationMVCController {
 
     @PostMapping("/addRegistrationSecond")
     public String chooseDoctorWorkDay(@RequestParam("doctorDTO") Long doctorDTOId
-            , Model model
-//            , BindingResult bindingResult
-                                            ) {
+            , Model model) {
         // static doctorDTOId appropriation
         doctorDTOIdForFuture = doctorDTOId;
 
