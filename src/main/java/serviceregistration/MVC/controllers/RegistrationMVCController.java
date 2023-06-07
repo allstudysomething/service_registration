@@ -129,7 +129,6 @@ public class RegistrationMVCController {
     public String redirectToThird(@PathVariable Long doctorId) {
         System.out.println("in     @GetMapping(\"/redirectToThird\")");
         System.out.println(doctorId);
-//        DoctorDTO doctorDTO = doctorService.getOne(doctorId);
 
         // static doctorDTOId appropriation
         doctorDTOIdForFuture = doctorId;
@@ -178,7 +177,8 @@ public class RegistrationMVCController {
         slotIdForFuture = slotId;
 
         Long doctorSlotId = doctorSlotService.getDoctorSlotByDoctorAndDayAndSlot(doctorDTOIdForFuture, dayIdForFuture, slotIdForFuture);
-        registrationService.sendAcceptedMeetEmail(registrationService.addRecord(doctorSlotId));
+        RegistrationDTO registrationDTO = registrationService.addRecord(doctorSlotId);
+//        registrationService.sendAcceptedMeetEmail(registrationDTO);
         return "registrations/allDoneRegistration";
     }
 

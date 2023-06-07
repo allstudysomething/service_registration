@@ -45,10 +45,9 @@ public class DoctorMVCController {
                          @RequestParam(value = "size", defaultValue = "5") int pageSize,
                          Model model) {
         PageRequest pageRequest = PageRequest.of(page - 1, pageSize
-//                , Sort.by(Sort.Direction.ASC, "lastName")
+                , Sort.by(Sort.Direction.ASC, "lastName")
         );
         Page<DoctorDTO> doctorDTOPage = doctorService.listAll(pageRequest);
-//        List<DoctorDTO> doctors = doctorService.listAll();
         model.addAttribute("doctors", doctorDTOPage);
         return "doctors/list";
     }

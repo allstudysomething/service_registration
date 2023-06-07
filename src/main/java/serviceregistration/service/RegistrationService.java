@@ -8,6 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 import serviceregistration.constants.MailConstants;
+import serviceregistration.constants.ToDeleteList;
 import serviceregistration.dto.*;
 import serviceregistration.mapper.DoctorSlotMapper;
 import serviceregistration.mapper.RegistrationMapper;
@@ -138,9 +139,7 @@ public class RegistrationService extends GenericService<Registration, Registrati
                                                             registrationSearchAdminDTO.getDoctorMiddleName(),
                                                             registrationSearchAdminDTO.getTitleSpecialization(),
                                                             getRegistrationDay,
-//                                                            registrationSearchAdminDTO.getRegistrationDay(),
                                                             pageable);
-//        registrationPage.getContent().forEach(System.out::println);
         List<RegistrationDTO> result = mapper.toDTOs(registrationPage.getContent());
         return new PageImpl<>(result, pageable, registrationPage.getTotalElements());
     }
@@ -148,11 +147,6 @@ public class RegistrationService extends GenericService<Registration, Registrati
     public void safeDelete(List<Registration> registrationList, Long roleId) {
         System.out.println("************ here in safe delete public void safeDelete(List<Registration> registrationList) { ****************");
         registrationList.forEach(s -> safeDelete(roleId, s.getId()));
-
-//        registrationList.forEach(s -> {
-//            System.out.println(s);
-//            System.out.println(doctorSlotService.getOne(getOne(s.getId()).getDoctorSlot().getId()));
-//            System.out.println("*******         ***********         **********");});
     }
 
     public void safeDelete(Long roleId, Long toDeleteId) {
@@ -170,8 +164,15 @@ public class RegistrationService extends GenericService<Registration, Registrati
             registrationDTO = registrationMapper.toDTO(registration);
         } else return;
 
-//        sendCancelledMeetEmail(registrationDTO);
-
+        DeletedRegistrationDTO deletedRegistration = new DeletedRegistrationDTO();
+        deletedRegistration.setEmail(registrationDTO.getClient().getEmail());
+        deletedRegistration.setDoctorFIO(registrationDTO.getDoctorSlot().getDoctor().getLastName()
+                + " " + registrationDTO.getDoctorSlot().getDoctor().getFirstName().charAt(0) + "."
+                + registrationDTO.getDoctorSlot().getDoctor().getMidName().charAt(0));
+        deletedRegistration.setDay(registrationDTO.getDoctorSlot().getDay().getDay().toString());
+        deletedRegistration.setTime(registrationDTO.getDoctorSlot().getSlot().getTimeSlot().toString());
+        deletedRegistration.setCabinet(registrationDTO.getDoctorSlot().getCabinet().getCabinetNumber().toString());
+        ToDeleteList.deletedRegistrationsList.add(deletedRegistration);
 
         updatedDoctorSlot.setIsRegistered(false);
         doctorSlotService.update(updatedDoctorSlot);
@@ -186,27 +187,7 @@ public class RegistrationService extends GenericService<Registration, Registrati
         registrationRepository.save(mapper.toEntity(registrationDTO));
     }
 
-//    public void sendCancelledMeetEmail(RegistrationDTO registrationDTO) {
-//        String email = registrationDTO.getClient().getEmail();
-//        String doctorFIO = registrationDTO.getDoctorSlot().getDoctor().getLastName() + " "
-//                + registrationDTO.getDoctorSlot().getDoctor().getFirstName().charAt(0) + ". "
-//                + registrationDTO.getDoctorSlot().getDoctor().getMidName().charAt(0) + ".";
-//        String cabinet = registrationDTO.getDoctorSlot().getCabinet().getCabinetDescription();
-//        String day = registrationDTO.getDoctorSlot().getDay().getDay().toString();
-//        String time = registrationDTO.getDoctorSlot().getSlot().getTimeSlot().toString();
-//        SimpleMailMessage mailMessage = MailUtils.crateMailMessage(email,
-//                MailConstants.MAIL_SUBJECT_ABOUT_CANCELLED_RECORD,
-//                MailConstants.MAIL_MESSAGE_ABOUT_CANCELLED_RECORD_1_1
-//                        + " " + doctorFIO
-//                        + ", " + day
-//                        + " на время " + time
-//                        + ", кабинет " + cabinet
-//                        + " - " + MailConstants.MAIL_MESSAGE_ABOUT_CANCELLED_RECORD_1_2);
-//
-//        javaMailSender.send(mailMessage);
-//    }
-
-        public void sendAcceptedMeetEmail(RegistrationDTO registrationDTO) {
+    public void sendAcceptedMeetEmail(RegistrationDTO registrationDTO) {
         String email = registrationDTO.getClient().getEmail();
         String doctorFIO = registrationDTO.getDoctorSlot().getDoctor().getLastName() + " "
                 + registrationDTO.getDoctorSlot().getDoctor().getFirstName().charAt(0) + ". "

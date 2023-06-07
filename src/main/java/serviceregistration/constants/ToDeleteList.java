@@ -1,10 +1,10 @@
 package serviceregistration.constants;
 
-import serviceregistration.model.Registration;
+import serviceregistration.dto.DeletedRegistrationDTO;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public interface ToDeleteList {
-    public List<Registration> deletedRegistrationsList = new ArrayList<>();
+    public List<DeletedRegistrationDTO> deletedRegistrationsList = new ArrayList<>();
 }
