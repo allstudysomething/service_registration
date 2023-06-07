@@ -9,71 +9,9 @@
 </head>
 <body>
     <div layout:fragment="content">
-<!--        <div>-->
-<!--&lt;!&ndash;            <hr class="hr"/>&ndash;&gt;-->
-<!--            <h3 align="center">поиск раписания врачей по параметрам</h3>-->
-<!--&lt;!&ndash;            <h3>поиск записей в базе по параметрам</h3>&ndash;&gt;-->
-<!--            <form method="POST" th:action="@{/doctorslots/search}" th:object="${doctorslotSearchFormAdmin}">-->
-<!--                <div class="mt-0 row g-2">-->
-<!--                    <div class="col-md">-->
-<!--                        <div class="form-floating">-->
-<!--                            <input name="doctorLastName" type="text" class="form-control" id="doctorLastName" placeholder="Фамилия врача">-->
-<!--                            <label for="doctorLastName">Фамилия врача</label>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div class="col-md">-->
-<!--                        <div class="form-floating">-->
-<!--                            <input name="doctorFirstName" type="text" class="form-control" id="doctorFirstName" placeholder="Имя врача">-->
-<!--                            <label for="doctorFirstName">Имя врача</label>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div class="col-md">-->
-<!--                        <div class="form-floating">-->
-<!--                            <input name="doctorMiddleName" type="text" class="form-control" id="doctorMiddleName" placeholder="Отчество врача">-->
-<!--                            <label for="doctorMiddleName">Отчество врача</label>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div class="col-md">-->
-<!--                        <div class="form-floating">-->
-<!--                            <input name="titleSpecialization" type="text" class="form-control" id="titleSpecialization" placeholder="Специализация врача">-->
-<!--                            <label for="titleSpecialization">Специализация врача</label>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                <div class="mt-0 row g-2">-->
-<!--                    <div class="col-md">-->
-<!--                        <div class="form-floating">-->
-<!--                            <input name="registrationDay" type="date" class="form-control" id="registrationDay" placeholder="Введите дату приема врача">-->
-<!--                            <label for="registrationDay">Дата приема врача</label>-->
-<!--                            <div class="invalid-feedback">Обязательное поле для заполнения</div>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                <div class="row g-2">-->
-<!--                    <button type="submit" class="btn btn-secondary">Найти</button>-->
-<!--                </div>-->
-<!--            </form>-->
-<!--        </div>-->
-<!--        <hr class="hr"/>-->
         <h3 align="center">расписание врачей на ближайшие 10 дней</h3>
-<!--        <h1>Расписание врачей</h1>-->
         <div class="row">
             <div class="col">
-<!--                <a href="/doctorslots/deleteSchedule"-->
-<!--                   class="btn btn-success"-->
-<!--                   role="button"-->
-<!--                   style="float: right"-->
-<!--                   aria-disabled="true">Удалить</a>-->
-<!--                <a href="/doctorslots/addSchedule"-->
-<!--                   class="btn btn-success"-->
-<!--                   role="button"-->
-<!--                   style="float: right"-->
-<!--                   aria-disabled="true">Добавить</a>-->
-<!--                <a href="/doctorslots/getActualSchedule"-->
-<!--                   class="btn btn-sm btn-success"-->
-<!--                   role="button"-->
-<!--                   style="float: left"-->
-<!--                   aria-disabled="true">Актуальное расписание</a>-->
             </div>
             <table class="table table-hover">
                 <thead>
@@ -81,9 +19,6 @@
                     <th scope="col">ФИО</th>
                     <th scope="col">Специализация</th>
                     <th scope="col">День</th>
-<!--                    <th scope="col">Время</th>-->
-<!--                    <th scope="col">Кабинет</th>-->
-<!--                    <th scope="col">Статус</th>-->
                 </tr>
                 </thead>
                 <tbody>
@@ -91,11 +26,6 @@
                     <td th:text="${doctorslot.getLastName() + ' ' + doctorslot.getFirstName() + ' ' + doctorslot.getMidName()}"></td>
                     <td th:text="${doctorslot.getTitleSpecialization()}"></td>
                     <td th:text="${doctorslot.getDay()}"></td>
-<!--                    <td th:text="${doctorslot.getTimeSlot().getHour()}"></td>-->
-<!--                    <td th:text="${doctorslot.getSlot().getTimeSlot()}"></td>-->
-<!--                    <td th:text="${doctorslot.getCabinet().getCabinetNumber()}"></td>-->
-<!--                    <td th:classappend="${doctorslot.getIsRegistered() == false} ? 'not-active-reg' : 'active-reg'"-->
-<!--                        th:text="${doctorslot.getIsRegistered()} == false ? 'Свободно' : 'Занято'"></td>-->
                 </tr>
                 </tbody>
             </table>
@@ -125,6 +55,5 @@
             </ul>
         </nav>
     </div>
-<!--</div>-->
 </body>
 </html>

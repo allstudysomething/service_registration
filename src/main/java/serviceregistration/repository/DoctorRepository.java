@@ -21,11 +21,6 @@ public interface DoctorRepository
             """)
     List<Doctor> findAllBySpecialization(Specialization specialization);
 
-//            where doctors.last_name ilike '%' || coalesce(:doctorLastName, '%') || '%'
-//          and doctors.first_name ilike '%' || coalesce(:doctorFirstName, '%') || '%'
-//          and doctors.mid_name ilike '%' || coalesce(:doctorMiddleName, '%') || '%'
-//          and s.title ilike '%' || coalesce(:titleSpecialization, '%') || '%'
-
     @Query(nativeQuery = true, value = """
             select doctors.* from doctors
                 join specializations s on s.id = doctors.specialization_id

@@ -19,20 +19,6 @@ public interface RegistrationRepository
 
     List<Registration> findAllByClientAndIsActiveOrderByDoctorSlotDesc(Client client, Boolean is_active);
 
-//    @Query(nativeQuery = true, value = """
-//        select d.day, s.time_slot, c2.number, registrations.is_active from registrations join clients c on c.id = registrations.client_id
-//        -- select * from registrations join clients c on c.id = registrations.client_id
-//                                    join doctors_slots ds on registrations.doctor_slot_id = ds.id
-//                                    join cabinets c2 on c2.id = ds.cabinet_id
-//                                    join days d on d.id = ds.day_id
-//                                    join slots s on s.id = ds.slot_id
-//
-//        -- where client_id = 5
-//        where c.login = :clientLogin
-//        order by d.day, s.time_slot """)
-//    List<Registration> findAllByClientAndIsActiveOrderByDayAndSlot(String clientLogin, Boolean is_active);
-
-//    Page<Registration> findAllByClientAndIsActive(Client client, Boolean is_active, Pageable pageRequest);
     @Query(nativeQuery = true, value = """
         select registrations.* from registrations
             join clients c on c.id = registrations.client_id
@@ -54,8 +40,6 @@ public interface RegistrationRepository
             join slots s on s.id = ds.slot_id
         where c.login = :clientLogin
             and registrations.is_active = false
-
-
         """)
     Page<Registration> findAllByClientAndNotIsActiveAndDateCurrentMinus(@Param(value = "clientLogin") String clientLogin,
                                                                         Pageable pageRequest);
@@ -114,11 +98,6 @@ public interface RegistrationRepository
         """)
     List<Registration> findCurrentRegistrationsByDoctorId(Long id);
 
-//    and s.time_slot <= cast(:localDateTime as time) - interval '6 hours'
-//    and d2.day <= cast(now() + interval '3 hours' as date)
-//    and s.time_slot <= cast(now() - interval '1 hours' as time);
-//    Page<Registration> findAllAndOrderByIsActiveBefore(Boolean is_active, Pageable pageable);
-//    Page<Registration> findAll(Pageable pageable);
 }
 
 

@@ -1,15 +1,3 @@
-<!--<!DOCTYPE html>-->
-<!--<html lang="en">-->
-<!--<head>-->
-<!--    <meta charset="UTF-8">-->
-<!--    <title>Title</title>-->
-<!--</head>-->
-<!--<body>-->
-<!--    My Registrations-->
-<!--</body>-->
-<!--</html>-->
-
-
 <!DOCTYPE html>
 <html lang="en"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
@@ -29,7 +17,6 @@
                 <thead>
                 <tr>
                     <th scope="col">Дата создания</th>
-    <!--                <th scope="col">Статус</th>-->
                     <th scope="col">Дата и время записи</th>
                     <th scope="col">Кабинет</th>
                     <th scope="col">Доктор</th>
@@ -41,9 +28,6 @@
                 <tbody>
                 <tr th:each="registration : ${currentRegistrations}">
                     <td th:text="${#temporals.format(registration.getCreatedWhen(), 'dd-MM-yyyy')}"></td>
-<!--                    <td th:text="${registration.getCreatedWhen().getYear() + '-' + registration.getCreatedWhen().getMonthValue() +-->
-<!--                        '-' + registration.getCreatedWhen().getDayOfMonth()}"></td>-->
-    <!--                <td th:text="${registration.isActive.booleanValue()}"></td>-->
                     <td th:text="${registration.getDoctorSlot().getDay().getDay() + ' ' + registration.getDoctorSlot().getSlot().getTimeSlot()}"></td>
                     <td th:text="${registration.getDoctorSlot().getCabinet().getCabinetNumber()}"></td>
                     <td th:text="${registration.getDoctorSlot().getDoctor().getLastName() + ' ' + registration.getDoctorSlot().getDoctor().getFirstName() + ' ' + registration.getDoctorSlot().getDoctor().getMidName()}"></td>
@@ -52,14 +36,10 @@
                         th:text="${registration.getIsActive()} == false ? 'Не активна' : 'Активна'"></td>
                     <td>
                         <div sec:authorize="isAuthenticated() && (hasRole('ADMIN') || hasRole('CLIENT'))">
-                            <!--                    <a class="btn btn-sm btn-outline-success" th:href="'/regbooks/update/' + ${book.id}">Обновить</a>-->
                             <a class="btn btn-sm btn-outline-danger" th:href="'/registrations/deleteRecord/' + ${registration.getId()}">Удалить</a>
                         </div>
-    <!--                    <a th:if="${book.getAmount() > 0}" sec:authorize="!hasRole('ADMIN')" class="btn btn-sm btn-outline-success"-->
-    <!--                       th:href="'/rent/book/' + ${book.id}">Арендовать книгу</a>-->
                     </td>
                 </tr>
-
                 </tbody>
             </table>
         </div>

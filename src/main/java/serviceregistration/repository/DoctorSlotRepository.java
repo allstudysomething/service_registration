@@ -67,26 +67,6 @@ public interface DoctorSlotRepository
             and slot_id = :slotId """)
     Long findByDoctorIdAndDayIdAndSlotId(Long doctorDTOId, Long dayId, Long slotId);
 
-//    @Query(nativeQuery = true,
-//            value = """
-//                    select ds.*
-//                    from doctors_slots ds
-//                        join days d on ds.day_id = d.id
-//                    where day >= TIMESTAMP 'today'
-//                    order by day_id
-//                    """)
-//    Page<DoctorSlot> findAllNotLessThanToday(Pageable pageable);
-
-//    @Query(nativeQuery = true,
-//            value = """
-//                    select dc.id as DoctorId, d.id as DayId
-//                    from doctors_slots ds
-//                        join days d on ds.day_id = d.id
-//                        join doctors dc on ds.doctor_id = dc.id
-//                    where day > TIMESTAMP 'today' and ds.is_registered = false
-//                    group by dc.id, d.id""")
-//    List<DoctorDay> groupByDoctorSlot();
-
     // from zotov
     @Query(nativeQuery = true,
             value = """
@@ -126,18 +106,6 @@ public interface DoctorSlotRepository
                                           @Param(value = "titleSpecialization") String titleSpecialization,
                                           @Param(value = "doctorSlotDay") String doctorSlotDay,
                                           Pageable pageable);
-
-//    @Query(nativeQuery = true, value = """
-//        select ds.* from doctors_slots ds
-//            left join doctors d on d.id = ds.doctor_id
-//            left join days d2 on d2.id = ds.day_id
-//            left join cabinets c on c.id = ds.cabinet_id
-//            left join specializations s on s.id = d.specialization_id
-//        where d2.day > now() and d2.day < now() + interval '10 days'
-//        order by d2.day, s.title
-//        """)
-//    Page<DoctorSlot> findAllCurrentDays(Pageable pageable);
-//}
 
     @Query(nativeQuery = true, value = """
         select distinct d2.day as Day, d.first_name as FirstName, d.last_name as LastName, d.mid_name as MidName,
@@ -192,16 +160,3 @@ public interface DoctorSlotRepository
         """)
     List<DoctorSlot> findDoctorSlotByDay(String getCurrentUserLogin, LocalDate registrationDay);
 }
-
-//    join registrations r on doctors_slots.id = r.doctor_slot_id
-
-
-
-//    select count(*) from registrations
-//    join doctors_slots ds on ds.id = registrations.doctor_slot_id
-//        join clients c on c.id = registrations.client_id
-//        join days d on d.id = ds.day_id
-//        join slots s on s.id = ds.slot_id
-//        where c.login = :getCurrentUserLogin
-//        and s.id = :specializationId
-//        and d.id = :dayIdForFuture

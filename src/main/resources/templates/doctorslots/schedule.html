@@ -10,9 +10,7 @@
 <body>
     <div layout:fragment="content">
         <div>
-<!--            <hr class="hr"/>-->
             <h3 align="center">поиск раписания врачей</h3>
-<!--            <form method="POST" th:action="@{/doctorslots/search}" th:object="${doctorslotSearchFormAdmin}">-->
             <form method="POST" th:action="@{/doctorslots/search}" th:object="${doctorslotSearchFormAdmin}">
                 <div class="mt-0 row g-2">
                     <div class="col-md">
@@ -57,7 +55,6 @@
         </div>
         <hr class="hr"/>
         <h3 align="center">расписание врачей</h3>
-<!--        <h1>Расписание врачей</h1>-->
         <div class="row">
             <div class="col">
                 <a href="/doctorslots/deleteSchedule"
@@ -125,6 +122,5 @@
             </ul>
         </nav>
     </div>
-<!--</div>-->
 </body>
 </html>

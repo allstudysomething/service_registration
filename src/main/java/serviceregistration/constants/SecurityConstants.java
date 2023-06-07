@@ -48,9 +48,7 @@ public interface SecurityConstants {
             (
                     "/doctorslots",
                     "/doctorslots/search",
-//                    "/doctorslots/schedule",
                     "/doctorslots/addSchedule",
-//                    "/doctorslots/delete",
                     "/doctorslots/deleteSchedule",
                     "/doctorslots/getActualSchedule"
             );
@@ -88,10 +86,8 @@ public interface SecurityConstants {
                     "registrations/myRegistrationsAllTime",
                     "/registrations/addRegistration",
                     "/registrations/addRegistrationSecond",
-//                    "/registrations/addRegistrationSecond/**",
                     "/registrations/addRegistrationThird",
                     "/registrations/redirectToThird/**",
-//                    "/registrations/addRegistrationThird/**",
                     "/registrations/addRegistrationFourth"
             );
 
@@ -103,7 +99,6 @@ public interface SecurityConstants {
     List<String> REGISTRATIONS_PERMISSION_LIST_FOR_ADMIN = List.of
             (
                     "/registrations",
-//                    "registrations/listAll",
                     "registrations/search"
             );
 }

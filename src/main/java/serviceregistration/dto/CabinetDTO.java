@@ -12,7 +12,6 @@ import java.util.List;
 @Getter
 @Setter
 public class CabinetDTO {
-
     private Long id;
     private Integer cabinetNumber;
     private String cabinetDescription;

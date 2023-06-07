@@ -15,7 +15,6 @@ public interface SlotRepository extends JpaRepository<Slot, Long> {
         where ds.doctor_id = :doctorDTOIdForFuture
                 AND ds.day_id = :dayIdForFuture
                 AND ds.is_registered = false;
-
         """)
     List<Long> findFreeSlotsByDoctorDTOIdAndDayId(Long doctorDTOIdForFuture, Long dayIdForFuture);
 

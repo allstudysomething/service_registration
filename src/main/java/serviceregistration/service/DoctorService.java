@@ -62,8 +62,6 @@ public class DoctorService extends GenericService<Doctor, DoctorDTO> {
         if (userService.findUserByLogin(doctorDTO.getLogin()) == null) {
             userService.createUser(doctorDTO.getLogin(), doctorDTO.getRole().getId());
         }
-//        newObj.setPassword(bCryptPasswordEncoder.encode(newObj.getPassword()));
-//        userService.createUser(newObj.getLogin(), newObj.getRole().getId());
         return mapper.toDTO(repository.save(mapper.toEntity(doctorDTO)));
     }
 
@@ -100,13 +98,11 @@ public class DoctorService extends GenericService<Doctor, DoctorDTO> {
         System.out.println("in doctorservice deleteSoft");
         Doctor doctor = doctorRepository.findById(id).orElseThrow(() -> new NotFoundException("Doctor not found here"));
         List<Registration> registrationList = registrationService.findCurrentRegistrationsByDoctorId(doctor.getId());
-//        registrationList.forEach(System.out::println);
         registrationService.safeDelete(registrationList, 4L);
         doctor.setIsDeleted(true);
         doctor.setDeletedWhen(LocalDateTime.now());
         doctor.setDeletedBy("admin");
         update(mapper.toDTO(doctor));
-//        registrationService.safeDelete();
     }
 
     public void restore(Long id) {

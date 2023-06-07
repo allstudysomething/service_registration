@@ -87,7 +87,6 @@ public class DoctorSlotService extends GenericService<DoctorSlot, DoctorSlotDTO>
                 localDateCurrent, plusDateCurrent);
         List<DoctorDTO> doctorDTOS = new ArrayList<>();
         doctorIds.forEach(s -> doctorDTOS.add(doctorService.getOne(s)));
-//        doctorDTOS.stream().forEach(s -> doctorService.getOne(s))
         return doctorDTOS;
     }
 
@@ -96,47 +95,34 @@ public class DoctorSlotService extends GenericService<DoctorSlot, DoctorSlotDTO>
         plusDateCurrent = localDateCurrent.plusDays(30);
         List<Long> dayIds = doctorSlotRepository.findDaysIdByDoctorDTOIdAndNotRegisteredAndDateBetween(doctorDTOId,
                 localDateCurrent, plusDateCurrent);
-//        System.out.println("in doctorslotservice");
-//        dayIds.forEach(System.out::println);
         List<Day> dayList = new ArrayList<>();
         dayIds.forEach(s -> dayList.add(dayService.getDayById(s)));
         dayList.sort((o1, o2) -> o1.getDay().compareTo(o2.getDay()));
-//        dayIds.stream().forEach(s -> dayList.add(dayService.getDayById(s)));
-
         return  dayList;
     }
 
     public List<Slot> getFreeSlotsByDoctorDTOIdAndDayId(Long doctorDTOIdForFuture, Long dayIdForFuture) {
         List<Long> slotIDs = slotRepository.findFreeSlotsByDoctorDTOIdAndDayId(doctorDTOIdForFuture, dayIdForFuture);
-//        System.out.println(" *** print slotIDs ***");
-//        slotIDs.forEach(s -> System.out.println(s.intValue()));
         return slotRepository.findAllById(slotIDs);
     }
 
     public Long getDoctorSlotByDoctorAndDayAndSlot(Long doctorDTOIdForFuture, Long dayIdForFuture, Long slotIdForFuture) {
         return doctorSlotRepository.findByDoctorIdAndDayIdAndSlotId(doctorDTOIdForFuture, dayIdForFuture, slotIdForFuture);
-//        System.out.println(doctorSlot.getDoctor() + " : " + doctorSlot.getCabinet() + " " + doctorSlot.getSlot());
-//        System.out.println(doctorSlotId);
-//        return getOne(doctorSlotId);
     }
 
     public Page<DoctorSlotDTO> listAllPaging(Pageable pageable) {
-//        Page<DoctorSlot> doctorSlotPage = doctorSlotRepository.findAll(pageable);
         Page<DoctorSlot> doctorSlotPage = doctorSlotRepository.findAllSchedule(pageable);
         List<DoctorSlotDTO> result = doctorSlotMapper.toDTOs(doctorSlotPage.getContent());
         return new PageImpl<>(result, pageable, doctorSlotPage.getTotalElements());
     }
 
     public Page<CustomDoctorSpecializationDay> listCurrentDays10(Pageable pageable) {
-//        Page<DoctorSlot> doctorSlotPage = doctorSlotRepository.findAll(pageable);
         Page<CustomDoctorSpecializationDay> doctorSlotPage = doctorSlotRepository.findAllCurrentDays10(pageable);
         List<CustomDoctorSpecializationDay> result = doctorSlotPage.getContent();
-//        result.forEach(System.out::println);
         return new PageImpl<>(result, pageable, doctorSlotPage.getTotalElements());
     }
 
     public Page<DoctorSlotDTO> listAllCurrentPaging(PageRequest pageable) {
-//        Page<DoctorSlot> doctorSlotPage = doctorSlotRepository.findAll(pageable);
         Page<DoctorSlot> doctorSlotPage = doctorSlotRepository.findActualSchedule(pageable);
         List<DoctorSlotDTO> result = doctorSlotMapper.toDTOs(doctorSlotPage.getContent());
         return new PageImpl<>(result, pageable, doctorSlotPage.getTotalElements());
@@ -152,22 +138,18 @@ public class DoctorSlotService extends GenericService<DoctorSlot, DoctorSlotDTO>
                         doctorSlotSearchAdminDTO.getTitleSpecialization(),
                         getDoctorSlotDay,
                         pageable);
-//        registrationPage.getContent().forEach(System.out::println);
         List<DoctorSlotDTO> result = mapper.toDTOs(doctorSlotPage.getContent());
         return new PageImpl<>(result, pageable, doctorSlotPage.getTotalElements());
     }
 
     public boolean isActiveRegistrationByClientAndDayIdAndSpecializationId(Long specializationId, Long dayIdForFuture) {
         Long count = doctorSlotRepository.isActiveRegistrationByClientAndDayIdAndSpecializationId(getCurrentUserLogin(), specializationId, dayIdForFuture);
-//        System.out.println("*********   " + getCurrentUserLogin() + " : " + count + "   **********");
-//        System.out.println(count);
         return count >= 1L;
     }
 
     // TODO нужно ли расписание архив для доктора? (реализовать при необходимости)
     public List<DoctorSlotDTO> getMySchedule() {
         List<DoctorSlot> doctorSlots = doctorSlotRepository.getMySchedule(getCurrentUserLogin());
-//        doctorSlots.forEach(System.out::println);
         List<DoctorSlotDTO> doctorSlotDTOS = mapper.toDTOs(doctorSlots);
         return doctorSlotDTOS;
     }

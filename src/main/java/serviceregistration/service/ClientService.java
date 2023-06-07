@@ -54,7 +54,6 @@ public class ClientService extends GenericService<Client, ClientDTO> {
         RoleDTO roleDTO = new RoleDTO();
         roleDTO.setId(1L);
         clientDTO.setRole(roleDTO);
-//        System.out.println("+++++++++++++++++++"+clientDTO.getPassword()+"+++++++++++++++++");
         if(encode) {
             clientDTO.setPassword(bCryptPasswordEncoder.encode(clientDTO.getPassword()));
         } else {
@@ -70,18 +69,6 @@ public class ClientService extends GenericService<Client, ClientDTO> {
         clientDTO = create(clientDTO, false);
         return clientDTO;
     }
-
-//    public ClientDTO create(ClientDTO newObj) {
-//        int age = Period.between(LocalDate.from(newObj.getBirthDate()), LocalDate.now()).getYears();
-////        System.out.println(ChronoUnit.YEARS.between(localDate, LocalDate.now())); //returns 11
-//        newObj.setAge(age);
-//        RoleDTO roleDTO = new RoleDTO();
-//        roleDTO.setId(1L);
-//        newObj.setRole(roleDTO);
-//        newObj.setPassword(bCryptPasswordEncoder.encode(newObj.getPassword()));
-//        userService.createUser(newObj.getLogin(), newObj.getRole().getId());
-//        return mapper.toDTO(repository.save(mapper.toEntity(newObj)));
-//    }
 
     public void delete(final Long id) {
         userService.deleteByLogin(getOne(id).getLogin());
@@ -101,8 +88,6 @@ public class ClientService extends GenericService<Client, ClientDTO> {
         UUID uuid = UUID.randomUUID();
         clientDTO.setChangePasswordToken(uuid.toString());
         clientDTO.setChangePasswordTokenExpireDateTime(LocalDateTime.now().plusHours(1));
-        log.info(uuid.toString());
-        log.info(clientDTO.toString());
         update(clientDTO);
         SimpleMailMessage mailMessage = MailUtils.crateMailMessage(clientDTO.getEmail(),
                 MailConstants.MAIL_SUBJECT_FOR_REMEMBER_PASSWORD,
@@ -113,12 +98,6 @@ public class ClientService extends GenericService<Client, ClientDTO> {
 
     public Boolean checkExpiredDate(String uuid) {
         ClientDTO clientDTO = mapper.toDTO(((ClientRepository) repository).findUserByChangePasswordToken(uuid));
-        Boolean x = LocalDateTime.now().isAfter(clientDTO.getChangePasswordTokenExpireDateTime());
-        if (x) {
-            System.out.println(LocalDateTime.now() + "    is before " + clientDTO.getChangePasswordTokenExpireDateTime());
-        } else {
-            System.out.println(LocalDateTime.now() + "    is after " + clientDTO.getChangePasswordTokenExpireDateTime());
-        }
-        return x;
+        return LocalDateTime.now().isAfter(clientDTO.getChangePasswordTokenExpireDateTime());
     }
 }

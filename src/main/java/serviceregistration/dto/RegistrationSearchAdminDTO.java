@@ -19,5 +19,4 @@ public class RegistrationSearchAdminDTO {
     private String doctorMiddleName;
     private String titleSpecialization;
     private LocalDate registrationDay;
-//    public LocalTime slot;
 }

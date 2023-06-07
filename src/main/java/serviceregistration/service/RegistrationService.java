@@ -91,21 +91,12 @@ public class RegistrationService extends GenericService<Registration, Registrati
 
     public List<Registration> listAllCurrent() {
         Client currentClient = clientRepository.findClientById(getCurrentUserId());
-//        Client currentClient = clientRepository.findClientByLogin(getCurrentUserId());
-//        System.out.println(currentClient.getLogin());
-//        System.out.println(currentClient.getPassword());
-//        System.out.println(currentClient.getEmail());
         List<Registration> registrationList = registrationRepository.findAllByClientAndIsActiveOrderByDoctorSlotDesc(currentClient, true);
-//        List<Registration> registrationList = registrationRepository.findAllByClientAndIsActiveOrderByDayAndSlot(currentClient.getLogin(), true);
-//        registrationList.forEach(s -> System.out.println(s.getDoctorSlot()));
         return registrationList;
     }
 
     public Page<RegistrationDTO> listAllCurrentPagedNotSorted(Pageable pageable) {
-//        Client currentClient = clientRepository.findClientById(getCurrentUserId());
-//        Page<Registration> registrationPageSorted = registrationRepository.findAllByClient(currentClient, pageable);
         Page<Registration> registrationPageSorted = registrationRepository.findAll(pageable);
-//        Page<Registration> registrationPageSorted = registrationRepository.findAllAndOrderByIsActiveBefore(true, pageable);
         List<RegistrationDTO> result = mapper.toDTOs(registrationPageSorted.getContent());
         result.forEach(s -> System.out.println(s.getIsActive()));
         return new PageImpl<>(result, pageable, registrationPageSorted.getTotalElements());
@@ -145,7 +136,6 @@ public class RegistrationService extends GenericService<Registration, Registrati
     }
 
     public void safeDelete(List<Registration> registrationList, Long roleId) {
-        System.out.println("************ here in safe delete public void safeDelete(List<Registration> registrationList) { ****************");
         registrationList.forEach(s -> safeDelete(roleId, s.getId()));
     }
 

@@ -68,7 +68,6 @@ public class WebSecurityConfig {
                       .requestMatchers(REGISTRATIONS_PERMISSION_LIST_FOR_CLIENT.toArray(String[]::new)).hasRole(CLIENT)
                       .requestMatchers(REGISTRATIONS_PERMISSION_LIST_FOR_CLIENT_DOCTOR.toArray(String[]::new)).hasAnyRole(CLIENT,DOCTOR)
                       .requestMatchers(REGISTRATIONS_PERMISSION_LIST_FOR_ADMIN.toArray(String[]::new)).hasRole(ADMIN)
-//                      .anyRequest().authenticated())
               )
               //Настройка для входа в систему
               .formLogin((form) -> form

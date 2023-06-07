@@ -31,8 +31,6 @@ public class RegistrationsScheduler {
 //    @Scheduled(cron = "0 * * ? * *") // Every minute. NOT RECOMMEND. FOR TEST ONLY
     public void findExpiredRegistrations() {
         List<Registration> registrationList = registrationService.getExpiredRegistrations();
-        System.out.println("************ here list of registrations expired ****************");
-        registrationList.forEach(System.out::println);
         registrationService.safeDelete(registrationList, 3L);
     }
 

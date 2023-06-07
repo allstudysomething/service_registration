@@ -32,7 +32,6 @@ public class ClientDTO extends GenericDTO {
     private String address;
     private String changePasswordToken;
     private LocalDateTime changePasswordTokenExpireDateTime;
-//    private Role role;
     private RoleDTO role;
     private List<Long> registrationIds;
 

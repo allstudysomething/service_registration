@@ -82,13 +82,6 @@ public class DoctorSlotMVCController {
         return "doctorslots/scheduleActual";
     }
 
-//    @GetMapping("")
-//    public String getSchedule(Model model) {
-//        List<DoctorSlotDTO> doctorSlots = doctorSlotService.listAll();
-//        model.addAttribute("doctorslots", doctorSlots);
-//        return "doctorslots/schedule";
-//    }
-
     @GetMapping ("/addSchedule")
     public String addSchedule(Model model) {
         List<DoctorDTO> doctors = doctorService.listAll();
@@ -149,68 +142,8 @@ public class DoctorSlotMVCController {
     @PostMapping ("/myScheduleSearch")
     public String myScheduleSearch(Model model,
                                    @ModelAttribute("doctorslotSearchFormDoctor") DateSearchDTO dateSearchDTO) {
-//        System.out.println(" ***********  " + dateSearchDTO + "  *************");
         List<DoctorSlotDTO> searchDoctorslots = doctorSlotService.getMySearchedSchedule(dateSearchDTO.getRegistrationDay());
         model.addAttribute("doctorslots", searchDoctorslots);
         return "doctorslots/mySchedule";
     }
-
-//    @GetMapping("/makeMeet")
-//    public String groupSlots(@RequestParam(value = "page", defaultValue = "1") int page,
-//                             @RequestParam(value = "size", defaultValue = "8") int pageSize,
-//                             Model model) {
-//        PageRequest pageRequest = PageRequest.of(page - 1, pageSize);
-//        model.addAttribute("doctorDays", doctorSlotService.groupByDoctorSlot(pageRequest));
-//        model.addAttribute("specializations", specializationService.listAll());
-//        model.addAttribute("days", dayService.getFirstActualDays(Days.ONE_WEEK));
-//        return "/doctorslots/makeMeet";
-//    }
-
-
-//    @PostMapping("/makeMeet/search")
-//    public String searchGroupSlots(@RequestParam(value = "page", defaultValue = "1") int page,
-//                                   @RequestParam(value = "size", defaultValue = "10") int pageSize,
-//                                   @ModelAttribute("doctorSlotSearchForm") DoctorSlotSearchDTO doctorSlotSearchDTO,
-//                                   Model model) {
-//        PageRequest pageRequest = PageRequest.of(page - 1, pageSize);
-//        log.info("in     @PostMapping(\"/makeMeet/search\")");
-////        model.addAttribute("doctorDays", doctorSlotService.findAmongGroupByDoctorSlot(pageRequest, doctorSlotSearchDTO));
-////        model.addAttribute("specializations", specializationService.listAll());
-////        model.addAttribute("days", dayService.getFirstActualDays(Days.ONE_WEEK));
-//        return "doctorslots/makeMeet";
-//    }
-//
-//    @GetMapping("/schedule/actual/{doctorId}")
-//    public String filterActualDoctorSchedule(@PathVariable Long doctorId,
-//                                             Model model) {
-//        DoctorDTO doctorDTO = doctorService.getOne(doctorId);
-//        DoctorSlotSearchDTO doctorSlotSearchDTO = new DoctorSlotSearchDTO();
-//        doctorSlotSearchDTO.setFirstName(doctorDTO.getFirstName());
-//        doctorSlotSearchDTO.setMidName(doctorDTO.getMidName());
-//        doctorSlotSearchDTO.setLastName(doctorDTO.getLastName());
-//        doctorSlotSearchDTO.setSpecialization(doctorDTO.getSpecialization().getTitleSpecialization());
-//        return searchGroupSlots(1, 10, doctorSlotSearchDTO, model);
-//    }
-
-
-//    @PostMapping("/addSchedule")
-//    public String addSchedule(@ModelAttribute("scheduleForm") DoctorSlotDTO doctorSlotDTO,
-//                              BindingResult bindingResult) {
-//        if(!Objects.isNull(doctorSlotService.findDoctorSlotByCabinetAndDay(doctorSlotDTO.getCabinet(),
-//                doctorSlotDTO.getDay()))) {
-//            bindingResult.rejectValue("cabinet", "error.cabinet", "This Record of Day" +
-//                    " and Cabinet are in use");
-//            System.out.println("******** zapis suschestvuet *******");
-////            return "doctorslots/addSchedule";
-//        } else {
-//            System.out.println("********** NOT PRESENT RECORD ***********");
-////            return "doctorslots/addSchedule";
-//        }
-//
-//        doctorSlotService.getSchedule(doctorSlotDTO.getDoctor().getId(),
-//                doctorSlotDTO.getDay().getId(),
-//                doctorSlotDTO.getCabinet().getId());
-//        return "redirect:/doctorslots";
-//    }
-
 }

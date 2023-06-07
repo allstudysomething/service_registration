@@ -53,7 +53,6 @@ public class RegistrationMVCController {
 
 //    @GetMapping("")
 //    public String faceWindow() {
-//
 //        return "registrations/faceWindowClientRegistrations";
 //    }
 
@@ -73,10 +72,7 @@ public class RegistrationMVCController {
                             @RequestParam(value = "size", defaultValue = "3") int pageSize,
                             @ModelAttribute("registrationSearchFormAdmin") RegistrationSearchAdminDTO registrationSearchAdminDTO,
                             Model model) {
-//        System.out.println(registrationSearchAdminDTO);
-        PageRequest pageRequest = PageRequest.of(page - 1, pageSize
-//                , Sort.by(Sort.Direction.DESC, "isActive")
-        );
+        PageRequest pageRequest = PageRequest.of(page - 1, pageSize);
         model.addAttribute("registrationsPaging", registrationService.findRegistrationByMany(registrationSearchAdminDTO, pageRequest));
         return "registrations/listAll";
     }
@@ -97,8 +93,8 @@ public class RegistrationMVCController {
     @PostMapping("/addRegistration")
     public String chooseSpecialization(@ModelAttribute("specialization") Specialization specialization
             , Model model
-//            , BindingResult bindingResult
     ) {
+
             // static specialization appropriation
             specializationForFuture = specialization;
 
@@ -107,7 +103,6 @@ public class RegistrationMVCController {
 
     @GetMapping("/addRegistrationSecond")
     public String chooseDoctor(Model model) {
-        log.info("in     @GetMapping(\"/addRegistrationSecond\") ");
         List<DoctorDTO> doctorDTOS = doctorSlotService.findDoctorDTOBySpecializationIdAndDayBetween(specializationForFuture.getId());
         model.addAttribute("doctorDTOList", doctorDTOS);
         model.addAttribute("doctorDTOForm", new DoctorDTO());
@@ -117,7 +112,6 @@ public class RegistrationMVCController {
     @PostMapping("/addRegistrationSecond")
     public String chooseDoctor(@RequestParam("doctorDTO") Long doctorDTOId
             , Model model) {
-        log.info("in     @PostMapping(\"/addRegistrationSecond\")");
 
         // static doctorDTOId appropriation
         doctorDTOIdForFuture = doctorDTOId;
@@ -127,8 +121,6 @@ public class RegistrationMVCController {
 
     @GetMapping("/redirectToThird/{doctorId}")
     public String redirectToThird(@PathVariable Long doctorId) {
-        System.out.println("in     @GetMapping(\"/redirectToThird\")");
-        System.out.println(doctorId);
 
         // static doctorDTOId appropriation
         doctorDTOIdForFuture = doctorId;
@@ -147,8 +139,8 @@ public class RegistrationMVCController {
 
     @PostMapping("/addRegistrationThird")
     public String chooseDay(@RequestParam("day") Long dayId,
-//                                            BindingResult bindingResult,
                                             Model model) {
+
         // static dayId appropriation
         dayIdForFuture = dayId;
 
@@ -161,10 +153,6 @@ public class RegistrationMVCController {
 
     @GetMapping("/addRegistrationFourth")
     public String chooseTimeOfDay(Model model) {
-//        CustomUserDetails customUserDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//        Long userId = Long.valueOf(customUserDetails.getUserId());
-//        System.out.println("userId :" + userId);
-
         List<Slot> freeTimeSlots = doctorSlotService.getFreeSlotsByDoctorDTOIdAndDayId(doctorDTOIdForFuture, dayIdForFuture);
         model.addAttribute("freeTimeSlots", freeTimeSlots);
         return "registrations/chooseTimeOfDayRegistration";
@@ -173,36 +161,22 @@ public class RegistrationMVCController {
     @PostMapping("/addRegistrationFourth")
     public String chooseTimeOfDay(@RequestParam("freeTime") Long slotId,
                                               Model model) {
+
         // static slotId appropriation
         slotIdForFuture = slotId;
 
         Long doctorSlotId = doctorSlotService.getDoctorSlotByDoctorAndDayAndSlot(doctorDTOIdForFuture, dayIdForFuture, slotIdForFuture);
         RegistrationDTO registrationDTO = registrationService.addRecord(doctorSlotId);
-//        registrationService.sendAcceptedMeetEmail(registrationDTO);
+        registrationService.sendAcceptedMeetEmail(registrationDTO);
         return "registrations/allDoneRegistration";
     }
-
-//    @GetMapping("/listAll")
-//    public String listAll(Model model) {
-//        List<RegistrationDTO> registrations = registrationService.listAll();
-//        model.addAttribute("registrations", registrations);
-//        return "registrations/listAll";
-//    }
 
     @GetMapping("myRegistrations")
     public String getAll(@RequestParam(value = "page", defaultValue = "1") int page,
                          @RequestParam(value = "size", defaultValue = "16") int pageSize,
                          Model model) {
         PageRequest pageRequest = PageRequest.of(page - 1, pageSize);
-//        PageRequest pageRequest = PageRequest.of(page - 1, pageSize, Sort.by(Sort.Direction.ASC, "isActive"));
         Page<RegistrationDTO> currentRegistrations = registrationService.listAllCurrentPagedByClient(pageRequest);
-//        final String userName = SecurityContextHolder.getContext().getAuthentication().getName();
-//        if (ADMIN.equalsIgnoreCase(userName)) {
-//            books = bookService.getAllBooksWithAuthors(pageRequest);
-//        }
-//        else {
-//            books = bookService.getAllNotDeletedBooksWithAuthors(pageRequest);
-//        }
         model.addAttribute("currentRegistrations", currentRegistrations);
         return "registrations/myList";
     }
@@ -211,35 +185,17 @@ public class RegistrationMVCController {
     public String getAllAlways(@RequestParam(value = "page", defaultValue = "1") int page,
                          @RequestParam(value = "size", defaultValue = "16") int pageSize,
                          Model model) {
-        PageRequest pageRequest = PageRequest.of(page - 1, pageSize
-//                , Sort.by(Sort.Direction.DESC, "createdWhen")
-        );
+        PageRequest pageRequest = PageRequest.of(page - 1, pageSize);
         Page<RegistrationDTO> registrationsPagingAll = registrationService.listArchivePagedByClient(pageRequest);
         model.addAttribute("registrationsPagingAll", registrationsPagingAll);
         return "registrations/myListAllTime";
     }
 
-//    @GetMapping("/myRegistrations")
-//    public String myList(Model model) {
-//        List<Registration> currentRegistrations = registrationService.listAllCurrent();
-////        currentRegistrations.forEach(s -> System.out.println(s.getClient() + " " + s.getDoctorSlot() + " " + s.getResultMeet()));
-//        model.addAttribute("currentRegistrations", currentRegistrations);
-//        return "registrations/myList";
-//    }
-
     // Костыль метод(чтобы не плодить). При передаче из под учетки Доктора в registrationId будет передан doctorslotId
     @RequestMapping(value = "/deleteRecord/{id}")
     public String deleteRecordById(@PathVariable(value = "id") Long toDeleteId) {
-//        System.out.println("***********" + " in deleteRecord " + "*******");
-
-//        registrationService.safeDelete(registrationDTO);
-
         Long roleId = registrationService.getCurrentUserRoleId();
-//        System.out.println("***********   " + roleId + "  **********   " + toDeleteId);
-//        roleId = 5L;
         registrationService.safeDelete(roleId, toDeleteId);
-//        roleId = registrationService.getCurrentUserRoleId();
-//        System.out.println("******** in out of registrationService.safeDelete(roleId, toDeleteId); **********");
         return (roleId == 1L) ? "redirect:/registrations/myRegistrations"
             : "redirect:/doctorslots/mySchedule";
     }

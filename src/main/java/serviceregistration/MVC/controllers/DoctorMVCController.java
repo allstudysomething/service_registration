@@ -61,15 +61,7 @@ public class DoctorMVCController {
         Page<DoctorDTO> doctorDTOPage = doctorService.listAllSearched(doctorSearchAllDTO, pageRequest);
         model.addAttribute("doctors", doctorDTOPage);
         return "doctors/list";
-//        return "doctors/listSearch";
     }
-
-//    @GetMapping("")
-//    public String getAll(Model model) {
-//        List<DoctorDTO> doctors = doctorService.listAll();
-//        model.addAttribute("doctors", doctors);
-//        return "doctors/list";
-//    }
 
     @GetMapping("/addDoctor")
     public String addDoctor(Model model) {
