@@ -83,9 +83,8 @@
             <tbody>
             <tr th:each="doctor : ${doctors}">
                 <td>
-                    <a class="text-link text-blue" th:href="'/doctors/' + ${doctor.getId()}" th:text="${doctor.getLastName() + ' ' + doctor.getFirstName() + ' ' + doctor.getMidName()}"></a>
+                    <a class="text-link text-dark" th:href="'/doctors/' + ${doctor.getId()}" th:text="${doctor.getLastName() + ' ' + doctor.getFirstName() + ' ' + doctor.getMidName()}"></a>
                 </td>
-<!--                <td th:text="${doctor.getLastName() + ' ' + doctor.getFirstName() + ' ' + doctor.getMidName()}"></td>-->
                 <td th:text="${doctor.getSpecialization().getTitleSpecialization()}"></td>
                 <td>
                     <div sec:authorize="isAuthenticated() && (hasRole('ADMIN'))">

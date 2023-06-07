@@ -171,7 +171,6 @@ public class RegistrationMVCController {
         return "registrations/chooseTimeOfDayRegistration";
     }
 
-//    @Transactional
     @PostMapping("/addRegistrationFourth")
     public String chooseTimeOfDay(@RequestParam("freeTime") Long slotId,
                                               Model model) {
@@ -179,7 +178,7 @@ public class RegistrationMVCController {
         slotIdForFuture = slotId;
 
         Long doctorSlotId = doctorSlotService.getDoctorSlotByDoctorAndDayAndSlot(doctorDTOIdForFuture, dayIdForFuture, slotIdForFuture);
-        registrationService.addRecord(doctorSlotId);
+        registrationService.sendAcceptedMeetEmail(registrationService.addRecord(doctorSlotId));
         return "registrations/allDoneRegistration";
     }
 

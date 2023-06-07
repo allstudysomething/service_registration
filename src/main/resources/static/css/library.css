@@ -1,5 +1,5 @@
 .not-active-reg {
-    color: red;
+    color: #f58585;
 }
 
 .active-reg {
@@ -39,5 +39,5 @@
 }
 
 .text-link:hover {
-    color: #001445;
+    color: #5786fa;
 }

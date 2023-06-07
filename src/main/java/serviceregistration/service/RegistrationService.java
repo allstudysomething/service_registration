@@ -2,25 +2,25 @@ package serviceregistration.service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.webjars.NotFoundException;
-import serviceregistration.dto.DoctorSlotDTO;
-import serviceregistration.dto.RegistrationDTO;
-import serviceregistration.dto.RegistrationSearchAdminDTO;
+import serviceregistration.constants.MailConstants;
+import serviceregistration.dto.*;
 import serviceregistration.mapper.DoctorSlotMapper;
 import serviceregistration.mapper.RegistrationMapper;
 import serviceregistration.model.Client;
-import serviceregistration.model.DoctorSlot;
+import serviceregistration.model.Doctor;
 import serviceregistration.model.Registration;
 import serviceregistration.model.ResultMeet;
 import serviceregistration.repository.ClientRepository;
 import serviceregistration.repository.RegistrationRepository;
 import serviceregistration.repository.UserRepository;
 import serviceregistration.service.userdetails.CustomUserDetails;
+import serviceregistration.utils.MailUtils;
+import org.springframework.mail.javamail.JavaMailSender;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -30,6 +30,7 @@ import java.util.Objects;
 @Service
 public class RegistrationService extends GenericService<Registration, RegistrationDTO> {
 
+    private final JavaMailSender javaMailSender;
     private final DoctorSlotMapper doctorSlotMapper;
     private final DoctorSlotService doctorSlotService;
     private final RegistrationRepository registrationRepository;
@@ -38,11 +39,12 @@ public class RegistrationService extends GenericService<Registration, Registrati
     private final UserRepository userRepository;
 
     public RegistrationService(RegistrationRepository repository,
-                               RegistrationMapper mapper, DoctorSlotMapper doctorSlotMapper, DoctorSlotService doctorSlotService,
+                               RegistrationMapper mapper, JavaMailSender javaMailSender, DoctorSlotMapper doctorSlotMapper, DoctorSlotService doctorSlotService,
                                RegistrationRepository registrationRepository, RegistrationMapper registrationMapper,
                                ClientRepository clientRepository,
                                UserRepository userRepository) {
         super(repository, mapper);
+        this.javaMailSender = javaMailSender;
         this.doctorSlotMapper = doctorSlotMapper;
         this.doctorSlotService = doctorSlotService;
         this.registrationRepository = registrationRepository;
@@ -51,7 +53,7 @@ public class RegistrationService extends GenericService<Registration, Registrati
         this.userRepository = userRepository;
     }
 
-    public void addRecord(Long doctorSlotId) {
+    public RegistrationDTO addRecord(Long doctorSlotId) {
         RegistrationDTO registrationDTO = new RegistrationDTO();
         registrationDTO.setCreatedWhen(LocalDateTime.now());
 
@@ -69,6 +71,7 @@ public class RegistrationService extends GenericService<Registration, Registrati
         doctorSlotService.update(doctorSlotDTO);
 
         registrationRepository.save(registrationMapper.toEntity(registrationDTO));
+        return registrationDTO;
     }
 
     public Long getCurrentUserId() {
@@ -160,23 +163,15 @@ public class RegistrationService extends GenericService<Registration, Registrati
             Long doctorSlotId = registrationDTO.getDoctorSlot().getId();
             updatedDoctorSlot = doctorSlotService.getOne(doctorSlotId);
         } else if (roleId == 2L) {
-//            System.out.println("****** in roleId == 2L *********");
             updatedDoctorSlot = doctorSlotService.getOne(toDeleteId);
-//            System.out.println("updatedDoctorSlot");
-//            System.out.println(updatedDoctorSlot);
-//            System.out.println();
             Registration registration = registrationRepository.findByDoctorSlot(
                     doctorSlotMapper.toEntity(updatedDoctorSlot));
             if(Objects.isNull(registration)) return;
-//            System.out.println("registration");
-//            System.out.println(registration);
-//            System.out.println();
             registrationDTO = registrationMapper.toDTO(registration);
-//            System.out.println("registrationDTO");
-//            System.out.println(registrationDTO);
-//        } else if(roleId == 3) {
-//            registrationDTO =
         } else return;
+
+//        sendCancelledMeetEmail(registrationDTO);
+
 
         updatedDoctorSlot.setIsRegistered(false);
         doctorSlotService.update(updatedDoctorSlot);
@@ -189,9 +184,46 @@ public class RegistrationService extends GenericService<Registration, Registrati
         registrationDTO.setDeletedWhen(LocalDateTime.now());
         registrationDTO.setResultMeet(ResultMeet.CANCEL);
         registrationRepository.save(mapper.toEntity(registrationDTO));
-//        System.out.println("**********   " + getCurrentUserRoleId() + "    **************");
-//        return userRepository.findRoleByLogin(getCurrentUser().getUsername());
-//        return roleId;
+    }
+
+//    public void sendCancelledMeetEmail(RegistrationDTO registrationDTO) {
+//        String email = registrationDTO.getClient().getEmail();
+//        String doctorFIO = registrationDTO.getDoctorSlot().getDoctor().getLastName() + " "
+//                + registrationDTO.getDoctorSlot().getDoctor().getFirstName().charAt(0) + ". "
+//                + registrationDTO.getDoctorSlot().getDoctor().getMidName().charAt(0) + ".";
+//        String cabinet = registrationDTO.getDoctorSlot().getCabinet().getCabinetDescription();
+//        String day = registrationDTO.getDoctorSlot().getDay().getDay().toString();
+//        String time = registrationDTO.getDoctorSlot().getSlot().getTimeSlot().toString();
+//        SimpleMailMessage mailMessage = MailUtils.crateMailMessage(email,
+//                MailConstants.MAIL_SUBJECT_ABOUT_CANCELLED_RECORD,
+//                MailConstants.MAIL_MESSAGE_ABOUT_CANCELLED_RECORD_1_1
+//                        + " " + doctorFIO
+//                        + ", " + day
+//                        + " на время " + time
+//                        + ", кабинет " + cabinet
+//                        + " - " + MailConstants.MAIL_MESSAGE_ABOUT_CANCELLED_RECORD_1_2);
+//
+//        javaMailSender.send(mailMessage);
+//    }
+
+        public void sendAcceptedMeetEmail(RegistrationDTO registrationDTO) {
+        String email = registrationDTO.getClient().getEmail();
+        String doctorFIO = registrationDTO.getDoctorSlot().getDoctor().getLastName() + " "
+                + registrationDTO.getDoctorSlot().getDoctor().getFirstName().charAt(0) + ". "
+                + registrationDTO.getDoctorSlot().getDoctor().getMidName().charAt(0) + ".";
+        String cabinet = registrationDTO.getDoctorSlot().getCabinet().getCabinetDescription();
+        String day = registrationDTO.getDoctorSlot().getDay().getDay().toString();
+        String time = registrationDTO.getDoctorSlot().getSlot().getTimeSlot().toString();
+        SimpleMailMessage mailMessage = MailUtils.crateMailMessage(email,
+                MailConstants.MAIL_SUBJECT_ABOUT_ACCEPTED_RECORD,
+                MailConstants.MAIL_MESSAGE_ABOUT_ACCEPTED_RECORD_1_1
+                        + " " + doctorFIO
+                        + ", " + day
+                        + " на время " + time
+                        + ", кабинет " + cabinet
+                        + " - " + MailConstants.MAIL_MESSAGE_ABOUT_ACCEPTED_RECORD_1_2);
+
+        javaMailSender.send(mailMessage);
     }
 
     public List<Registration> getExpiredRegistrations(){
