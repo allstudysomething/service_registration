@@ -60,6 +60,7 @@ public class WebSecurityConfig {
                       .requestMatchers(CLIENTS_WHITE_LIST.toArray(String[]::new)).permitAll()
                       .requestMatchers(DOCTORS_PERMISSION_LIST_FOR_ADMIN.toArray(String[]::new)).hasRole(ADMIN)
                       .requestMatchers(DOCTORS_PERMISSION_LIST_FOR_DOCTOR.toArray(String[]::new)).hasRole(DOCTOR)
+                      .requestMatchers(DOCTORSLOTS_PERMISSION_LIST_FOR_CLIENT_ADMIN.toArray(String[]::new)).hasAnyRole(CLIENT, ADMIN)
                       .requestMatchers(DOCTORSLOTS_PERMISSION_LIST_FOR_ADMIN.toArray(String[]::new)).hasRole(ADMIN)
                       .requestMatchers(DOCTORSLOTS_PERMISSION_LIST_FOR_DOCTOR.toArray(String[]::new)).hasRole(DOCTOR)
                       .requestMatchers(CLIENTS_PERMISSION_LIST_FOR_ADMIN.toArray(String[]::new)).hasAnyRole(ADMIN, DOCTOR)

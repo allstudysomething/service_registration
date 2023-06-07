@@ -8,10 +8,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import serviceregistration.dto.DoctorDTO;
 import serviceregistration.dto.RegistrationDTO;
 import serviceregistration.dto.RegistrationSearchAdminDTO;
+import serviceregistration.dto.TempDTO;
 import serviceregistration.model.*;
 import serviceregistration.repository.UserRepository;
 import serviceregistration.service.*;
@@ -104,7 +106,8 @@ public class RegistrationMVCController {
     }
 
     @GetMapping("/addRegistrationSecond")
-    public String chooseDoctorWorkDay(Model model) {
+    public String chooseDoctor(Model model) {
+        log.info("in     @GetMapping(\"/addRegistrationSecond\") ");
         List<DoctorDTO> doctorDTOS = doctorSlotService.findDoctorDTOBySpecializationIdAndDayBetween(specializationForFuture.getId());
         model.addAttribute("doctorDTOList", doctorDTOS);
         model.addAttribute("doctorDTOForm", new DoctorDTO());
@@ -112,16 +115,31 @@ public class RegistrationMVCController {
     }
 
     @PostMapping("/addRegistrationSecond")
-    public String chooseDoctorWorkDay(@RequestParam("doctorDTO") Long doctorDTOId
+    public String chooseDoctor(@RequestParam("doctorDTO") Long doctorDTOId
             , Model model) {
+        log.info("in     @PostMapping(\"/addRegistrationSecond\")");
+
         // static doctorDTOId appropriation
         doctorDTOIdForFuture = doctorDTOId;
 
         return "redirect:/registrations/addRegistrationThird";
     }
 
+    @GetMapping("/redirectToThird/{doctorId}")
+    public String redirectToThird(@PathVariable Long doctorId) {
+        System.out.println("in     @GetMapping(\"/redirectToThird\")");
+        System.out.println(doctorId);
+//        DoctorDTO doctorDTO = doctorService.getOne(doctorId);
+
+        // static doctorDTOId appropriation
+        doctorDTOIdForFuture = doctorId;
+        specializationForFuture = specializationService.getOneByDoctorId(doctorId);
+
+        return "redirect:/registrations/addRegistrationThird";
+    }
+
     @GetMapping("/addRegistrationThird")
-    public String reserveDoctorSlotByClient(Model model) {
+    public String chooseDay(Model model) {
         List<Day> dayList = doctorSlotService.findDaysByDoctorDTOIdAndNotRegisteredAndDateBetween(doctorDTOIdForFuture);
         model.addAttribute("doctorDTOForm", new DoctorDTO());
         model.addAttribute("doctorWorkDates", dayList);
@@ -129,7 +147,7 @@ public class RegistrationMVCController {
     }
 
     @PostMapping("/addRegistrationThird")
-    public String reserveDoctorSlotByClient(@RequestParam("day") Long dayId,
+    public String chooseDay(@RequestParam("day") Long dayId,
 //                                            BindingResult bindingResult,
                                             Model model) {
         // static dayId appropriation
@@ -143,7 +161,7 @@ public class RegistrationMVCController {
     }
 
     @GetMapping("/addRegistrationFourth")
-    public String chooseTimeOfDayRegistration(Model model) {
+    public String chooseTimeOfDay(Model model) {
 //        CustomUserDetails customUserDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 //        Long userId = Long.valueOf(customUserDetails.getUserId());
 //        System.out.println("userId :" + userId);
@@ -153,9 +171,9 @@ public class RegistrationMVCController {
         return "registrations/chooseTimeOfDayRegistration";
     }
 
-    @Transactional
+//    @Transactional
     @PostMapping("/addRegistrationFourth")
-    public String chooseTimeOfDayRegistration(@RequestParam("freeTime") Long slotId,
+    public String chooseTimeOfDay(@RequestParam("freeTime") Long slotId,
                                               Model model) {
         // static slotId appropriation
         slotIdForFuture = slotId;

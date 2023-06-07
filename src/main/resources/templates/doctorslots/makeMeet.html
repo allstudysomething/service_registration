@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Запись</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div>
+        <hr class="hr"/>
+        <h3 align="center">Поиск по расписанию</h3>
+        <form method="POST" th:action="@{/doctorslots/makeMeet/search}" th:object="${doctorSlotSearchForm}">
+            <div class="mt-0 row g-2">
+                <div class="col-md">
+                    <div class="form-floating">
+                        <input name="lastName" type="text" class="form-control" id="lastName" placeholder="Фамилия">
+                        <label for="lastName">Фамилия</label>
+                    </div>
+                </div>
+                <div class="col-md">
+                    <div class="form-floating">
+                        <input name="firstName" type="text" class="form-control" id="firstName" placeholder="Имя">
+                        <label for="firstName">Имя</label>
+                    </div>
+                </div>
+                <div class="col-md">
+                    <div class="form-floating">
+                        <input name="midName" type="text" class="form-control" id="midName" placeholder="Отчество">
+                        <label for="midName">Отчество</label>
+                    </div>
+                </div>
+<!--                <div class="col-md">-->
+<!--                    <div class="form-floating">-->
+<!--                        <select class="form-select" name="specialization" id="specialization">-->
+<!--                            <option selected th:value="null">Выберете специализацию</option>-->
+<!--                            <option th:each="s : ${specializations}"-->
+<!--                                    th:value="${s.getTitleSpecialization()}"-->
+<!--                                    th:text="${s.getTitleSpecialization()}"></option>-->
+<!--                        </select>-->
+<!--                        <label for="specialization">Специализация</label>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="col-md">-->
+<!--                    <div class="form-floating">-->
+<!--                        <input name="day" type="date" class="form-control" id="day"-->
+<!--                               th:min="${days.get(0).getDay()}" th:max="${days.get(days.size() - 1).getDay()}"-->
+<!--                               placeholder="Дата">-->
+<!--                        <label for="day">Дата</label>-->
+<!--                    </div>-->
+<!--                </div>-->
+                <div class="row g-2">
+                    <button type="submit" class="btn btn-secondary">Фильтровать расписание</button>
+                </div>
+            </div>
+        </form>
+        <hr class="hr"/>
+    </div>
+    <div><br></div>
+
+    <h3 align="center">Доступно для записи</h3>
+    <div><br></div>
+    <div class="row">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th scope="col">Врач</th>
+                <th scope="col">Специализация</th>
+                <th scope="col">Дата</th>
+                <th scope="col">Кабинет</th>
+                <th scope="col"></th>
+            </tr>
+            </thead>
+<!--            <tbody>-->
+<!--            <tr th:each="ds : ${doctorDays}" >-->
+<!--                <td th:text="${ds.getDoctorLastName() + ' ' + ds.getDoctorFirstName() + ' ' + ds.getDoctorMidName()}"></td>-->
+<!--                <td th:text="${ds.getSpecialization()}"></td>-->
+<!--                <td th:text="${ds.getDay()}"></td>-->
+<!--                <td th:text="${ds.getCabinet()}"></td>-->
+<!--                <td>-->
+<!--                    <a sec:authorize="hasRole('CLIENT')" class="btn btn-sm btn-info"-->
+<!--                       th:href="'/registrations/slots/' + ${ds.getDoctorId()} + '/' + ${ds.getDayId()}">Выбрать время</a>-->
+<!--                </td>-->
+<!--            </tr>-->
+<!--            </tbody>-->
+        </table>
+    </div>
+    <nav aria-label="Pagination" th:if="${doctorDays.totalPages gt 0}">
+        <ul class="pagination justify-content-center font-weight-bold">
+            <li class="page-item" th:classappend="${doctorDays.number eq 0} ? 'disabled'">
+                <a class="page-link"
+                   th:href="@{/doctorslots/makeMeet?page={id}(id=${doctorDays.number lt 2 ? 1 : doctorDays.number})}"
+                   aria-label="Previous" title="Previous Page" data-toggle="tooltip">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item"
+                th:each="i : ${#numbers.sequence(1, doctorDays.totalPages, 1)}"
+                th:classappend="${i eq doctorDays.number + 1} ? 'active'">
+                <a class="page-link" th:href="@{/doctorslots/makeMeet?page={id}(id=${i})}" th:text="${i}"
+                   th:title="${'Page '+ i}" data-toggle="tooltip"></a>
+            </li>
+            <li class="page-item" th:classappend="${doctorDays.number eq doctorDays.totalPages - 1} ? 'disabled'">
+                <a class="page-link"
+                   th:href="@{/doctorslots/makeMeet?page={id}(id=${doctorDays.number + 2})}"
+                   aria-label="Next" title="Next Page" data-toggle="tooltip">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>
+</body>
+</html>

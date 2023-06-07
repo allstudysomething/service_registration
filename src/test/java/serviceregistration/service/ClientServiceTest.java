@@ -24,9 +24,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ClientServiceTest extends GenericTest<Client, ClientDTO> {
 
+    private final UserService userService;
+
     public ClientServiceTest() {
         super();
-        UserService userService = Mockito.mock(UserService.class);
+        userService = Mockito.mock(UserService.class);
         repository = Mockito.mock(ClientRepository.class);
         mapper = Mockito.mock(ClientMapper.class);
         BCryptPasswordEncoder bCryptPasswordEncoder = Mockito.mock(BCryptPasswordEncoder.class);
@@ -55,6 +57,18 @@ public class ClientServiceTest extends GenericTest<Client, ClientDTO> {
         log.info("Testing getOne() : " + clientDTO);
         assertEquals(ClientTestData.CLIENT_DTO_4, clientDTO);
     }
+
+//    @Test
+//    @Order(3)
+//    @Override
+//    protected void create() {
+//        Mockito.when(repository.save(ClientTestData.CLIENT_2)).thenReturn(ClientTestData.CLIENT_2);
+//        Mockito.when(mapper.toDTO(ClientTestData.CLIENT_2)).thenReturn(ClientTestData.CLIENT_DTO_2);
+//        Mockito.when(mapper.toEntity(ClientTestData.CLIENT_DTO_2)).thenReturn(ClientTestData.CLIENT_2);
+//        ClientDTO clientDTO = service.create(ClientTestData.CLIENT_DTO_2);
+//        log.info("Testing create : " + clientDTO);
+//        assertEquals(ClientTestData.CLIENT_DTO_2, clientDTO);
+//    }
 
     @Test
     @Order(3)
@@ -85,7 +99,10 @@ public class ClientServiceTest extends GenericTest<Client, ClientDTO> {
     @Order(5)
     @Override
     protected void delete() {
-        Mockito.when(repository.findById(2L)).thenReturn(Optional.of(ClientTestData.CLIENT_2));
-//        Mockito.when(service.delete(2L)).thenReturn(null);
+//        Mockito.when(usgetOne(2L);userService.deleteByLogin(ClientTestData.CLIENT_2.getLogin())).thenReturn(true);
+//        Mockito.when(getOne(2L);userService.deleteByLogin(ClientTestData.CLIENT_2.getLogin())).thenReturn(true);
+//
+//        userService.deleteByLogin(getOne(id).getLogin());
+//        repository.deleteById(id);
     }
 }

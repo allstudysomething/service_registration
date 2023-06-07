@@ -14,7 +14,17 @@ public interface DoctorRepository
 
     Doctor findDoctorByLogin(String login);
 
+    @Query(nativeQuery = true, value = """
+            select doctors.* from doctors
+                join specializations s on s.id = doctors.specialization_id
+          order by doctors.last_name
+            """)
     List<Doctor> findAllBySpecialization(Specialization specialization);
+
+//            where doctors.last_name ilike '%' || coalesce(:doctorLastName, '%') || '%'
+//          and doctors.first_name ilike '%' || coalesce(:doctorFirstName, '%') || '%'
+//          and doctors.mid_name ilike '%' || coalesce(:doctorMiddleName, '%') || '%'
+//          and s.title ilike '%' || coalesce(:titleSpecialization, '%') || '%'
 
     @Query(nativeQuery = true, value = """
             select doctors.* from doctors

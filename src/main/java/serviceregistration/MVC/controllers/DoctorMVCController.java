@@ -42,10 +42,10 @@ public class DoctorMVCController {
 
     @GetMapping("")
     public String getAll(@RequestParam(value = "page", defaultValue = "1") int page,
-                         @RequestParam(value = "size", defaultValue = "10") int pageSize,
+                         @RequestParam(value = "size", defaultValue = "5") int pageSize,
                          Model model) {
         PageRequest pageRequest = PageRequest.of(page - 1, pageSize
-                , Sort.by(Sort.Direction.ASC, "lastName")
+//                , Sort.by(Sort.Direction.ASC, "lastName")
         );
         Page<DoctorDTO> doctorDTOPage = doctorService.listAll(pageRequest);
 //        List<DoctorDTO> doctors = doctorService.listAll();
@@ -55,13 +55,14 @@ public class DoctorMVCController {
 
     @PostMapping("/search")
     public String getAllSearch(@RequestParam(value = "page", defaultValue = "1") int page,
-                         @RequestParam(value = "size", defaultValue = "2") int pageSize,
+                         @RequestParam(value = "size", defaultValue = "5") int pageSize,
                          @ModelAttribute("doctorsSearchFormAll") DoctorSearchAllDTO doctorSearchAllDTO,
                          Model model) {
         PageRequest pageRequest = PageRequest.of(page - 1, pageSize);
         Page<DoctorDTO> doctorDTOPage = doctorService.listAllSearched(doctorSearchAllDTO, pageRequest);
         model.addAttribute("doctors", doctorDTOPage);
         return "doctors/list";
+//        return "doctors/listSearch";
     }
 
 //    @GetMapping("")
@@ -118,6 +119,13 @@ public class DoctorMVCController {
         return "redirect:/doctors";
     }
 
+    @GetMapping("/{id}")
+    public String viewDoctor(@PathVariable Long id,
+                             Model model) {
+        model.addAttribute("doctor", doctorService.getOne(id));
+        return "profile/viewDoctor";
+    }
+
     @GetMapping("/profile/{id}")
     public String userProfile(@PathVariable Integer id,
 //                              @ModelAttribute(value = "exception") String exception,
@@ -132,7 +140,7 @@ public class DoctorMVCController {
         }
         model.addAttribute("doctorDTO", doctorService.getOne(Long.valueOf(id)));
 //        model.addAttribute("exception", exception);
-        return "profile/viewDoctor";
+        return "profile/viewDoctorProfile";
     }
 
 }

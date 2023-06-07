@@ -52,10 +52,22 @@ values ('Кабинет № 1', 1),
 
 insert into slots(time_slot)
 values
-('09:00'),
-('10:00'),
-('11:00'),
-('12:00');
+    ('09:00'),
+    ('10:00'),
+    ('11:00'),
+    ('12:00'),
+    ('13:00'),
+    ('14:00'),
+    ('15:00'),
+    ('15:00'),
+    ('16:00'),
+    ('17:00'),
+    ('18:00'),
+    ('19:00'),
+    ('19:00'),
+    ('20:00'),
+    ('21:00'),
+    ('22:00');
 
 insert into days(day)
 values
@@ -108,12 +120,6 @@ values (nextval('doctors_seq'), null, now(), null, null, false, 'Петр', 'И�
        (nextval('doctors_seq'), null, now(), null, null, false, 'Doctor5Name', 'Doctor5LastName', 'Doctor5Login', 'Doctor5MidName', '$2a$12$FN6OMZ.RuFZ56VJZ9YP3iOzb.TgqQ6U.CF0p9J2tw2eiXGiWtFPXC', 2, 3),
        (nextval('doctors_seq'), null, now(), null, null, false, 'Doctor6Name', 'Doctor6LastName', 'Doctor6Login', 'Doctor6MidName', '$2a$12$FN6OMZ.RuFZ56VJZ9YP3iOzb.TgqQ6U.CF0p9J2tw2eiXGiWtFPXC', 2, 1),
        (nextval('doctors_seq'), null, now(), null, null, false, 'Doctor7Name', 'Doctor7LastName', 'Doctor7Login', 'Doctor7MidName', '$2a$12$FN6OMZ.RuFZ56VJZ9YP3iOzb.TgqQ6U.CF0p9J2tw2eiXGiWtFPXC', 2, 4);
-
--- insert into clients
--- values (nextval('clients_seq'), now(), null, null, null, null,
---         'Изм проспект', 34, now(), 'as1d2@sf.ru', 'Алексей', 'm', 'Зотов', 'login', 'Владимирович', 'pass', '89031103775', 12345, 1),
---        (nextval('clients_seq'), now(), null, null, null, null,
---         'Изм проспект', 19, now(), 'vs1d2@sf.ru', 'Иван', 'm', 'Иванов', 'login2', 'Владимирович', 'pass', '89131103765', 16345, 1);
 
 insert into clients
 values (nextval('clients_seq'), now(), null, null, null, null,

@@ -8,11 +8,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import serviceregistration.dto.*;
 import serviceregistration.dto.CustomInterfaces.CustomDoctorSpecializationDay;
-import serviceregistration.dto.DateSearchDTO;
-import serviceregistration.dto.DoctorDTO;
-import serviceregistration.dto.DoctorSlotDTO;
-import serviceregistration.dto.DoctorSlotSearchAdminDTO;
 import serviceregistration.model.Cabinet;
 import serviceregistration.model.Day;
 import serviceregistration.model.Slot;
@@ -69,9 +66,7 @@ public class DoctorSlotMVCController {
     public String getCurrentDays(@RequestParam(value = "page", defaultValue = "1") int page,
                               @RequestParam(value = "size", defaultValue = "4") int pageSize,
                               Model model) {
-        PageRequest pageRequest = PageRequest.of(page - 1, pageSize
-                //, Sort.Direction.ASC, "day_id"
-                 );
+        PageRequest pageRequest = PageRequest.of(page - 1, pageSize);
         Page<CustomDoctorSpecializationDay> doctorSlots = doctorSlotService.listCurrentDays10(pageRequest);
         model.addAttribute("doctorslots", doctorSlots);
         return "doctorslots/scheduleForAll";
@@ -159,6 +154,43 @@ public class DoctorSlotMVCController {
         model.addAttribute("doctorslots", searchDoctorslots);
         return "doctorslots/mySchedule";
     }
+
+//    @GetMapping("/makeMeet")
+//    public String groupSlots(@RequestParam(value = "page", defaultValue = "1") int page,
+//                             @RequestParam(value = "size", defaultValue = "8") int pageSize,
+//                             Model model) {
+//        PageRequest pageRequest = PageRequest.of(page - 1, pageSize);
+//        model.addAttribute("doctorDays", doctorSlotService.groupByDoctorSlot(pageRequest));
+//        model.addAttribute("specializations", specializationService.listAll());
+//        model.addAttribute("days", dayService.getFirstActualDays(Days.ONE_WEEK));
+//        return "/doctorslots/makeMeet";
+//    }
+
+
+//    @PostMapping("/makeMeet/search")
+//    public String searchGroupSlots(@RequestParam(value = "page", defaultValue = "1") int page,
+//                                   @RequestParam(value = "size", defaultValue = "10") int pageSize,
+//                                   @ModelAttribute("doctorSlotSearchForm") DoctorSlotSearchDTO doctorSlotSearchDTO,
+//                                   Model model) {
+//        PageRequest pageRequest = PageRequest.of(page - 1, pageSize);
+//        log.info("in     @PostMapping(\"/makeMeet/search\")");
+////        model.addAttribute("doctorDays", doctorSlotService.findAmongGroupByDoctorSlot(pageRequest, doctorSlotSearchDTO));
+////        model.addAttribute("specializations", specializationService.listAll());
+////        model.addAttribute("days", dayService.getFirstActualDays(Days.ONE_WEEK));
+//        return "doctorslots/makeMeet";
+//    }
+//
+//    @GetMapping("/schedule/actual/{doctorId}")
+//    public String filterActualDoctorSchedule(@PathVariable Long doctorId,
+//                                             Model model) {
+//        DoctorDTO doctorDTO = doctorService.getOne(doctorId);
+//        DoctorSlotSearchDTO doctorSlotSearchDTO = new DoctorSlotSearchDTO();
+//        doctorSlotSearchDTO.setFirstName(doctorDTO.getFirstName());
+//        doctorSlotSearchDTO.setMidName(doctorDTO.getMidName());
+//        doctorSlotSearchDTO.setLastName(doctorDTO.getLastName());
+//        doctorSlotSearchDTO.setSpecialization(doctorDTO.getSpecialization().getTitleSpecialization());
+//        return searchGroupSlots(1, 10, doctorSlotSearchDTO, model);
+//    }
 
 
 //    @PostMapping("/addSchedule")

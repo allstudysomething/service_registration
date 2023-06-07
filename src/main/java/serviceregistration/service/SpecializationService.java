@@ -18,4 +18,8 @@ public class SpecializationService {
     public List<Specialization> listAll() {
         return specializationRepository.findAll();
     }
+
+    public Specialization getOneByDoctorId(Long doctorId) {
+        return specializationRepository.getByDoctorId(doctorId);
+    }
 }
