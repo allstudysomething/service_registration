@@ -100,9 +100,9 @@ public class DoctorMVCController {
 
     @GetMapping("/deleteSoft/{id}")
     public String delete(@PathVariable Long id) throws MyDeleteException {
-        System.out.println(" in @GetMapping(\"/deleteSoft/{id}\") ");
-        System.out.println(id);
-        System.out.println();
+//        System.out.println(" in @GetMapping(\"/deleteSoft/{id}\") ");
+//        System.out.println(id);
+//        System.out.println();
         doctorService.deleteSoft(id);
         return "redirect:/doctors";
     }

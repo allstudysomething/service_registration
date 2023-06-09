@@ -160,6 +160,7 @@ public class RegistrationService extends GenericService<Registration, Registrati
         }
 
         updatedDoctorSlot.setIsRegistered(false);
+        updatedDoctorSlot.setDeletedWhen(LocalDateTime.now());
         doctorSlotService.update(updatedDoctorSlot);
         registrationDTO.setIsActive(false);
         String deletedBy = "unknown";

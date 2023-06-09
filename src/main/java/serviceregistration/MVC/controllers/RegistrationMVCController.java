@@ -170,7 +170,7 @@ public class RegistrationMVCController {
 
         Long doctorSlotId = doctorSlotService.getDoctorSlotByDoctorAndDayAndSlot(doctorDTOIdForFuture, dayIdForFuture, slotIdForFuture);
         RegistrationDTO registrationDTO = registrationService.addRecord(doctorSlotId);
-//        registrationService.sendAcceptedMeetEmail(registrationDTO);
+        registrationService.sendAcceptedMeetEmail(registrationDTO);
         return "registrations/allDoneRegistration";
     }
 
