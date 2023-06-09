@@ -98,6 +98,7 @@ public class DoctorService extends GenericService<Doctor, DoctorDTO> {
         System.out.println("in doctorservice deleteSoft");
         Doctor doctor = doctorRepository.findById(id).orElseThrow(() -> new NotFoundException("Doctor not found here"));
         List<Registration> registrationList = registrationService.findCurrentRegistrationsByDoctorId(doctor.getId());
+        registrationList.forEach(System.out::println);
         registrationService.safeDelete(registrationList, 4L);
         doctor.setIsDeleted(true);
         doctor.setDeletedWhen(LocalDateTime.now());

@@ -28,11 +28,11 @@ public interface SlotRepository extends JpaRepository<Slot, Long> {
                                        join cabinets c2 on c2.id = doctors_slots.cabinet_id
                                        join slots s on doctors_slots.slot_id = s.id
                               where
-    --     d.id = 10
-    --     and
-                                      d2.id = :dayIdForFuture
-                                and
-                                      registrations.is_active = true)                             
+                                     d.id = :doctorDTOIdForFuture
+                                     and
+                                     d2.id = :dayIdForFuture
+                                     and
+                                     registrations.is_active = true)                             
         """)
     List<Long> findFreeSlotsByDoctorDTOIdAndDayId(Long doctorDTOIdForFuture, Long dayIdForFuture);
 

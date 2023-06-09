@@ -30,6 +30,7 @@ public class RegistrationsScheduler {
 //    @Scheduled(cron = "0 0 6 * * ?") // Every day at 6am
 //    @Scheduled(cron = "0 */55 * ? * *") // Every 55 minute
 //    @Scheduled(cron = "0 * * ? * *") // Every minute. NOT RECOMMEND. FOR TEST ONLY
+//    @Scheduled(cron = "0 */2 * ? * *") // Every 2 minute. NOT RECOMMEND. FOR TEST ONLY
     public void findExpiredRegistrations() {
         List<Registration> registrationList = registrationService.getExpiredRegistrations();
         registrationService.safeDelete(registrationList, 3L);

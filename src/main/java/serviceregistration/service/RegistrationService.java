@@ -96,7 +96,8 @@ public class RegistrationService extends GenericService<Registration, Registrati
     }
 
     public Page<RegistrationDTO> listAllCurrentPagedNotSorted(Pageable pageable) {
-        Page<Registration> registrationPageSorted = registrationRepository.findAll(pageable);
+//        Page<Registration> registrationPageSorted = registrationRepository.findAll(pageable);
+        Page<Registration> registrationPageSorted = registrationRepository.listAllCurrentPagedNotSorted(pageable);
         List<RegistrationDTO> result = mapper.toDTOs(registrationPageSorted.getContent());
 //        result.forEach(s -> System.out.println(s.getIsActive()));
         return new PageImpl<>(result, pageable, registrationPageSorted.getTotalElements());
@@ -180,6 +181,9 @@ public class RegistrationService extends GenericService<Registration, Registrati
         deletedRegistration.setDay(registrationDTO.getDoctorSlot().getDay().getDay().toString());
         deletedRegistration.setTime(registrationDTO.getDoctorSlot().getSlot().getTimeSlot().toString());
         deletedRegistration.setCabinet(registrationDTO.getDoctorSlot().getCabinet().getCabinetNumber().toString());
+        System.out.println(" in fillDeletedRegistrationList ");
+        System.out.println(deletedRegistration);
+        System.out.println();
         ToDeleteList.deletedRegistrationsList.add(deletedRegistration);
     }
 

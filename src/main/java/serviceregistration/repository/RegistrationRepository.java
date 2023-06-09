@@ -101,6 +101,18 @@ public interface RegistrationRepository
         """)
     List<Registration> findCurrentRegistrationsByDoctorId(Long id);
 
+    @Query(nativeQuery = true, value = """
+        select registrations.* from registrations
+            join doctors_slots ds on ds.id = registrations.doctor_slot_id
+            join doctors d on d.id = ds.doctor_id
+            join clients c on c.id = registrations.client_id
+            join days d2 on d2.id = ds.day_id
+            join cabinets c2 on ds.cabinet_id = c2.id
+            join slots s on s.id = ds.slot_id
+        where d2.day = timestamp 'today'
+        order by c2.number, d2.day, s.time_slot
+    """)
+    Page<Registration> listAllCurrentPagedNotSorted(Pageable pageable);
 }
 
 

@@ -109,11 +109,18 @@ public class DoctorSlotService extends GenericService<DoctorSlot, DoctorSlotDTO>
         List<Long> slotIDs = slotRepository.findFreeSlotsByDoctorDTOIdAndDayId(
 //                getCurrentUserLogin(),
                 doctorDTOIdForFuture, dayIdForFuture);
+        Day day = dayService.getDayById(dayIdForFuture);
+//        System.out.println(day.getDay().toString());
 
         List<Slot> slotList = slotRepository.findAllById(slotIDs);
-        System.out.println("slotList.forEach(System.out::println);");
-        slotList.forEach(s -> System.out.println(s.getTimeSlot().toString()));
-        System.out.println();
+//        System.out.println("slotList.forEach(System.out::println);");
+//        slotList.forEach(s -> System.out.println(s.getTimeSlot().toString()));
+//        System.out.println();
+        if (!day.getDay().isEqual(LocalDate.now())) {
+//            System.out.println("day ne sovpadaet");
+            return slotList;
+        }
+
         List<Slot> slotListNew = new ArrayList<>();
         for (int i = 0; i < slotList.size(); i++) {
             System.out.println(slotList.get(i).getTimeSlot().toString());
@@ -121,6 +128,7 @@ public class DoctorSlotService extends GenericService<DoctorSlot, DoctorSlotDTO>
                 slotListNew.add(slotList.get(i));
             }
         }
+//        return slotList;
         return slotListNew;
 //        return slotRepository.findAllById(slotIDs);
     }
@@ -183,7 +191,7 @@ public class DoctorSlotService extends GenericService<DoctorSlot, DoctorSlotDTO>
 
     public boolean isActiveRegistrationByClientAndDayIdAndSpecializationId(Long specializationId, Long dayIdForFuture) {
         Long count = doctorSlotRepository.isActiveRegistrationByClientAndDayIdAndSpecializationId(getCurrentUserLogin(), specializationId, dayIdForFuture);
-        System.out.println("************ v etot day u vas est zapis **************");
+        System.out.println("************ in this day u have meet with doctor **************");
         return count >= 1L;
     }
 

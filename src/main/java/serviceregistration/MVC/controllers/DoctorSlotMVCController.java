@@ -144,7 +144,7 @@ public class DoctorSlotMVCController {
     @GetMapping ("/mySchedule")
     public String mySchedule(Model model) {
         List<DoctorSlotDTO> doctorslots = doctorSlotService.getMySchedule();
-        String timeFor = doctorslots.get(0).getDay().getDay().toString();
+//        String timeFor = doctorslots.get(0).getDay().getDay().toString();
 //        model.addAttribute("timeFor", timeFor);
         model.addAttribute("doctorslots", doctorslots);
         return "doctorslots/mySchedule";

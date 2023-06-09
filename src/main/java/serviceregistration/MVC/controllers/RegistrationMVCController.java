@@ -60,7 +60,9 @@ public class RegistrationMVCController {
     public String listAll(@RequestParam(value = "page", defaultValue = "1") int page,
                           @RequestParam(value = "size", defaultValue = "20") int pageSize,
                           Model model) {
-        PageRequest pageRequest = PageRequest.of(page - 1, pageSize, Sort.by(Sort.Direction.DESC, "isActive"));
+        PageRequest pageRequest = PageRequest.of(page - 1, pageSize
+//                , Sort.by(Sort.Direction.DESC, "isActive")
+        );
         Page<RegistrationDTO> registrationsPaging = registrationService.listAllCurrentPagedNotSorted(pageRequest);
         model.addAttribute("registrationsPaging", registrationsPaging);
         model.addAttribute("registrationSearchFormAdmin", new RegistrationSearchAdminDTO());
