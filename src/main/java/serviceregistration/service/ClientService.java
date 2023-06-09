@@ -82,6 +82,7 @@ public class ClientService extends GenericService<Client, ClientDTO> {
     public void changePassword(final String uuid,
                                final String password) {
         ClientDTO clientDTO = mapper.toDTO(((ClientRepository) repository).findUserByChangePasswordToken(uuid));
+        System.out.println(clientDTO);
         clientDTO.setChangePasswordToken(null);
         clientDTO.setChangePasswordTokenExpireDateTime(null);
         clientDTO.setPassword(bCryptPasswordEncoder.encode(password));

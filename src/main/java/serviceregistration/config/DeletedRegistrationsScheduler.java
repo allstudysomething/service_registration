@@ -36,7 +36,7 @@ public class DeletedRegistrationsScheduler {
 
 //    @Scheduled(cron = "0 0 6 * * ?") // Every day at 6am
 //    @Scheduled(cron = "0 * * ? * *") // Every minute. NOT RECOMMEND. FOR TEST ONLY
-//    @Scheduled(cron = "0/15 * * ? * *") // Every 5 seconds. STRONGLY NOT RECOMMEND. FOR TEST ONLY
+//    @Scheduled(cron = "0/15 * * ? * *") // Every 15 seconds. STRONGLY NOT RECOMMEND. FOR TEST ONLY
     public void checkDeletedRegistrations() {
         if(ToDeleteList.deletedRegistrationsList.size() > 0) {
             System.out.println(ToDeleteList.deletedRegistrationsList.size());
@@ -70,7 +70,7 @@ public class DeletedRegistrationsScheduler {
                         + " - " + MailConstants.MAIL_MESSAGE_ABOUT_CANCELLED_RECORD_1_2);
 
         System.out.println(mailMessage);
-        javaMailSender.send(mailMessage);
+//        javaMailSender.send(mailMessage);
         System.out.println("sendCancelledMeetEmail отработал");
         System.out.println();
     }
