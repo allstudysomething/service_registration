@@ -36,4 +36,9 @@ public interface DoctorRepository
                                  @Param(value = "titleSpecialization") String titleSpecialization,
                                  Pageable pageable);
 
+    @Query(nativeQuery = true, value = """
+        select doctors.* from doctors
+        order by doctors.last_name;
+        """)
+    List<Doctor> listAllSorted();
 }

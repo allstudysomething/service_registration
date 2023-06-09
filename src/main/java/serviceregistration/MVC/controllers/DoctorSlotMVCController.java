@@ -88,7 +88,7 @@ public class DoctorSlotMVCController {
 
     @GetMapping ("/addSchedule")
     public String addSchedule(Model model) {
-        List<DoctorDTO> doctors = doctorService.listAll();
+        List<DoctorDTO> doctors = doctorService.listAllSorted();
         List<Day> days = dayService.getcurrent10days();
         List<Slot> slots = slotService.listAll();
         List<Cabinet> cabinets = cabinetService.listAll();

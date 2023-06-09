@@ -113,4 +113,9 @@ public class DoctorService extends GenericService<Doctor, DoctorDTO> {
         doctor.setDeletedWhen(null);
         update(mapper.toDTO(doctor));
     }
+
+    public List<DoctorDTO> listAllSorted() {
+        List<Doctor> doctorList = doctorRepository.listAllSorted();
+        return mapper.toDTOs(doctorList);
+    }
 }

@@ -27,7 +27,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-@Transactional
 @Service
 public class DoctorSlotService extends GenericService<DoctorSlot, DoctorSlotDTO> {
     private static LocalDate localDateCurrent;
@@ -107,30 +106,21 @@ public class DoctorSlotService extends GenericService<DoctorSlot, DoctorSlotDTO>
 
     public List<Slot> getFreeSlotsByDoctorDTOIdAndDayId(Long doctorDTOIdForFuture, Long dayIdForFuture) {
         List<Long> slotIDs = slotRepository.findFreeSlotsByDoctorDTOIdAndDayId(
-//                getCurrentUserLogin(),
                 doctorDTOIdForFuture, dayIdForFuture);
         Day day = dayService.getDayById(dayIdForFuture);
-//        System.out.println(day.getDay().toString());
-
         List<Slot> slotList = slotRepository.findAllById(slotIDs);
-//        System.out.println("slotList.forEach(System.out::println);");
-//        slotList.forEach(s -> System.out.println(s.getTimeSlot().toString()));
-//        System.out.println();
+
         if (!day.getDay().isEqual(LocalDate.now())) {
-//            System.out.println("day ne sovpadaet");
             return slotList;
         }
 
         List<Slot> slotListNew = new ArrayList<>();
         for (int i = 0; i < slotList.size(); i++) {
-            System.out.println(slotList.get(i).getTimeSlot().toString());
             if(slotList.get(i).getTimeSlot().isAfter(LocalTime.now())) {
                 slotListNew.add(slotList.get(i));
             }
         }
-//        return slotList;
         return slotListNew;
-//        return slotRepository.findAllById(slotIDs);
     }
 
     public Long getDoctorSlotByDoctorAndDayAndSlot(Long doctorDTOIdForFuture, Long dayIdForFuture, Long slotIdForFuture) {
