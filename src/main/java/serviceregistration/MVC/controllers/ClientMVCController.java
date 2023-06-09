@@ -46,6 +46,18 @@ public class ClientMVCController {
     public String getAll(Model model) {
         List<ClientDTO> clients = clientService.listAll();
         model.addAttribute("clients", clients);
+        model.addAttribute("clientsSearchForm", new ClientDTO());
+        return "clients/list";
+    }
+
+    @PostMapping("/search")
+    public String getAll(@ModelAttribute("clientsSearchForm") ClientDTO clientDTO,
+                         Model model) {
+//        System.out.println("    @PostMapping(\"/search\")");
+        System.out.println(clientDTO);
+        List<ClientDTO> clients = clientService.listAllSearch(clientDTO);
+        model.addAttribute("clients", clients);
+        model.addAttribute("clientsSearchForm", new ClientDTO());
         return "clients/list";
     }
 

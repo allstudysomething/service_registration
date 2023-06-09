@@ -93,19 +93,43 @@ public interface DoctorSlotRepository
             join doctors d on d.id = ds.doctor_id
             join specializations s on s.id = d.specialization_id
             join days d2 on d2.id = ds.day_id
+            join slots s2 on s2.id = ds.slot_id
         where d.last_name ilike '%' || coalesce(:doctorLastName, '%') || '%'
           and d.first_name ilike '%' || coalesce(:doctorFirstName, '%') || '%'
           and d.mid_name ilike '%' || coalesce(:doctorMiddleName, '%') || '%'
           and s.title ilike '%' || coalesce(:titleSpecialization, '%') || '%'
-          and cast(d2.day as text) like '%' || coalesce(:doctorSlotDay, '%') || '%'
+          and d2.day = :doctorSlotDay
+        order by d.last_name, d2.day, s2.time_slot
+        """)
+    List<DoctorSlot> findDoctorSlotByManyNotPaging(@Param(value = "doctorLastName") String doctorLastName,
+                                                   @Param(value = "doctorFirstName") String doctorFirstName,
+                                                   @Param(value = "doctorMiddleName") String doctorMiddleName,
+                                                   @Param(value = "titleSpecialization") String titleSpecialization,
+                                                   @Param(value = "doctorSlotDay") LocalDate doctorSlotDay);
 
+    @Query(nativeQuery = true, value = """
+        select ds.* from doctors_slots ds
+            join doctors d on d.id = ds.doctor_id
+            join specializations s on s.id = d.specialization_id
+            join days d2 on d2.id = ds.day_id
+            join slots s2 on s2.id = ds.slot_id
+        where d.last_name ilike '%' || coalesce(:doctorLastName, '%') || '%'
+          and d.first_name ilike '%' || coalesce(:doctorFirstName, '%') || '%'
+          and d.mid_name ilike '%' || coalesce(:doctorMiddleName, '%') || '%'
+          and s.title ilike '%' || coalesce(:titleSpecialization, '%') || '%'
+          and d2.day = :doctorSlotDay
+        order by d.last_name, d2.day, s2.time_slot
         """)
     Page<DoctorSlot> findDoctorSlotByMany(@Param(value = "doctorLastName") String doctorLastName,
                                           @Param(value = "doctorFirstName") String doctorFirstName,
                                           @Param(value = "doctorMiddleName") String doctorMiddleName,
                                           @Param(value = "titleSpecialization") String titleSpecialization,
-                                          @Param(value = "doctorSlotDay") String doctorSlotDay,
+                                          @Param(value = "doctorSlotDay") LocalDate doctorSlotDay,
                                           Pageable pageable);
+
+//    @Param(value = "doctorSlotDay") String doctorSlotDay,
+//    and cast(d2.day as text) like '%' || coalesce(:doctorSlotDay, '%') || '%'
+//    limit 14
 
     @Query(nativeQuery = true, value = """
         select distinct d2.day as Day, d.first_name as FirstName, d.last_name as LastName, d.mid_name as MidName,
@@ -144,19 +168,36 @@ public interface DoctorSlotRepository
                 join doctors d on d.id = doctors_slots.doctor_id
                 join days d2 on d2.id = doctors_slots.day_id
         where d.login = :currentUserLogin
-            and d2.day > now() - interval '1 day'
+            and d2.day = :localDate
         order by d2.day, doctors_slots.slot_id
         """)
-    List<DoctorSlot> getMySchedule(String currentUserLogin);
+    List<DoctorSlot> getMySchedule(String currentUserLogin, LocalDate localDate);
 
     @Query(nativeQuery = true, value = """
         select doctors_slots.* from doctors_slots
             join doctors d on d.id = doctors_slots.doctor_id
             join cabinets c on c.id = doctors_slots.cabinet_id
             join days d2 on d2.id = doctors_slots.day_id
-        where cast(d2.day as text) like coalesce(cast(:registrationDay as text), '%')
-            and d2.day > now() - interval '1 day'
+            join slots s on s.id = doctors_slots.slot_id
+        where cast(d2.day as text) like '%' || coalesce(:registrationDay, '%') || '%'
             and d.login = :getCurrentUserLogin
+        order by d2.day desc, s.time_slot
+        limit 15
         """)
-    List<DoctorSlot> findDoctorSlotByDay(String getCurrentUserLogin, LocalDate registrationDay);
+    List<DoctorSlot> findDoctorSlotByDay(String getCurrentUserLogin, String registrationDay);
+
+    @Query(nativeQuery = true, value = """
+        select doctors_slots.* from doctors_slots
+            join doctors d on d.id = doctors_slots.doctor_id
+            join days d2 on d2.id = doctors_slots.day_id
+            join cabinets c on c.id = doctors_slots.cabinet_id
+            join slots s on s.id = doctors_slots.slot_id
+        where d2.day = timestamp 'today'            
+        """)
+    List<DoctorSlot> findActualScheduleNotPaging();
+
+
 }
+
+//    join registrations r on doctors_slots.id = r.doctor_slot_id
+

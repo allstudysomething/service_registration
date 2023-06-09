@@ -58,7 +58,7 @@ public class RegistrationMVCController {
 
     @GetMapping("")
     public String listAll(@RequestParam(value = "page", defaultValue = "1") int page,
-                          @RequestParam(value = "size", defaultValue = "3") int pageSize,
+                          @RequestParam(value = "size", defaultValue = "20") int pageSize,
                           Model model) {
         PageRequest pageRequest = PageRequest.of(page - 1, pageSize, Sort.by(Sort.Direction.DESC, "isActive"));
         Page<RegistrationDTO> registrationsPaging = registrationService.listAllCurrentPagedNotSorted(pageRequest);
@@ -146,6 +146,7 @@ public class RegistrationMVCController {
 
         if(doctorSlotService.isActiveRegistrationByClientAndDayIdAndSpecializationId(specializationForFuture.getId(), dayIdForFuture)) {
             dayIdForFuture = null;
+//            System.out.println("isActiveRegistrationByClientAndDayIdAndSpecializationId");
             return "redirect:/registrations/addRegistrationThird";
         }
         return "redirect:/registrations/addRegistrationFourth";
@@ -167,7 +168,7 @@ public class RegistrationMVCController {
 
         Long doctorSlotId = doctorSlotService.getDoctorSlotByDoctorAndDayAndSlot(doctorDTOIdForFuture, dayIdForFuture, slotIdForFuture);
         RegistrationDTO registrationDTO = registrationService.addRecord(doctorSlotId);
-        registrationService.sendAcceptedMeetEmail(registrationDTO);
+//        registrationService.sendAcceptedMeetEmail(registrationDTO);
         return "registrations/allDoneRegistration";
     }
 
@@ -183,7 +184,7 @@ public class RegistrationMVCController {
 
     @GetMapping("myRegistrationsAllTime")
     public String getAllAlways(@RequestParam(value = "page", defaultValue = "1") int page,
-                         @RequestParam(value = "size", defaultValue = "16") int pageSize,
+                         @RequestParam(value = "size", defaultValue = "15") int pageSize,
                          Model model) {
         PageRequest pageRequest = PageRequest.of(page - 1, pageSize);
         Page<RegistrationDTO> registrationsPagingAll = registrationService.listArchivePagedByClient(pageRequest);

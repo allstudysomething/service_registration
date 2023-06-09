@@ -98,7 +98,7 @@ public class RegistrationService extends GenericService<Registration, Registrati
     public Page<RegistrationDTO> listAllCurrentPagedNotSorted(Pageable pageable) {
         Page<Registration> registrationPageSorted = registrationRepository.findAll(pageable);
         List<RegistrationDTO> result = mapper.toDTOs(registrationPageSorted.getContent());
-        result.forEach(s -> System.out.println(s.getIsActive()));
+//        result.forEach(s -> System.out.println(s.getIsActive()));
         return new PageImpl<>(result, pageable, registrationPageSorted.getTotalElements());
     }
 
@@ -154,15 +154,9 @@ public class RegistrationService extends GenericService<Registration, Registrati
             registrationDTO = registrationMapper.toDTO(registration);
         } else return;
 
-        DeletedRegistrationDTO deletedRegistration = new DeletedRegistrationDTO();
-        deletedRegistration.setEmail(registrationDTO.getClient().getEmail());
-        deletedRegistration.setDoctorFIO(registrationDTO.getDoctorSlot().getDoctor().getLastName()
-                + " " + registrationDTO.getDoctorSlot().getDoctor().getFirstName().charAt(0) + "."
-                + registrationDTO.getDoctorSlot().getDoctor().getMidName().charAt(0));
-        deletedRegistration.setDay(registrationDTO.getDoctorSlot().getDay().getDay().toString());
-        deletedRegistration.setTime(registrationDTO.getDoctorSlot().getSlot().getTimeSlot().toString());
-        deletedRegistration.setCabinet(registrationDTO.getDoctorSlot().getCabinet().getCabinetNumber().toString());
-        ToDeleteList.deletedRegistrationsList.add(deletedRegistration);
+        if(roleId != 3) {
+            fillDeletedRegistrationList(registrationDTO);
+        }
 
         updatedDoctorSlot.setIsRegistered(false);
         doctorSlotService.update(updatedDoctorSlot);
@@ -175,6 +169,18 @@ public class RegistrationService extends GenericService<Registration, Registrati
         registrationDTO.setDeletedWhen(LocalDateTime.now());
         registrationDTO.setResultMeet(ResultMeet.CANCEL);
         registrationRepository.save(mapper.toEntity(registrationDTO));
+    }
+
+    private void fillDeletedRegistrationList(RegistrationDTO registrationDTO) {
+        DeletedRegistrationDTO deletedRegistration = new DeletedRegistrationDTO();
+        deletedRegistration.setEmail(registrationDTO.getClient().getEmail());
+        deletedRegistration.setDoctorFIO(registrationDTO.getDoctorSlot().getDoctor().getLastName()
+                + " " + registrationDTO.getDoctorSlot().getDoctor().getFirstName().charAt(0) + "."
+                + registrationDTO.getDoctorSlot().getDoctor().getMidName().charAt(0));
+        deletedRegistration.setDay(registrationDTO.getDoctorSlot().getDay().getDay().toString());
+        deletedRegistration.setTime(registrationDTO.getDoctorSlot().getSlot().getTimeSlot().toString());
+        deletedRegistration.setCabinet(registrationDTO.getDoctorSlot().getCabinet().getCabinetNumber().toString());
+        ToDeleteList.deletedRegistrationsList.add(deletedRegistration);
     }
 
     public void sendAcceptedMeetEmail(RegistrationDTO registrationDTO) {

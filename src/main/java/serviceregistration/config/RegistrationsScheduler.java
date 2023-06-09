@@ -27,7 +27,8 @@ public class RegistrationsScheduler {
         this.javaMailSender = javaMailSender;
     }
 
-    @Scheduled(cron = "0 0 6 * * ?") // Every day at 6am
+//    @Scheduled(cron = "0 0 6 * * ?") // Every day at 6am
+//    @Scheduled(cron = "0 */55 * ? * *") // Every 55 minute
 //    @Scheduled(cron = "0 * * ? * *") // Every minute. NOT RECOMMEND. FOR TEST ONLY
     public void findExpiredRegistrations() {
         List<Registration> registrationList = registrationService.getExpiredRegistrations();

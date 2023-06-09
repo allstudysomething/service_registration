@@ -12,6 +12,7 @@ import serviceregistration.dto.*;
 import serviceregistration.dto.CustomInterfaces.CustomDoctorSpecializationDay;
 import serviceregistration.model.Cabinet;
 import serviceregistration.model.Day;
+import serviceregistration.model.DoctorSlot;
 import serviceregistration.model.Slot;
 import serviceregistration.service.*;
 
@@ -51,20 +52,22 @@ public class DoctorSlotMVCController {
         return "doctorslots/schedule";
     }
 
+
     @PostMapping("/search")
     public String getSearchSchedule(@RequestParam(value = "page", defaultValue = "1") int page,
                                     @RequestParam(value = "size", defaultValue = "15") int pageSize,
                                     @ModelAttribute("doctorslotSearchFormAdmin") DoctorSlotSearchAdminDTO doctorSlotSearchAdminDTO,
                                     Model model) {
-        PageRequest pageRequest = PageRequest.of(page - 1, pageSize);
-        Page<DoctorSlotDTO> doctorSlots = doctorSlotService.findDoctorSlotByMany(doctorSlotSearchAdminDTO, pageRequest);
+//        PageRequest pageRequest = PageRequest.of(page - 1, pageSize);
+//        Page<DoctorSlotDTO> doctorSlots = doctorSlotService.findDoctorSlotByMany(doctorSlotSearchAdminDTO, pageRequest);
+        List<DoctorSlotDTO> doctorSlots = doctorSlotService.findDoctorSlotByManyNotPaging(doctorSlotSearchAdminDTO);
         model.addAttribute("doctorslots", doctorSlots);
-        return "doctorslots/schedule";
+        return "doctorslots/scheduleActual";
     }
 
     @GetMapping("/currentDays")
     public String getCurrentDays(@RequestParam(value = "page", defaultValue = "1") int page,
-                              @RequestParam(value = "size", defaultValue = "4") int pageSize,
+                              @RequestParam(value = "size", defaultValue = "20") int pageSize,
                               Model model) {
         PageRequest pageRequest = PageRequest.of(page - 1, pageSize);
         Page<CustomDoctorSpecializationDay> doctorSlots = doctorSlotService.listCurrentDays10(pageRequest);
@@ -76,8 +79,9 @@ public class DoctorSlotMVCController {
     public String getActualSchedule(@RequestParam(value = "page", defaultValue = "1") int page,
                               @RequestParam(value = "size", defaultValue = "15") int pageSize,
                               Model model) {
-        PageRequest pageRequest = PageRequest.of(page - 1, pageSize, Sort.Direction.ASC, "day_id");
-        Page<DoctorSlotDTO> doctorSlots = doctorSlotService.listAllCurrentPaging(pageRequest);
+//        PageRequest pageRequest = PageRequest.of(page - 1, pageSize, Sort.Direction.ASC, "day_id");
+//        Page<DoctorSlotDTO> doctorSlots = doctorSlotService.listAllCurrentPaging(pageRequest);
+        List<DoctorSlotDTO> doctorSlots = doctorSlotService.listAllCurrent();
         model.addAttribute("doctorslots", doctorSlots);
         return "doctorslots/scheduleActual";
     }
@@ -85,7 +89,7 @@ public class DoctorSlotMVCController {
     @GetMapping ("/addSchedule")
     public String addSchedule(Model model) {
         List<DoctorDTO> doctors = doctorService.listAll();
-        List<Day> days = dayService.listAll();
+        List<Day> days = dayService.getcurrent10days();
         List<Slot> slots = slotService.listAll();
         List<Cabinet> cabinets = cabinetService.listAll();
         model.addAttribute("doctors", doctors);
@@ -100,26 +104,32 @@ public class DoctorSlotMVCController {
     public String addSchedule(@ModelAttribute("scheduleForm") DoctorSlotDTO doctorSlotDTO,
                               BindingResult bindingResult,
                               Model model) {
+//        System.out.println(doctorSlotDTO.getDoctor().getId());
+//        System.out.println(doctorSlotDTO.getDoctor().getLogin());
+//        System.out.println(doctorSlotDTO.getDay().getId());
+//        System.out.println(doctorSlotDTO.getDay().getDay().toString());
         addSchedule(model);
         if (doctorSlotService.getDoctorSlotByDoctorAndDay(doctorSlotDTO.getDoctor().getId(), doctorSlotDTO.getDay().getId()) != null) {
             bindingResult.rejectValue("day", "error.day", "Врач уже работает " + doctorSlotDTO.getDay().getDay());
+            System.out.println(" in bindingResult Врач уже работает ");
             return "doctorslots/addSchedule";
         }
         if (doctorSlotService.getDoctorSlotByCabinetAndDay(doctorSlotDTO.getCabinet().getId(), doctorSlotDTO.getDay().getId()) != null) {
             bindingResult.rejectValue("cabinet", "error.cabinet", "В этот день кабинет занят");
+            System.out.println(" in bindingResult В этот день кабинет занят");
             return "doctorslots/addSchedule";
         }
         doctorSlotService.addSchedule(doctorSlotDTO.getDoctor().getId(),
                 doctorSlotDTO.getDay().getId(),
                 doctorSlotDTO.getCabinet().getId());
-        return "redirect:/doctorslots";
+        return "redirect:/doctorslots/getActualSchedule";
     }
 
     //TODO make soft delete (if needed)
     @GetMapping("/deleteSchedule")
     public String deleteSchedule(Model model) {
         List<DoctorDTO> doctors = doctorService.listAll();
-        List<Day> days = dayService.listAll();
+        List<Day> days = dayService.getcurrent10days();
         model.addAttribute("doctors", doctors);
         model.addAttribute("days", days);
         return "doctorslots/deleteSchedule";
@@ -128,12 +138,14 @@ public class DoctorSlotMVCController {
     @PostMapping("/deleteSchedule")
     public String deleteSchedule(@ModelAttribute("scheduleForm") DoctorSlotDTO doctorSlotDTO) {
         doctorSlotService.deleteSchedule(doctorSlotDTO.getDoctor().getId(), doctorSlotDTO.getDay().getId());
-        return "redirect:/doctorslots";
+        return "redirect:/doctorslots/getActualSchedule";
     }
 
     @GetMapping ("/mySchedule")
     public String mySchedule(Model model) {
         List<DoctorSlotDTO> doctorslots = doctorSlotService.getMySchedule();
+        String timeFor = doctorslots.get(0).getDay().getDay().toString();
+//        model.addAttribute("timeFor", timeFor);
         model.addAttribute("doctorslots", doctorslots);
         return "doctorslots/mySchedule";
     }
@@ -142,6 +154,8 @@ public class DoctorSlotMVCController {
     @PostMapping ("/myScheduleSearch")
     public String myScheduleSearch(Model model,
                                    @ModelAttribute("doctorslotSearchFormDoctor") DateSearchDTO dateSearchDTO) {
+        System.out.println(" in     @PostMapping (\"/myScheduleSearch\")");
+        System.out.println(dateSearchDTO.getRegistrationDay());
         List<DoctorSlotDTO> searchDoctorslots = doctorSlotService.getMySearchedSchedule(dateSearchDTO.getRegistrationDay());
         model.addAttribute("doctorslots", searchDoctorslots);
         return "doctorslots/mySchedule";

@@ -25,9 +25,11 @@ public interface RegistrationRepository
             join doctors_slots ds on ds.id = registrations.doctor_slot_id
             join cabinets c2 on c2.id = ds.cabinet_id
             join days d on d.id = ds.day_id
+            join slots s on ds.slot_id = s.id
         where c.login = :clientLogin
             and registrations.is_active = true
             and d.day >= now() - interval '1 day'
+        order by d.day, s.time_slot
         """)
     Page<Registration> findAllByClientAndIsActiveAndDateCurrentPlus(@Param(value = "clientLogin") String clientLogin,
                                                   Pageable pageRequest);
@@ -40,6 +42,7 @@ public interface RegistrationRepository
             join slots s on s.id = ds.slot_id
         where c.login = :clientLogin
             and registrations.is_active = false
+        order by d.day, s.time_slot
         """)
     Page<Registration> findAllByClientAndNotIsActiveAndDateCurrentMinus(@Param(value = "clientLogin") String clientLogin,
                                                                         Pageable pageRequest);

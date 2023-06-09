@@ -9,42 +9,42 @@
 </head>
 <body>
 <div layout:fragment="content">
-    <div>
-<!--        <hr class="hr"/>-->
-        <h3 align="center">поиск врача</h3>
-        <form method="POST" th:action="@{/doctors/search}" th:object="${doctorsSearchFormAll}">
-            <div class="mt-0 row g-2">
-                <div class="col-md">
-                    <div class="form-floating">
-                        <input name="doctorLastName" type="text" class="form-control" id="doctorLastName" placeholder="Фамилия врача">
-                        <label for="doctorLastName">Фамилия врача</label>
-                    </div>
-                </div>
-                <div class="col-md">
-                    <div class="form-floating">
-                        <input name="doctorFirstName" type="text" class="form-control" id="doctorFirstName" placeholder="Имя врача">
-                        <label for="doctorFirstName">Имя врача</label>
-                    </div>
-                </div>
-                <div class="col-md">
-                    <div class="form-floating">
-                        <input name="doctorMiddleName" type="text" class="form-control" id="doctorMiddleName" placeholder="Отчество врача">
-                        <label for="doctorMiddleName">Отчество врача</label>
-                    </div>
-                </div>
-                <div class="col-md">
-                    <div class="form-floating">
-                        <input name="titleSpecialization" type="text" class="form-control" id="titleSpecialization" placeholder="Специализация врача">
-                        <label for="titleSpecialization">Специализация врача</label>
-                    </div>
-                </div>
-            </div>
-            <div><br></div>
-            <div class="row g-2">
-                <button type="submit" class="btn btn-secondary">Найти</button>
-            </div>
-        </form>
-    </div>
+<!--    <div>-->
+<!--&lt;!&ndash;        <hr class="hr"/>&ndash;&gt;-->
+<!--        <h3 align="center">поиск врача</h3>-->
+<!--        <form method="POST" th:action="@{/doctors/search}" th:object="${doctorsSearchFormAll}">-->
+<!--            <div class="mt-0 row g-2">-->
+<!--                <div class="col-md">-->
+<!--                    <div class="form-floating">-->
+<!--                        <input name="doctorLastName" type="text" class="form-control" id="doctorLastName" placeholder="Фамилия врача">-->
+<!--                        <label for="doctorLastName">Фамилия врача</label>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="col-md">-->
+<!--                    <div class="form-floating">-->
+<!--                        <input name="doctorFirstName" type="text" class="form-control" id="doctorFirstName" placeholder="Имя врача">-->
+<!--                        <label for="doctorFirstName">Имя врача</label>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="col-md">-->
+<!--                    <div class="form-floating">-->
+<!--                        <input name="doctorMiddleName" type="text" class="form-control" id="doctorMiddleName" placeholder="Отчество врача">-->
+<!--                        <label for="doctorMiddleName">Отчество врача</label>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="col-md">-->
+<!--                    <div class="form-floating">-->
+<!--                        <input name="titleSpecialization" type="text" class="form-control" id="titleSpecialization" placeholder="Специализация врача">-->
+<!--                        <label for="titleSpecialization">Специализация врача</label>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div><br></div>-->
+<!--            <div class="row g-2">-->
+<!--                <button type="submit" class="btn btn-secondary">Найти</button>-->
+<!--            </div>-->
+<!--        </form>-->
+<!--    </div>-->
     <hr class="hr"/>
     <h3 align="center">врачи</h3>
     <div class="row">

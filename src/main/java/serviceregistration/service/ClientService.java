@@ -16,22 +16,26 @@ import serviceregistration.utils.MailUtils;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
 @Service
 public class ClientService extends GenericService<Client, ClientDTO> {
+    private final ClientRepository clientRepository;
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final UserService userService;
     private final JavaMailSender javaMailSender;
 
     public ClientService(ClientRepository repository,
-                         ClientMapper mapper, BCryptPasswordEncoder bCryptPasswordEncoder, UserService userService, JavaMailSender javaMailSender) {
+                         ClientMapper mapper, BCryptPasswordEncoder bCryptPasswordEncoder, UserService userService, JavaMailSender javaMailSender,
+                         ClientRepository clientRepository) {
         super(repository, mapper);
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.userService = userService;
         this.javaMailSender = javaMailSender;
+        this.clientRepository = clientRepository;
     }
     public ClientDTO getClientByLogin(String login) {
         return mapper.toDTO(((ClientRepository) repository).findClientByLogin(login));
@@ -99,5 +103,16 @@ public class ClientService extends GenericService<Client, ClientDTO> {
     public Boolean checkExpiredDate(String uuid) {
         ClientDTO clientDTO = mapper.toDTO(((ClientRepository) repository).findUserByChangePasswordToken(uuid));
         return LocalDateTime.now().isAfter(clientDTO.getChangePasswordTokenExpireDateTime());
+    }
+
+    public List<ClientDTO> listAllSearch(ClientDTO clientDTO) {
+        List<Client> clientList = clientRepository.listAllSearch(
+                clientDTO.getLastName(),
+                clientDTO.getFirstName(),
+                clientDTO.getMidName(),
+                clientDTO.getPolicy()
+        );
+        List<ClientDTO> clientDTOList = mapper.toDTOs(clientList);
+        return clientDTOList;
     }
 }

@@ -27,9 +27,8 @@
             </form>
         </div>
         <hr class="hr"/>
-        <h3 align="center">мое расписание</h3>
+        <h3 align="center">мое расписание </h3>
         <div class="row">
-
             <table class="table table-hover">
                 <thead>
                 <tr>
@@ -41,16 +40,16 @@
                 </thead>
                 <tbody>
                 <tr th:each="doctorslot : ${doctorslots}">
-                    <td th:text="${doctorslot.getDay().getDay()}"></td>
+                    <td th:text="${#temporals.format(doctorslot.getDay().getDay(), 'dd-MM-yyyy')}"></td>
                     <td th:text="${doctorslot.getSlot().getTimeSlot()}"></td>
                     <td th:text="${doctorslot.getCabinet().getCabinetNumber()}"></td>
                     <td th:classappend="${doctorslot.getIsRegistered() == false} ? 'not-active-reg' : 'active-reg'"
                         th:text="${doctorslot.getIsRegistered()} == false ? 'Свободно' : 'Занято'"></td>
-                    <td>
-                        <div sec:authorize="isAuthenticated() && (hasRole('DOCTOR'))">
-                            <a class="btn btn-sm btn-outline-danger" th:href="'/registrations/deleteRecord/' + ${doctorslot.getId()}">Удалить</a>
-                        </div>
-                    </td>
+<!--                    <td>-->
+<!--                        <div sec:authorize="isAuthenticated() && (hasRole('DOCTOR'))">-->
+<!--                            <a class="btn btn-sm btn-outline-danger" th:href="'/registrations/deleteRecord/' + ${doctorslot.getId()}">Удалить</a>-->
+<!--                        </div>-->
+<!--                    </td>-->
                 </tr>
                 </tbody>
             </table>

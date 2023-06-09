@@ -8,8 +8,50 @@
     <title>Клиенты</title>
 </head>
 <body>
-<div layout:fragment="content">
-    <h1>Клиенты</h1>
+    <div layout:fragment="content">
+        <div>
+        <h3 align="center">поиск клиента</h3>
+        <form method="POST" th:action="@{/clients/search}" th:object="${clientsSearchForm}">
+            <div class="mt-0 row g-2">
+                <div class="col-md">
+                    <div class="form-floating">
+                        <input name="lastName" type="text" class="form-control" id="lastName" placeholder="Фамилия клиента">
+                        <label for="lastName">Фамилия клиента</label>
+                    </div>
+                </div>
+                <div class="col-md">
+                    <div class="form-floating">
+                        <input name="firstName" type="text" class="form-control" id="firstName" placeholder="Имя клиента">
+                        <label for="firstName">Имя клиента</label>
+                    </div>
+                </div>
+                <div class="col-md">
+                    <div class="form-floating">
+                        <input name="midName" type="text" class="form-control" id="midName" placeholder="Отчество клиента">
+                        <label for="midName">Отчество клиента</label>
+                    </div>
+                </div>
+                <div class="col-md">
+                    <div class="form-floating">
+                        <input name="policy" type="text" class="form-control" id="policy" placeholder="Полис">
+                        <label for="policy">Полис</label>
+                    </div>
+                </div>
+<!--                <div class="col-md">-->
+<!--                    <div class="form-floating">-->
+<!--                        <input name="titleSpecialization" type="text" class="form-control" id="titleSpecialization" placeholder="Специализация врача">-->
+<!--                        <label for="titleSpecialization">Специализация врача</label>-->
+<!--                    </div>-->
+<!--                </div>-->
+            </div>
+            <div><br></div>
+            <div class="row g-2">
+                <button type="submit" class="btn btn-secondary">Найти</button>
+            </div>
+        </form>
+    </div>
+    <hr class="hr"/>
+<!--    <h1>Клиенты</h1>-->
     <div class="row">
         <div class="col">
         </div>

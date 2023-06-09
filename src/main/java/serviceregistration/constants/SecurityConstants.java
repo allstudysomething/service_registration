@@ -72,6 +72,11 @@ public interface SecurityConstants {
                     "/clients"
             );
 
+    List<String> CLIENTS_PERMISSION_LIST_FOR_DOCTOR_ADMIN = List.of
+            (
+                    "/clients/search"
+            );
+
     List<String> CLIENTS_PERMISSION_LIST_FOR_CLIENT = List.of
             (
                     "/clients/profile/**",

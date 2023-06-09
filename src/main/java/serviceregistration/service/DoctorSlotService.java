@@ -21,9 +21,11 @@ import serviceregistration.repository.SlotRepository;
 import serviceregistration.service.userdetails.CustomUserDetails;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 @Transactional
 @Service
@@ -75,7 +77,9 @@ public class DoctorSlotService extends GenericService<DoctorSlot, DoctorSlotDTO>
         return mapper.toDTO(doctorSlotRepository.findFirstByCabinetIdAndDayId(cabinetId, dayId));
     }
 
+//    public DoctorSlotDTO getDoctorSlotByDoctorAndDay(final Long doctorId, final Long dayId) {
     public DoctorSlotDTO getDoctorSlotByDoctorAndDay(final Long doctorId, final Long dayId) {
+//        String doctorId =
         return mapper.toDTO(doctorSlotRepository.findFirstByDoctorIdAndDayId(doctorId, dayId));
     }
 
@@ -102,8 +106,23 @@ public class DoctorSlotService extends GenericService<DoctorSlot, DoctorSlotDTO>
     }
 
     public List<Slot> getFreeSlotsByDoctorDTOIdAndDayId(Long doctorDTOIdForFuture, Long dayIdForFuture) {
-        List<Long> slotIDs = slotRepository.findFreeSlotsByDoctorDTOIdAndDayId(doctorDTOIdForFuture, dayIdForFuture);
-        return slotRepository.findAllById(slotIDs);
+        List<Long> slotIDs = slotRepository.findFreeSlotsByDoctorDTOIdAndDayId(
+//                getCurrentUserLogin(),
+                doctorDTOIdForFuture, dayIdForFuture);
+
+        List<Slot> slotList = slotRepository.findAllById(slotIDs);
+        System.out.println("slotList.forEach(System.out::println);");
+        slotList.forEach(s -> System.out.println(s.getTimeSlot().toString()));
+        System.out.println();
+        List<Slot> slotListNew = new ArrayList<>();
+        for (int i = 0; i < slotList.size(); i++) {
+            System.out.println(slotList.get(i).getTimeSlot().toString());
+            if(slotList.get(i).getTimeSlot().isAfter(LocalTime.now())) {
+                slotListNew.add(slotList.get(i));
+            }
+        }
+        return slotListNew;
+//        return slotRepository.findAllById(slotIDs);
     }
 
     public Long getDoctorSlotByDoctorAndDayAndSlot(Long doctorDTOIdForFuture, Long dayIdForFuture, Long slotIdForFuture) {
@@ -122,10 +141,29 @@ public class DoctorSlotService extends GenericService<DoctorSlot, DoctorSlotDTO>
         return new PageImpl<>(result, pageable, doctorSlotPage.getTotalElements());
     }
 
+    public List<DoctorSlotDTO> listAllCurrent() {
+        List<DoctorSlot> doctorSlot = doctorSlotRepository.findActualScheduleNotPaging();
+        List<DoctorSlotDTO> doctorSlotDTOS = mapper.toDTOs(doctorSlot);
+        return doctorSlotDTOS;
+    }
+
     public Page<DoctorSlotDTO> listAllCurrentPaging(PageRequest pageable) {
         Page<DoctorSlot> doctorSlotPage = doctorSlotRepository.findActualSchedule(pageable);
         List<DoctorSlotDTO> result = doctorSlotMapper.toDTOs(doctorSlotPage.getContent());
         return new PageImpl<>(result, pageable, doctorSlotPage.getTotalElements());
+    }
+
+
+    public List<DoctorSlotDTO> findDoctorSlotByManyNotPaging(DoctorSlotSearchAdminDTO doctorSlotSearchAdminDTO) {
+        String getDoctorSlotDay = doctorSlotSearchAdminDTO.getRegistrationDay() == null ?
+                "%" : doctorSlotSearchAdminDTO.getRegistrationDay().toString();
+        List<DoctorSlot> doctorSlots = doctorSlotRepository.findDoctorSlotByManyNotPaging(doctorSlotSearchAdminDTO.getDoctorLastName(),
+                doctorSlotSearchAdminDTO.getDoctorFirstName(),
+                doctorSlotSearchAdminDTO.getDoctorMiddleName(),
+                doctorSlotSearchAdminDTO.getTitleSpecialization(),
+                doctorSlotSearchAdminDTO.getRegistrationDay());
+        List<DoctorSlotDTO> doctorSlotDTOS = mapper.toDTOs(doctorSlots);
+        return doctorSlotDTOS;
     }
 
     public Page<DoctorSlotDTO> findDoctorSlotByMany(DoctorSlotSearchAdminDTO doctorSlotSearchAdminDTO, Pageable pageable) {
@@ -136,7 +174,8 @@ public class DoctorSlotService extends GenericService<DoctorSlot, DoctorSlotDTO>
                         doctorSlotSearchAdminDTO.getDoctorFirstName(),
                         doctorSlotSearchAdminDTO.getDoctorMiddleName(),
                         doctorSlotSearchAdminDTO.getTitleSpecialization(),
-                        getDoctorSlotDay,
+                        doctorSlotSearchAdminDTO.getRegistrationDay(),
+//                        getDoctorSlotDay,
                         pageable);
         List<DoctorSlotDTO> result = mapper.toDTOs(doctorSlotPage.getContent());
         return new PageImpl<>(result, pageable, doctorSlotPage.getTotalElements());
@@ -144,18 +183,21 @@ public class DoctorSlotService extends GenericService<DoctorSlot, DoctorSlotDTO>
 
     public boolean isActiveRegistrationByClientAndDayIdAndSpecializationId(Long specializationId, Long dayIdForFuture) {
         Long count = doctorSlotRepository.isActiveRegistrationByClientAndDayIdAndSpecializationId(getCurrentUserLogin(), specializationId, dayIdForFuture);
+        System.out.println("************ v etot day u vas est zapis **************");
         return count >= 1L;
     }
 
     // TODO нужно ли расписание архив для доктора? (реализовать при необходимости)
     public List<DoctorSlotDTO> getMySchedule() {
-        List<DoctorSlot> doctorSlots = doctorSlotRepository.getMySchedule(getCurrentUserLogin());
+        List<DoctorSlot> doctorSlots = doctorSlotRepository.getMySchedule(getCurrentUserLogin(), LocalDate.now());
         List<DoctorSlotDTO> doctorSlotDTOS = mapper.toDTOs(doctorSlots);
         return doctorSlotDTOS;
     }
 
     public List<DoctorSlotDTO> getMySearchedSchedule(LocalDate registrationDay) {
-        List<DoctorSlot> doctorSlots = doctorSlotRepository.findDoctorSlotByDay(getCurrentUserLogin(), registrationDay);
+        String registrationDayNew = (registrationDay == null) ?
+                "%" : registrationDay.toString();
+        List<DoctorSlot> doctorSlots = doctorSlotRepository.findDoctorSlotByDay(getCurrentUserLogin(), registrationDayNew);
         List<DoctorSlotDTO> doctorSlotDTOS = mapper.toDTOs(doctorSlots);
         return doctorSlotDTOS;
     }

@@ -46,7 +46,10 @@ public class DeletedRegistrationsScheduler {
             System.out.println();
 
             sendCancelledMeetEmail(deletedRegistrationDTO);
-        } else {
+        }
+        // Закомментировать или удалить  потмо строки 51-53
+        else {
+            System.out.println();
             System.out.println("DeletedRegistrationsScheduler, method - checkDeletedRegistrations, work at every ***** sec");
         }
     }
