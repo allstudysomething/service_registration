@@ -12,7 +12,7 @@ public interface Errors {
     class Users {
         public static final String USER_FORBIDDEN_ERROR = "У вас нет прав просматривать информацию о пользователе";
     }
-    
+
     class REST {
         public static final String DELETE_ERROR_MESSAGE = "Удаление невозможно";
         public static final String AUTH_ERROR_MESSAGE = "Неавторизованный пользователь";

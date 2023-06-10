@@ -8,15 +8,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import serviceregistration.dto.*;
 import serviceregistration.dto.CustomInterfaces.CustomDoctorSpecializationDay;
+import serviceregistration.dto.DateSearchDTO;
+import serviceregistration.dto.DoctorDTO;
+import serviceregistration.dto.DoctorSlotDTO;
+import serviceregistration.dto.DoctorSlotSearchAdminDTO;
 import serviceregistration.model.Cabinet;
 import serviceregistration.model.Day;
-import serviceregistration.model.DoctorSlot;
 import serviceregistration.model.Slot;
 import serviceregistration.service.*;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Slf4j
@@ -87,7 +88,8 @@ public class DoctorSlotMVCController {
     }
 
     @GetMapping ("/addSchedule")
-    public String addSchedule(Model model) {
+    public String addSchedule(Model model,
+                              @ModelAttribute("exception") final String exception) {
         List<DoctorDTO> doctors = doctorService.listAllSorted();
         List<Day> days = dayService.getcurrent10days();
         List<Slot> slots = slotService.listAll();
@@ -97,6 +99,7 @@ public class DoctorSlotMVCController {
         model.addAttribute("slots", slots);
         model.addAttribute("cabinets", cabinets);
         model.addAttribute("scheduleForm", new DoctorSlotDTO());
+        model.addAttribute("exception", exception);
         return "doctorslots/addSchedule";
     }
 
@@ -108,15 +111,17 @@ public class DoctorSlotMVCController {
 //        System.out.println(doctorSlotDTO.getDoctor().getLogin());
 //        System.out.println(doctorSlotDTO.getDay().getId());
 //        System.out.println(doctorSlotDTO.getDay().getDay().toString());
-        addSchedule(model);
+//        addSchedule(model, model.addAttribute("qwerty", "qwerty"));
         if (doctorSlotService.getDoctorSlotByDoctorAndDay(doctorSlotDTO.getDoctor().getId(), doctorSlotDTO.getDay().getId()) != null) {
             bindingResult.rejectValue("day", "error.day", "Врач уже работает " + doctorSlotDTO.getDay().getDay());
             System.out.println(" in bindingResult Врач уже работает ");
+//            throw new MyDeleteException("Врач уже работает в этот день");
             return "doctorslots/addSchedule";
         }
         if (doctorSlotService.getDoctorSlotByCabinetAndDay(doctorSlotDTO.getCabinet().getId(), doctorSlotDTO.getDay().getId()) != null) {
             bindingResult.rejectValue("cabinet", "error.cabinet", "В этот день кабинет занят");
             System.out.println(" in bindingResult В этот день кабинет занят");
+//            throw new MyDeleteException("В этот день кабинет занят");
             return "doctorslots/addSchedule";
         }
         doctorSlotService.addSchedule(doctorSlotDTO.getDoctor().getId(),

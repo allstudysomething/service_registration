@@ -13,9 +13,7 @@ import org.springframework.security.web.firewall.StrictHttpFirewall;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import serviceregistration.service.userdetails.CustomUserDetailsService;
 
-
 import java.util.Arrays;
-import java.util.List;
 
 import static serviceregistration.constants.SecurityConstants.*;
 import static serviceregistration.constants.UserRolesConstants.*;
@@ -26,8 +24,6 @@ import static serviceregistration.constants.UserRolesConstants.*;
 public class WebSecurityConfig {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final CustomUserDetailsService customUserDetailsService;
-    
-
 
     public WebSecurityConfig(BCryptPasswordEncoder bCryptPasswordEncoder
                         ,CustomUserDetailsService customUserDetailsService) {
@@ -69,6 +65,7 @@ public class WebSecurityConfig {
                       .requestMatchers(REGISTRATIONS_PERMISSION_LIST_FOR_CLIENT.toArray(String[]::new)).hasRole(CLIENT)
                       .requestMatchers(REGISTRATIONS_PERMISSION_LIST_FOR_CLIENT_DOCTOR.toArray(String[]::new)).hasAnyRole(CLIENT,DOCTOR)
                       .requestMatchers(REGISTRATIONS_PERMISSION_LIST_FOR_ADMIN.toArray(String[]::new)).hasRole(ADMIN)
+                      .anyRequest().authenticated()
               )
               //Настройка для входа в систему
               .formLogin((form) -> form

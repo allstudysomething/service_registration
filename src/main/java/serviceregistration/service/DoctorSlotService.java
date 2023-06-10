@@ -23,9 +23,7 @@ import serviceregistration.service.userdetails.CustomUserDetails;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public class DoctorSlotService extends GenericService<DoctorSlot, DoctorSlotDTO> {
@@ -64,10 +62,12 @@ public class DoctorSlotService extends GenericService<DoctorSlot, DoctorSlotDTO>
         return currentUserLogin;
     }
 
+    @Transactional
     public void addSchedule(Long doctorId, Long dayId, Long cabinetId) {
          doctorSlotRepository.addSchedule(doctorId, dayId, cabinetId);
     }
 
+    @Transactional
     public void deleteSchedule(final Long doctorId, final Long dayId) {
         doctorSlotRepository.deleteAllByDoctorIdAndDayId(doctorId, dayId);
     }

@@ -9,7 +9,6 @@ import serviceregistration.model.Client;
 import serviceregistration.model.DoctorSlot;
 import serviceregistration.model.Registration;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -83,10 +82,11 @@ public interface RegistrationRepository
                                     join slots s on s.id = ds.slot_id
                                     join days d2 on d2.id = ds.day_id
         where registrations.is_active = true
-            and d2.day <= cast(:localDateTime as date)
-            and s.time_slot <= cast(:localDateTime as time)
+            and d2.day < cast(:localDateTime as date)
         """)
     List<Registration> findExpiredRegistrations(LocalDateTime localDateTime);
+
+    //            and s.time_slot <= cast(:localDateTime as time)
 
     @Query(nativeQuery = true, value = """
         select registrations.* from registrations join doctors_slots ds on ds.id = registrations.doctor_slot_id

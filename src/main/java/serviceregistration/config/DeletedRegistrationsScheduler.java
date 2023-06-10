@@ -3,20 +3,14 @@ package serviceregistration.config;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import serviceregistration.constants.MailConstants;
 import serviceregistration.constants.ToDeleteList;
 import serviceregistration.dto.DeletedRegistrationDTO;
-import serviceregistration.dto.RegistrationDTO;
-import serviceregistration.model.Registration;
 import serviceregistration.service.ClientService;
 import serviceregistration.service.DoctorSlotService;
 import serviceregistration.service.RegistrationService;
 import serviceregistration.utils.MailUtils;
-
-import java.util.List;
-import java.util.Objects;
 
 @Slf4j
 @Component
@@ -35,7 +29,7 @@ public class DeletedRegistrationsScheduler {
     }
 
 //    @Scheduled(cron = "0 0 6 * * ?") // Every day at 6am
-    @Scheduled(cron = "0 * * ? * *") // Every minute. NOT RECOMMEND. FOR TEST ONLY
+//    @Scheduled(cron = "0 * * ? * *") // Every minute. NOT RECOMMEND. FOR TEST ONLY
 //    @Scheduled(cron = "0/15 * * ? * *") // Every 15 seconds. STRONGLY NOT RECOMMEND. FOR TEST ONLY
     public void checkDeletedRegistrations() {
         if(ToDeleteList.deletedRegistrationsList.size() > 0) {

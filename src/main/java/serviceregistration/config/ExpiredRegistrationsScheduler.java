@@ -32,19 +32,13 @@ public class ExpiredRegistrationsScheduler {
 //    @Scheduled(cron = "0 0 6 * * ?") // Every day at 6am
 //    @Scheduled(cron = "0 */55 * ? * *") // Every 55 minute
 //    @Scheduled(cron = "0 */2 * ? * *") // Every 2 minute. NOT RECOMMEND. FOR TEST ONLY
-//    @Scheduled(cron = "0 * * ? * *") // Every minute. NOT RECOMMEND. FOR TEST ONLY
+//    @Scheduled(cron = "0/5 * * ? * *") // Every minute. NOT RECOMMEND. FOR TEST ONLY
     public void findExpiredRegistrations() {
         List<Registration> registrationList = registrationService.getExpiredRegistrations();
         System.out.println("registrationList size : " + registrationList.size());
+//        registrationList.forEach(s -> System.out.println(s));
         registrationService.safeDelete(registrationList, 3L);
 
-//        for(Registration registration: registrationList) {
-//            registration.setIsActive(false);
-//            DoctorSlotDTO doctorSlotDTO = doctorSlotService.getOne(registration.getDoctorSlot().getId());
-//            doctorSlotDTO.setIsRegistered(false);
-//            registrationService.update(registrationMapper.toDTO(registration));
-//            doctorSlotService.update(doctorSlotDTO);
-//        }
         System.out.println("public void findExpiredRegistrations() workout");
     }
 
