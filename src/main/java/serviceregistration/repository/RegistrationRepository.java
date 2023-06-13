@@ -9,6 +9,7 @@ import serviceregistration.model.Client;
 import serviceregistration.model.DoctorSlot;
 import serviceregistration.model.Registration;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -113,6 +114,27 @@ public interface RegistrationRepository
         order by c2.number, d2.day, s.time_slot
     """)
     Page<Registration> listAllCurrentPagedNotSorted(Pageable pageable);
+
+    @Query(nativeQuery = true, value = """
+        select cast((now() at time zone 'utc-3') as date);
+        """)
+    LocalDate getCurrentDate();
+
+    @Query(nativeQuery = true, value = """
+        select EXTRACT('YEAR' from cast((now() at time zone 'utc-3') as date));
+        """)
+    String getCurrentYear();
+
+    @Query(nativeQuery = true, value = """
+        select EXTRACT('MONTH' from cast((now() at time zone 'utc-3') as date));
+        """)
+    String getCurrentMonth();
+
+    @Query(nativeQuery = true, value = """
+        select EXTRACT('DAY' from cast((now() at time zone 'utc-3') as date));
+        """)
+    String getCurrentDay();
+
 }
 
 

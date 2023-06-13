@@ -4,16 +4,19 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 import serviceregistration.constants.MailConstants;
 import serviceregistration.constants.ToDeleteList;
-import serviceregistration.dto.*;
+import serviceregistration.dto.DeletedRegistrationDTO;
+import serviceregistration.dto.DoctorSlotDTO;
+import serviceregistration.dto.RegistrationDTO;
+import serviceregistration.dto.RegistrationSearchAdminDTO;
 import serviceregistration.mapper.DoctorSlotMapper;
 import serviceregistration.mapper.RegistrationMapper;
 import serviceregistration.model.Client;
-import serviceregistration.model.Doctor;
 import serviceregistration.model.Registration;
 import serviceregistration.model.ResultMeet;
 import serviceregistration.repository.ClientRepository;
@@ -21,8 +24,8 @@ import serviceregistration.repository.RegistrationRepository;
 import serviceregistration.repository.UserRepository;
 import serviceregistration.service.userdetails.CustomUserDetails;
 import serviceregistration.utils.MailUtils;
-import org.springframework.mail.javamail.JavaMailSender;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -215,5 +218,12 @@ public class RegistrationService extends GenericService<Registration, Registrati
 
     public List<Registration> findCurrentRegistrationsByDoctorId(Long id) {
         return registrationRepository.findCurrentRegistrationsByDoctorId(id);
+    }
+
+    public LocalDate getCurrentDate() {
+        LocalDate localDateDB = LocalDate.of(registrationRepository.getCurrentDate().getYear()
+                , registrationRepository.getCurrentDate().getMonth()
+                , registrationRepository.getCurrentDate().getDayOfMonth());
+        return localDateDB;
     }
 }

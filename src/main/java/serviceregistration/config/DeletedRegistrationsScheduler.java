@@ -11,7 +11,6 @@ import serviceregistration.service.ClientService;
 import serviceregistration.service.DoctorSlotService;
 import serviceregistration.service.RegistrationService;
 import serviceregistration.utils.MailUtils;
-
 @Slf4j
 @Component
 public class DeletedRegistrationsScheduler {

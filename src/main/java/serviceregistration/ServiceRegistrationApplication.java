@@ -6,7 +6,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableScheduling
-public class ServiceRegistrationApplication {
+public class ServiceRegistrationApplication	{
 
 	// TODO
 	// 1) Когда нибудь реализоватьпроверку на то чтобы нельзя было записаться клиенту в этот же день

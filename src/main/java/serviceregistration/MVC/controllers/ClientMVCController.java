@@ -14,11 +14,10 @@ import serviceregistration.dto.ClientDTO;
 import serviceregistration.mapper.ClientMapper;
 import serviceregistration.repository.ClientRepository;
 import serviceregistration.service.ClientService;
+import serviceregistration.service.RegistrationService;
 import serviceregistration.service.UserService;
 import serviceregistration.service.userdetails.CustomUserDetails;
 
-import java.time.LocalDate;
-import java.time.Period;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -31,14 +30,18 @@ import static serviceregistration.constants.UserRolesConstants.ADMIN;
 public class ClientMVCController {
     private final ClientRepository clientRepository;
     private final ClientService clientService;
+
+    private final RegistrationService registrationService;
+
     private final UserService userService;
     private final ClientMapper clientMapper;
 
     public ClientMVCController(ClientService clientService, UserService userService,
-                               ClientRepository clientRepository, ClientMapper clientMapper) {
+                               ClientRepository clientRepository, RegistrationService registrationService, ClientMapper clientMapper) {
         this.clientService = clientService;
         this.userService = userService;
         this.clientRepository = clientRepository;
+        this.registrationService = registrationService;
         this.clientMapper = clientMapper;
     }
 
@@ -77,11 +80,32 @@ public class ClientMVCController {
             bindingResult.rejectValue("login", "login.error", "Этот логин уже существует");
             return "registration";
         }
+        if (clientService.getClientByPhone(clientDTO.getPhone()) != null) {
+            bindingResult.rejectValue("phone", "phone.error", "Этот телефон уже существует");
+            return "registration";
+        }
+        if (!clientDTO.getPhone().matches("\\d*")) {
+            bindingResult.rejectValue("phone", "phoneDigital.error", "Телефон должен состоять из цифр");
+            return "registration";
+        }
+        if (clientDTO.getBirthDate().isAfter(registrationService.getCurrentDate().minusYears(14))) {
+            System.out.println("clientDTO.getBirthDate().toString() :" + clientDTO.getBirthDate().toString());
+            System.out.println("registrationService.getCurrentDate().minusYears(18)) :"
+                    + registrationService.getCurrentDate().minusYears(18));
+            bindingResult.rejectValue("birthDate", "birthDate.error", "Клиенту меньше 18 лет");
+            return "registration";
+        }
+//        int age = Period.between(LocalDate.from(clientDTO.getBirthDate()), LocalDate.now()).getYears();
+        if (clientService.getClientByPolicy(clientDTO.getPolicy()) != null) {
+            bindingResult.rejectValue("policy", "policy.error", "Этот полис уже существует");
+            return "registration";
+        }
         if (clientService.getClientByEmail(clientDTO.getEmail()) != null) {
             bindingResult.rejectValue("email", "email.error", "Этот email уже существует");
             return "registration";
         }
-        clientService.create(clientDTO, true);
+//        clientService.create(clientDTO, true);
+        System.out.println("ALL DONE!!!");
         return "redirect:login";
     }
 
