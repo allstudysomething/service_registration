@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import serviceregistration.dto.CustomInterfaces.CustomDoctorSpecializationDay;
+import serviceregistration.dto.CustomInterfaces.MyUniversalQueryModel;
 import serviceregistration.dto.DateSearchDTO;
 import serviceregistration.dto.DoctorDTO;
 import serviceregistration.dto.DoctorSlotDTO;
@@ -76,6 +77,17 @@ public class DoctorSlotMVCController {
         return "doctorslots/scheduleForAll";
     }
 
+    @GetMapping("/makeMeet")
+    public String getCurrentDaysPlus(@RequestParam(value = "page", defaultValue = "1") int page,
+                                 @RequestParam(value = "size", defaultValue = "20") int pageSize,
+                                 Model model) {
+        PageRequest pageRequest = PageRequest.of(page - 1, pageSize);
+        Page<MyUniversalQueryModel> doctorslotsMUQM = doctorSlotService.getCurrentDaysPlus(pageRequest);
+//        doctorSlots.forEach(s -> System.out.println(s.toString()));
+        model.addAttribute("doctorslotsMUQM", doctorslotsMUQM);
+        return "doctorslots/makeMeet";
+    }
+
     @GetMapping("/getActualSchedule")
     public String getActualSchedule(@RequestParam(value = "page", defaultValue = "1") int page,
                               @RequestParam(value = "size", defaultValue = "15") int pageSize,
@@ -83,6 +95,7 @@ public class DoctorSlotMVCController {
 //        PageRequest pageRequest = PageRequest.of(page - 1, pageSize, Sort.Direction.ASC, "day_id");
 //        Page<DoctorSlotDTO> doctorSlots = doctorSlotService.listAllCurrentPaging(pageRequest);
         List<DoctorSlotDTO> doctorSlots = doctorSlotService.listAllCurrent();
+//        System.out.println(doctorSlots.get(0));
         model.addAttribute("doctorslots", doctorSlots);
         return "doctorslots/scheduleActual";
     }
@@ -107,11 +120,6 @@ public class DoctorSlotMVCController {
     public String addSchedule(@ModelAttribute("scheduleForm") DoctorSlotDTO doctorSlotDTO,
                               BindingResult bindingResult,
                               Model model) {
-//        System.out.println(doctorSlotDTO.getDoctor().getId());
-//        System.out.println(doctorSlotDTO.getDoctor().getLogin());
-//        System.out.println(doctorSlotDTO.getDay().getId());
-//        System.out.println(doctorSlotDTO.getDay().getDay().toString());
-//        addSchedule(model, model.addAttribute("qwerty", "qwerty"));
         if (doctorSlotService.getDoctorSlotByDoctorAndDay(doctorSlotDTO.getDoctor().getId(), doctorSlotDTO.getDay().getId()) != null) {
             bindingResult.rejectValue("day", "error.day", "Врач уже работает " + doctorSlotDTO.getDay().getDay());
             System.out.println(" in bindingResult Врач уже работает ");
@@ -119,7 +127,8 @@ public class DoctorSlotMVCController {
             return "doctorslots/addSchedule";
         }
         if (doctorSlotService.getDoctorSlotByCabinetAndDay(doctorSlotDTO.getCabinet().getId(), doctorSlotDTO.getDay().getId()) != null) {
-            bindingResult.rejectValue("cabinet", "error.cabinet", "В этот день кабинет занят");
+            bindingResult.rejectValue("cabinet", "error.cabinet", "В этот день кабинет номер "
+                    + doctorSlotDTO.getCabinet().getCabinetNumber() +  " занят");
             System.out.println(" in bindingResult В этот день кабинет занят");
 //            throw new MyDeleteException("В этот день кабинет занят");
             return "doctorslots/addSchedule";
@@ -132,25 +141,39 @@ public class DoctorSlotMVCController {
 
     //TODO make soft delete (if needed)
     @GetMapping("/deleteSchedule")
-    public String deleteSchedule(Model model) {
+    public String deleteSchedule(Model model,
+                                 @ModelAttribute("exception") final String exception) {
         List<DoctorDTO> doctors = doctorService.listAll();
         List<Day> days = dayService.getcurrent10days();
         model.addAttribute("doctors", doctors);
         model.addAttribute("days", days);
+        model.addAttribute("scheduleForm", new DoctorSlotDTO());
+        model.addAttribute("exception", exception);
         return "doctorslots/deleteSchedule";
     }
 
     @PostMapping("/deleteSchedule")
-    public String deleteSchedule(@ModelAttribute("scheduleForm") DoctorSlotDTO doctorSlotDTO) {
-        doctorSlotService.deleteSchedule(doctorSlotDTO.getDoctor().getId(), doctorSlotDTO.getDay().getId());
+    public String deleteSchedule(@ModelAttribute("scheduleForm") DoctorSlotDTO doctorSlotDTO,
+                                 BindingResult bindingResult) {
+        if (doctorSlotService.getDoctorSlotByDoctorAndDay(doctorSlotDTO.getDoctor().getId(), doctorSlotDTO.getDay().getId()) == null) {
+            bindingResult.rejectValue("day", "error.day", "Врач "
+                    + doctorSlotDTO.getDoctor().getLastName() + " "
+                    + doctorSlotDTO.getDoctor().getFirstName().charAt(0) + "."
+                    + doctorSlotDTO.getDoctor().getMidName().charAt(0) + "."
+                    + " не работает " + doctorSlotDTO.getDay().getDay());
+//            bindingResult.rejectValue("doctor", "error.doctor", "Врач не работает " + doctorSlotDTO.getDay().getDay());
+//            System.out.println(" in bindingResult Врач уже работает ");
+//            throw new MyDeleteException("Врач уже работает в этот день");
+            return "doctorslots/deleteSchedule";
+        }
+
+            doctorSlotService.deleteSchedule(doctorSlotDTO.getDoctor().getId(), doctorSlotDTO.getDay().getId());
         return "redirect:/doctorslots/getActualSchedule";
     }
 
     @GetMapping ("/mySchedule")
     public String mySchedule(Model model) {
         List<DoctorSlotDTO> doctorslots = doctorSlotService.getMySchedule();
-//        String timeFor = doctorslots.get(0).getDay().getDay().toString();
-//        model.addAttribute("timeFor", timeFor);
         model.addAttribute("doctorslots", doctorslots);
         return "doctorslots/mySchedule";
     }

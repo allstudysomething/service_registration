@@ -19,6 +19,9 @@
                         th:text="${doctor.getLastName() + ' ' + doctor.getFirstName() + ' ' + doctor.getMidName()
                          + ' ' + doctor.getSpecialization().getTitleSpecialization()}"></option>
             </select>
+            <div class="alert alert-danger" th:if="${#fields.hasErrors('doctor')}">
+                <p th:errors="*{doctor}"></p>
+            </div>
         </div>
         <div class="mb-3">
             <label for="day" class="form-label">День</label>
@@ -28,6 +31,9 @@
                         th:value="${day.getId()}"
                         th:text="${day.getDay()}"></option>
             </select>
+            <div class="alert alert-danger" th:if="${#fields.hasErrors('day')}">
+                <p th:errors="*{day}"></p>
+            </div>
         </div>
         <button type="submit" class="btn btn-success" onclick="validateFormSchedule()">Удалить</button>
         <button type="button" class="btn btn-secondary" onclick="window.history.back()">Назад</button>

@@ -7,8 +7,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import serviceregistration.dto.CustomInterfaces.CustomDoctorSpecializationDay;
-import serviceregistration.dto.DoctorDTO;
-import serviceregistration.model.*;
+import serviceregistration.dto.CustomInterfaces.MyUniversalQueryModel;
+import serviceregistration.model.DoctorSlot;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -196,6 +196,24 @@ public interface DoctorSlotRepository
         """)
     List<DoctorSlot> findActualScheduleNotPaging();
 
+    @Query(nativeQuery = true, value = """
+        select d.last_name as DoctorLastName, d.first_name as DoctorFirstName, d.mid_name as DoctorMidName,
+               s2.title as TitleSpecialization, d2.day as Day, c.number as CabinetNumber, d.id as DoctorId, d2.id as DayId
+                 from doctors_slots
+                          join doctors d on d.id = doctors_slots.doctor_id
+                          join slots s on s.id = doctors_slots.slot_id
+                          join cabinets c on c.id = doctors_slots.cabinet_id
+                          join days d2 on d2.id = doctors_slots.day_id
+                        join specializations s2 on d.specialization_id = s2.id
+        where doctors_slots.is_registered = false
+            and d2.day <= TIMESTAMP 'today' + interval '14 days'
+            and d2.day + s.time_slot > (now() at time zone 'utc-3')
+        group by d.last_name, d.first_name, d.mid_name, s2.title, d2.day, c.number, d.id, d2.id
+        order by 5, 6
+        """)
+    Page<MyUniversalQueryModel> getCurrentDaysPlus(Pageable pageable);
+
+//            --         and d2.day >= timestamp 'today'
 
 }
 

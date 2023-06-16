@@ -8,6 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import serviceregistration.dto.CustomInterfaces.CustomDoctorSpecializationDay;
+import serviceregistration.dto.CustomInterfaces.MyUniversalQueryModel;
 import serviceregistration.dto.DoctorDTO;
 import serviceregistration.dto.DoctorSlotDTO;
 import serviceregistration.dto.DoctorSlotSearchAdminDTO;
@@ -200,4 +201,8 @@ public class DoctorSlotService extends GenericService<DoctorSlot, DoctorSlotDTO>
         return doctorSlotDTOS;
     }
 
+    public Page<MyUniversalQueryModel> getCurrentDaysPlus(Pageable pageable) {
+        Page<MyUniversalQueryModel> myUniversalQueryModels = doctorSlotRepository.getCurrentDaysPlus(pageable);
+        return new PageImpl<>(myUniversalQueryModels.getContent(), pageable, myUniversalQueryModels.getTotalElements());
+    }
 }

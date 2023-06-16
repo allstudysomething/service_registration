@@ -44,6 +44,12 @@ public interface SecurityConstants {
                     "/doctorslots/schedule/actual/**"
             );
 
+    List<String> DOCTORSLOTS_PERMISSION_LIST_FOR_CLIENT = List.of
+            (
+                    "/doctorslots/currentDays",
+                    "/doctorslots/makeMeet"
+            );
+
     List<String> DOCTORSLOTS_PERMISSION_LIST_FOR_ADMIN = List.of
             (
                     "/doctorslots",

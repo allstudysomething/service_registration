@@ -34,6 +34,9 @@
                         th:value="${day.getId()}"
                         th:text="${day.getDay()}"></option>
             </select>
+            <div class="alert alert-danger" th:if="${#fields.hasErrors('day')}">
+                <p th:errors="*{day}"></p>
+            </div>
         </div>
         <div class="mb-3">
             <label for="cabinet" class="form-label">Кабинет</label>
