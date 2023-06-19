@@ -9,7 +9,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import serviceregistration.dto.CustomInterfaces.CustomDoctorSpecializationDay;
-import serviceregistration.dto.CustomInterfaces.MyUniversalQueryModel;
 import serviceregistration.dto.DateSearchDTO;
 import serviceregistration.dto.DoctorDTO;
 import serviceregistration.dto.DoctorSlotDTO;
@@ -19,6 +18,7 @@ import serviceregistration.model.Day;
 import serviceregistration.model.Slot;
 import serviceregistration.service.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Slf4j
@@ -50,6 +50,8 @@ public class DoctorSlotMVCController {
                               Model model) {
         PageRequest pageRequest = PageRequest.of(page - 1, pageSize, Sort.Direction.ASC, "day_id");
         Page<DoctorSlotDTO> doctorSlots = doctorSlotService.listAllPaging(pageRequest);
+//        Page<DoctorSlotDTO> doctorSlots = doctorSlotService.listAllPagingWOTimeSlots(pageRequest);
+//        model.addAttribute("flagTime", 1);
         model.addAttribute("doctorslots", doctorSlots);
         return "doctorslots/schedule";
     }
@@ -63,7 +65,11 @@ public class DoctorSlotMVCController {
 //        PageRequest pageRequest = PageRequest.of(page - 1, pageSize);
 //        Page<DoctorSlotDTO> doctorSlots = doctorSlotService.findDoctorSlotByMany(doctorSlotSearchAdminDTO, pageRequest);
         List<DoctorSlotDTO> doctorSlots = doctorSlotService.findDoctorSlotByManyNotPaging(doctorSlotSearchAdminDTO);
+        model.addAttribute("currentDate", LocalDate.now());
+        model.addAttribute("flagTime", 1);
         model.addAttribute("doctorslots", doctorSlots);
+//        System.out.println(LocalDate.now());
+//        System.out.println(doctorSlots.get(0).getDay().getDay());
         return "doctorslots/scheduleActual";
     }
 
@@ -77,16 +83,16 @@ public class DoctorSlotMVCController {
         return "doctorslots/scheduleForAll";
     }
 
-    @GetMapping("/makeMeet")
-    public String getCurrentDaysPlus(@RequestParam(value = "page", defaultValue = "1") int page,
-                                 @RequestParam(value = "size", defaultValue = "20") int pageSize,
-                                 Model model) {
-        PageRequest pageRequest = PageRequest.of(page - 1, pageSize);
-        Page<MyUniversalQueryModel> doctorslotsMUQM = doctorSlotService.getCurrentDaysPlus(pageRequest);
-//        doctorSlots.forEach(s -> System.out.println(s.toString()));
-        model.addAttribute("doctorslotsMUQM", doctorslotsMUQM);
-        return "doctorslots/makeMeet";
-    }
+//    @GetMapping("/makeMeet")
+//    public String getCurrentDaysPlus(@RequestParam(value = "page", defaultValue = "1") int page,
+//                                 @RequestParam(value = "size", defaultValue = "20") int pageSize,
+//                                 Model model) {
+//        PageRequest pageRequest = PageRequest.of(page - 1, pageSize);
+//        Page<MyUniversalQueryModel> doctorslotsMUQM = doctorSlotService.getCurrentDaysPlus(pageRequest);
+////        doctorSlots.forEach(s -> System.out.println(s.toString()));
+//        model.addAttribute("doctorslotsMUQM", doctorslotsMUQM);
+//        return "doctorslots/makeMeet";
+//    }
 
     @GetMapping("/getActualSchedule")
     public String getActualSchedule(@RequestParam(value = "page", defaultValue = "1") int page,
@@ -143,7 +149,7 @@ public class DoctorSlotMVCController {
     @GetMapping("/deleteSchedule")
     public String deleteSchedule(Model model,
                                  @ModelAttribute("exception") final String exception) {
-        List<DoctorDTO> doctors = doctorService.listAll();
+        List<DoctorDTO> doctors = doctorService.listAllSorted();
         List<Day> days = dayService.getcurrent10days();
         model.addAttribute("doctors", doctors);
         model.addAttribute("days", days);
@@ -167,7 +173,7 @@ public class DoctorSlotMVCController {
             return "doctorslots/deleteSchedule";
         }
 
-            doctorSlotService.deleteSchedule(doctorSlotDTO.getDoctor().getId(), doctorSlotDTO.getDay().getId());
+        doctorSlotService.deleteSchedule(doctorSlotDTO.getDoctor().getId(), doctorSlotDTO.getDay().getId());
         return "redirect:/doctorslots/getActualSchedule";
     }
 

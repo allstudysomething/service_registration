@@ -3,21 +3,17 @@ package serviceregistration.MVC.controllers;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import serviceregistration.dto.DoctorDTO;
 import serviceregistration.dto.RegistrationDTO;
 import serviceregistration.dto.RegistrationSearchAdminDTO;
-import serviceregistration.dto.TempDTO;
-import serviceregistration.model.*;
+import serviceregistration.model.Day;
+import serviceregistration.model.Slot;
+import serviceregistration.model.Specialization;
 import serviceregistration.repository.UserRepository;
 import serviceregistration.service.*;
-import serviceregistration.service.userdetails.CustomUserDetails;
 
 import java.util.List;
 
@@ -27,7 +23,6 @@ import java.util.List;
 @RequestMapping("/registrations")
 public class RegistrationMVCController {
     private final UserRepository userRepository;
-
     private static Specialization specializationForFuture;
     private static Long doctorDTOIdForFuture;
     private static Long dayIdForFuture;
@@ -39,9 +34,10 @@ public class RegistrationMVCController {
     private final DoctorSlotService doctorSlotService;
     private final DoctorService doctorService;
     private SlotService slotService;
+    private final DayService dayService;
 
     public RegistrationMVCController(RegistrationService registrationService, SpecializationService specializationService, DoctorSlotService doctorSlotService, DoctorService doctorService, SlotService slotService,
-                                     UserRepository userRepository, UserService userService) {
+                                     UserRepository userRepository, UserService userService, DayService dayService) {
         this.registrationService = registrationService;
         this.specializationService = specializationService;
         this.doctorSlotService = doctorSlotService;
@@ -49,6 +45,7 @@ public class RegistrationMVCController {
         this.slotService = slotService;
         this.userRepository = userRepository;
         this.userService = userService;
+        this.dayService = dayService;
     }
 
 //    @GetMapping("")
@@ -86,7 +83,7 @@ public class RegistrationMVCController {
         dayIdForFuture = null;
         slotIdForFuture = null;
 
-        List<Specialization> specializations = specializationService.listAll();
+        List<Specialization> specializations = specializationService.listAllSorted();
         model.addAttribute("specializations", specializations);
         model.addAttribute("specializationsForm", new Specialization());
         return "registrations/chooseSpecialization";
@@ -194,6 +191,20 @@ public class RegistrationMVCController {
         return "registrations/myListAllTime";
     }
 
+//    @GetMapping("/slots/{doctorId}/{dayId}")
+//    public String createMeet(@PathVariable Long doctorId,
+//                             @PathVariable Long dayId,
+//                             Model model) {
+//        model.addAttribute("timeSlots", doctorSlotService.getSlotsOneDayForClient(doctorId, dayId));
+//        DoctorDTO doctorDTO = doctorService.getOne(doctorId);
+//        model.addAttribute("doctor", doctorDTO);
+//        model.addAttribute("day", dayService.getDayById(dayId));
+////        model.addAttribute("specialization", specializationService.listAll());
+//        model.addAttribute("specialization", doctorDTO.getSpecialization());
+//        model.addAttribute("cabinet", doctorSlotService.getCabinetByDoctorIdAndDayId(doctorId, dayId));
+//        return "registrations/chooseTime";
+//    }
+
     // Костыль метод(чтобы не плодить). При передаче из под учетки Доктора в registrationId будет передан doctorslotId
     @RequestMapping(value = "/deleteRecord/{id}")
     public String deleteRecordById(@PathVariable(value = "id") Long toDeleteId) {
@@ -202,6 +213,28 @@ public class RegistrationMVCController {
         return (roleId == 1L) ? "redirect:/registrations/myRegistrations"
             : "redirect:/doctorslots/mySchedule";
     }
+
+//    @GetMapping("/slots/create/{doctorSlotId}")
+//    public String createMeet(@PathVariable Long doctorSlotId,
+//                             @ModelAttribute("registrationSlot") RegistrationDTO registrationDTO) {
+//        DoctorSlotDTO doctorSlotDTO = doctorSlotService.getOne(doctorSlotId);
+//        CustomUserDetails customUserDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//        ClientDTO clientDTO = clientService.getClientByLogin(customUserDetails.getUsername());
+//        if (clientService.isActiveRegistrationBySpecialization(doctorSlotDTO, clientDTO.getId())) {
+//            return "redirect:/doctorslots/makeMeet";
+//        }
+//        if (clientService.isActiveRegistrationByDayAndTime(doctorSlotDTO, clientDTO.getId())) {
+//            return "redirect:/doctorslots/makeMeet";
+//        }
+//        registrationDTO.setClientId(Long.valueOf(customUserDetails.getUserId()));
+//        registrationDTO.setDoctorSlotId(doctorSlotDTO.getId());
+//        registrationService.registrationSlot(registrationDTO);
+//        mailSenderService.sendMessage(
+//                registrationService.getRegistrationDTOByDoctorSlotId(doctorSlotDTO.getId()).getId(),
+//                MAIL_SUBJECT_FOR_REGISTRATION_SUCCESS,
+//                MAIL_BODY_FOR_REGISTRATION_SUCCESS);
+//        return "redirect:/registrations/client-slots/" + customUserDetails.getUserId();
+//    }
 
 }
 

@@ -79,6 +79,7 @@
                     <th scope="col">ФИО</th>
                     <th scope="col">Специализация</th>
                     <th scope="col">День</th>
+<!--                    <th scope="col" th:text="${flagTime lt 1 ? '     ' : 'Время'}"></th>-->
                     <th scope="col">Время</th>
                     <th scope="col">Кабинет</th>
                     <th scope="col">Статус</th>
@@ -86,13 +87,17 @@
                 </thead>
                 <tbody>
                 <tr th:each="doctorslot : ${doctorslots}">
-                    <td th:text="${doctorslot.getDoctor().getLastName() + ' ' + doctorslot.getDoctor().getFirstName() + ' ' + doctorslot.getDoctor().getMidName()}"></td>
+                    <td th:text="${doctorslot.getDoctor().getLastName() + ' '
+                        + doctorslot.getDoctor().getFirstName().charAt(0) + '. '
+                        + doctorslot.getDoctor().getMidName().charAt(0) + '.'}"></td>
                     <td th:text="${doctorslot.getDoctor().getSpecialization().getTitleSpecialization()}"></td>
                     <td th:text="${doctorslot.getDay().getDay()}"></td>
                     <td th:text="${doctorslot.getSlot().getTimeSlot()}"></td>
                     <td th:text="${doctorslot.getCabinet().getCabinetNumber()}"></td>
-                    <td th:classappend="${doctorslot.getIsRegistered() == false} ? 'not-active-reg' : 'active-reg'"
-                        th:text="${doctorslot.getIsRegistered()} == false ? 'Свободно' : 'Занято'"></td>
+                    <td
+                        th:text="${doctorslot.getDay().getDay() < currentDate ? 'архив' : (doctorslot.getIsRegistered() == false ? 'Свободно' : 'Занято')}"></td>
+<!--                        th:text="${doctorslot.getIsRegistered()} == false ? 'Свободно' : 'Занято'"></td>-->
+<!--                    th:classappend="${doctorslot.getIsRegistered() == false} ? 'not-active-reg' : 'active-reg'"-->
                 </tr>
                 </tbody>
             </table>

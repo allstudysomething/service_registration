@@ -78,7 +78,7 @@
                 <td th:text="${ds.getDoctorLastName() + ' ' + ds.getDoctorFirstName() + ' ' + ds.getDoctorMidName()}"></td>
                 <td th:text="${ds.getTitleSpecialization()}"></td>
                 <td th:text="${ds.getDay()}"></td>
-                <td th:text="${ds.getCabinet()}"></td>
+                <td th:text="${ds.getCabinetNumber()}"></td>
                 <td>
                     <a sec:authorize="hasRole('CLIENT')" class="btn btn-sm btn-info"
                        th:href="'/registrations/slots/' + ${ds.getDoctorId()} + '/' + ${ds.getDayId()}">Выбрать время</a>

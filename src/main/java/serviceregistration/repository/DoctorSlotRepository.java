@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import serviceregistration.dto.CustomInterfaces.CustomDoctorSpecializationDay;
-import serviceregistration.dto.CustomInterfaces.MyUniversalQueryModel;
 import serviceregistration.model.DoctorSlot;
 
 import java.time.LocalDate;
@@ -48,6 +47,7 @@ public interface DoctorSlotRepository
                    and d2.day between :currentDay and :plusDays
                    and doctors_slots.is_registered = false
                    and d3.is_deleted = false
+                order by doctor_id
                    """)
     List<Long> findDoctorIDsBySpecializationAndDayBetween(Long specializationId, LocalDate currentDay, LocalDate plusDays);
 
@@ -57,6 +57,7 @@ public interface DoctorSlotRepository
             WHERE doctor_id = :doctorDTOId
               AND is_registered = 'false'
               AND d2.day BETWEEN :currentDay AND :plusDays
+            order by day_id
             """)
     List<Long> findDaysIdByDoctorDTOIdAndNotRegisteredAndDateBetween(Long doctorDTOId, LocalDate currentDay, LocalDate plusDays);
 
@@ -68,14 +69,33 @@ public interface DoctorSlotRepository
     Long findByDoctorIdAndDayIdAndSlotId(Long doctorDTOId, Long dayId, Long slotId);
 
     // from zotov
+//    @Query(nativeQuery = true,
+//            value = """
+//                    select ds.*
+//                    from doctors_slots ds
+//                        join days d on ds.day_id = d.id
+//                    order by day, doctor_id, slot_id
+//                    """)
+//    Page<DoctorSlot> findAllSchedule(Pageable pageable);
+
     @Query(nativeQuery = true,
             value = """
-                    select ds.*
-                    from doctors_slots ds
-                        join days d on ds.day_id = d.id
-                    order by day, doctor_id, slot_id
+                select ds.doctor_id, ds.day_id, ds.cabinet_id
+                from doctors_slots ds
+                         join days d on ds.day_id = d.id
+                group by ds.doctor_id, ds.day_id, ds.cabinet_id
+                order by ds.doctor_id, ds.day_id, ds.cabinet_id
                     """)
     Page<DoctorSlot> findAllSchedule(Pageable pageable);
+
+//    @Query(nativeQuery = true,
+//            value = """
+//                    select ds.*
+//                    from doctors_slots ds
+//                        join days d on ds.day_id = d.id
+//                    order by day, doctor_id, slot_id
+//                    """)
+//    Page<DoctorSlot> findAllScheduleWOTimeSlots(Pageable pageable);
 
     // from zotov
     @Query(nativeQuery = true,
@@ -192,30 +212,53 @@ public interface DoctorSlotRepository
             join days d2 on d2.id = doctors_slots.day_id
             join cabinets c on c.id = doctors_slots.cabinet_id
             join slots s on s.id = doctors_slots.slot_id
-        where d2.day = timestamp 'today'            
+        where d2.day = timestamp 'today'
         """)
     List<DoctorSlot> findActualScheduleNotPaging();
 
-    @Query(nativeQuery = true, value = """
-        select d.last_name as DoctorLastName, d.first_name as DoctorFirstName, d.mid_name as DoctorMidName,
-               s2.title as TitleSpecialization, d2.day as Day, c.number as CabinetNumber, d.id as DoctorId, d2.id as DayId
-                 from doctors_slots
-                          join doctors d on d.id = doctors_slots.doctor_id
-                          join slots s on s.id = doctors_slots.slot_id
-                          join cabinets c on c.id = doctors_slots.cabinet_id
-                          join days d2 on d2.id = doctors_slots.day_id
-                        join specializations s2 on d.specialization_id = s2.id
-        where doctors_slots.is_registered = false
-            and d2.day <= TIMESTAMP 'today' + interval '14 days'
-            and d2.day + s.time_slot > (now() at time zone 'utc-3')
-        group by d.last_name, d.first_name, d.mid_name, s2.title, d2.day, c.number, d.id, d2.id
-        order by 5, 6
-        """)
-    Page<MyUniversalQueryModel> getCurrentDaysPlus(Pageable pageable);
+//    @Query(nativeQuery = true, value = """
+//        select d.last_name as DoctorLastName, d.first_name as DoctorFirstName, d.mid_name as DoctorMidName,
+//               s2.title as TitleSpecialization, d2.day as Day, c.number as CabinetNumber, d.id as DoctorId, d2.id as DayId
+//                 from doctors_slots
+//                          join doctors d on d.id = doctors_slots.doctor_id
+//                          join slots s on s.id = doctors_slots.slot_id
+//                          join cabinets c on c.id = doctors_slots.cabinet_id
+//                          join days d2 on d2.id = doctors_slots.day_id
+//                        join specializations s2 on d.specialization_id = s2.id
+//        where doctors_slots.is_registered = false
+//            and d2.day <= TIMESTAMP 'today' + interval '14 days'
+//            and d2.day + s.time_slot > (now() at time zone 'utc-3')
+//        group by d.last_name, d.first_name, d.mid_name, s2.title, d2.day, c.number, d.id, d2.id
+//        order by 5, 6
+//        """)
+//    Page<MyUniversalQueryModel> getCurrentDaysPlus(Pageable pageable);
 
-//            --         and d2.day >= timestamp 'today'
+//    @Query(nativeQuery = true,
+//            value = """
+//                    select ds.id as DoctorSlotId, s.time_slot as TimeSlot, ds.is_registered as IsRegistered
+//                    from doctors_slots ds
+//                        join slots s on s.id = ds.slot_id
+//                        join doctors doc on doc.id = ds.doctor_id
+//                        join days d on ds.day_id = d.id
+//                    where doc.id = :doctorId
+//                        and d.id = :dayId
+//                        and d.day + s.time_slot > (now() at time zone 'utc-3')
+//                        and ds.is_registered = false
+//                    order by ds.is_registered desc, s.time_slot
+//                    """)
+//    List<MyUniversalQueryModel> findSlotsOneDayForClient(Long doctorId, Long dayId);
+//
+//    @Query(nativeQuery = true,
+//            value = """
+//                    select c.number
+//                    from doctors_slots ds
+//                        join cabinets c on c.id = ds.cabinet_id
+//                        join doctors doc on doc.id = ds.doctor_id
+//                        join days d on d.id = ds.day_id
+//                    where doc.id = :doctorId
+//                        and d.id = :dayId
+//                    """)
+//    Integer findCabinetByDoctorIdAndDayId(Long doctorId, Long dayId);
 
 }
-
-//    join registrations r on doctors_slots.id = r.doctor_slot_id
 

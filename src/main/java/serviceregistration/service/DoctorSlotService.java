@@ -8,7 +8,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import serviceregistration.dto.CustomInterfaces.CustomDoctorSpecializationDay;
-import serviceregistration.dto.CustomInterfaces.MyUniversalQueryModel;
 import serviceregistration.dto.DoctorDTO;
 import serviceregistration.dto.DoctorSlotDTO;
 import serviceregistration.dto.DoctorSlotSearchAdminDTO;
@@ -134,6 +133,12 @@ public class DoctorSlotService extends GenericService<DoctorSlot, DoctorSlotDTO>
         return new PageImpl<>(result, pageable, doctorSlotPage.getTotalElements());
     }
 
+//    public Page<DoctorSlotDTO> listAllPagingWOTimeSlots(Pageable pageable) {
+//        Page<DoctorSlot> doctorSlotPage = doctorSlotRepository.findAllScheduleWOTimeSlots(pageable);
+//        List<DoctorSlotDTO> result = doctorSlotMapper.toDTOs(doctorSlotPage.getContent());
+//        return new PageImpl<>(result, pageable, doctorSlotPage.getTotalElements());
+//    }
+
     public Page<CustomDoctorSpecializationDay> listCurrentDays10(Pageable pageable) {
         Page<CustomDoctorSpecializationDay> doctorSlotPage = doctorSlotRepository.findAllCurrentDays10(pageable);
         List<CustomDoctorSpecializationDay> result = doctorSlotPage.getContent();
@@ -201,8 +206,17 @@ public class DoctorSlotService extends GenericService<DoctorSlot, DoctorSlotDTO>
         return doctorSlotDTOS;
     }
 
-    public Page<MyUniversalQueryModel> getCurrentDaysPlus(Pageable pageable) {
-        Page<MyUniversalQueryModel> myUniversalQueryModels = doctorSlotRepository.getCurrentDaysPlus(pageable);
-        return new PageImpl<>(myUniversalQueryModels.getContent(), pageable, myUniversalQueryModels.getTotalElements());
-    }
+//    public Page<MyUniversalQueryModel> getCurrentDaysPlus(Pageable pageable) {
+//        Page<MyUniversalQueryModel> myUniversalQueryModels = doctorSlotRepository.getCurrentDaysPlus(pageable);
+//        return new PageImpl<>(myUniversalQueryModels.getContent(), pageable, myUniversalQueryModels.getTotalElements());
+//    }
+
+//    public List<MyUniversalQueryModel> getSlotsOneDayForClient(Long doctorId, Long dayId) {
+//        return ((DoctorSlotRepository) repository).findSlotsOneDayForClient(doctorId, dayId);
+//    }
+//
+//    public Integer getCabinetByDoctorIdAndDayId(Long doctorId, Long dayId) {
+//        return ((DoctorSlotRepository) repository).findCabinetByDoctorIdAndDayId(doctorId, dayId);
+//    }
+
 }

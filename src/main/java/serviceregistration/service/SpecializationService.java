@@ -19,7 +19,12 @@ public class SpecializationService {
         return specializationRepository.findAll();
     }
 
+    public List<Specialization> listAllSorted() {
+        return specializationRepository.findAllSorted();
+    }
+
     public Specialization getOneByDoctorId(Long doctorId) {
         return specializationRepository.getByDoctorId(doctorId);
     }
+
 }

@@ -17,9 +17,9 @@
                     <li sec:authorize="isAuthenticated() && hasRole('CLIENT')" class="nav-item">
                         <a class="nav-link active" aria-current="page" href="/doctorslots/currentDays">расписание врачей</a>
                     </li>
-                    <li sec:authorize="isAuthenticated() && hasRole('CLIENT')" class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/doctorslots/makeMeet">расписание врачей+ </a>
-                    </li>
+<!--                    <li sec:authorize="isAuthenticated() && hasRole('CLIENT')" class="nav-item">-->
+<!--                        <a class="nav-link active" aria-current="page" href="/doctorslots/makeMeet">расписание врачей+ </a>-->
+<!--                    </li>-->
                     <li sec:authorize="isAuthenticated() && hasRole('ADMIN') || isAuthenticated() && hasRole('DOCTOR')" class="nav-item">
                         <a class="nav-link active" aria-current="page" href="/clients">клиенты</a>
                     </li>

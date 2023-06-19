@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Расписание</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div>
+        <hr class="hr"/>
+        <h3 th:text="'Врач: ' + ${doctor.getLastName()} + ' ' + ${doctor.getFirstName()} + ' ' + ${doctor.getMidName()}" ></h3>
+<!--        <h3 th:text="'Специализация: ' + ${specialization.get(__${doctor.getSpecialization().getId() - 1}__).getTitleSpecialization()}" ></h3>-->
+        <h3 th:text="'Специализация: ' + ${specialization.getTitleSpecialization()}" ></h3>
+        <h3 th:text="'День: ' + ${day.getDay()}"></h3>
+        <h3 th:text="'Кабинет: ' + ${cabinet}"></h3>
+
+        <hr class="hr"/>
+        <div><br></div>
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th scope="col">Время</th>
+                <th scope="col">Запись</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="t : ${timeSlots}" th:if="${!t.getIsRegistered()}">
+                <td th:text="${t.getTimeSlot()}"></td>
+                <td>
+                    <a th:if="${!t.getIsRegistered()}" class="btn btn-sm btn-info"
+                       th:href="'/registrations/slots/create/' + ${t.getDoctorSlotId()}"
+                       onclick="return confirm('Вы хотите записаться?')">Записаться</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <form>
+            <button style="float: left" type="button" class="btn btn-secondary" onclick="window.history.back()">
+                Назад</button>
+        </form>
+        <div><br><br><br></div>
+    </div>
+</div>
+</body>
+</html>

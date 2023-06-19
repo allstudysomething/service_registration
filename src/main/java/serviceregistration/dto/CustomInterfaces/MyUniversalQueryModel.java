@@ -5,6 +5,7 @@ import serviceregistration.model.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 public interface MyUniversalQueryModel {
 
@@ -36,6 +37,7 @@ public interface MyUniversalQueryModel {
     Doctor getDoctor();
     LocalDate getDay();
     Slot getSlot();
+    LocalTime getTimeSlot();
     Cabinet getCabinet();
     Boolean getIsRegistered();
     Boolean getIsActive();
